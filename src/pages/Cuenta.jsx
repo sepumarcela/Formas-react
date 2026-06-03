@@ -22,10 +22,20 @@ import { useSiteContent } from '../hooks/useSiteContent'
 
 const sections = [
   { id: 'overview', label: 'Resumen', icon: LayoutDashboard },
+  { id: 'hero', label: 'Inicio', icon: Images },
+  { id: 'pages', label: 'Páginas', icon: LayoutDashboard },
   { id: 'products', label: 'Productos', icon: Package },
   { id: 'blog', label: 'Blog', icon: Newspaper },
   { id: 'categories', label: 'Categorías', icon: Tags },
   { id: 'bulk', label: 'Carga masiva', icon: FileJson },
+]
+
+const pageOptions = [
+  { id: 'homeProducts', label: 'Productos en inicio' },
+  { id: 'proyectos', label: 'Proyectos' },
+  { id: 'nosotros', label: 'Nosotros' },
+  { id: 'blog', label: 'Blog' },
+  { id: 'contacto', label: 'Contacto' },
 ]
 
 const ADMIN_SESSION_KEY = 'formas-admin-authenticated'
@@ -40,8 +50,28 @@ function getEmptyProduct(category) {
     name: '',
     price: '',
     size: '',
+    description: '',
+    material: '',
+    color: '',
+    leadTime: '',
     image: '',
     featured: false,
+  }
+}
+
+function getEmptyHeroSlide(index) {
+  return {
+    id: `inicio-${index}`,
+    eyebrow: '',
+    titleAccent: 'Diseña',
+    title: 'tu estilo',
+    description: 'Muebles modernos y funcionales\npara transformar cada espacio\nde tu hogar.',
+    primaryLabel: 'Ver colecciones',
+    primaryLink: '/proyectos',
+    secondaryLabel: 'Solicitar diseño',
+    secondaryLink: '/contacto',
+    image: '',
+    active: true,
   }
 }
 
@@ -144,7 +174,7 @@ const csvConfig = {
   products: {
     label: 'Productos',
     filename: 'productos-formas.csv',
-    headers: ['id', 'categoryId', 'category', 'name', 'price', 'size', 'image', 'featured'],
+    headers: ['id', 'categoryId', 'category', 'name', 'price', 'size', 'description', 'material', 'color', 'leadTime', 'image', 'featured'],
   },
   categories: {
     label: 'Categorías',
@@ -167,6 +197,7 @@ function Cuenta() {
   const [activeSection, setActiveSection] = useState('overview')
   const [newProduct, setNewProduct] = useState(() => getEmptyProduct(content.categories[0]))
   const [bulkType, setBulkType] = useState('products')
+  const [pageKey, setPageKey] = useState('proyectos')
   const [csvPreview, setCsvPreview] = useState('')
   const [notice, setNotice] = useState('')
 
@@ -174,7 +205,7 @@ function Cuenta() {
     { label: 'Productos', value: content.products.length },
     { label: 'Destacados', value: content.products.filter((product) => product.featured).length },
     { label: 'Categorías', value: content.categories.length },
-    { label: 'Artículos', value: content.blogPosts.length },
+    { label: 'Fotos inicio', value: content.heroSlides.length },
   ]), [content])
 
   function flash(message) {
@@ -248,6 +279,19 @@ function Cuenta() {
 
   function updateProductPrice(product, value) {
     updateCollection('products', product.id, { price: formatCop(value) })
+  }
+
+  function updatePageContent(section, patch) {
+    setContent((current) => ({
+      ...current,
+      pageContent: {
+        ...current.pageContent,
+        [section]: {
+          ...current.pageContent[section],
+          ...patch,
+        },
+      },
+    }))
   }
 
   function handleNewProductCategory(categoryId) {
@@ -325,6 +369,18 @@ function Cuenta() {
     flash('Artículo creado.')
   }
 
+  function addHeroSlide() {
+    setContent((current) => ({
+      ...current,
+      heroSlides: [
+        ...current.heroSlides,
+        getEmptyHeroSlide(current.heroSlides.length + 1),
+      ],
+    }))
+    setActiveSection('hero')
+    flash('Foto de inicio creada.')
+  }
+
   async function handleImageUpload(collection, id, event) {
     const file = event.target.files?.[0]
     if (!file) return
@@ -332,6 +388,45 @@ function Cuenta() {
     const image = await readFileAsDataUrl(file)
     updateCollection(collection, id, { image })
     flash('Imagen cargada.')
+  }
+
+  async function handleHeroImageUpload(id, event) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const image = await readFileAsDataUrl(file)
+    updateCollection('heroSlides', id, { image })
+    flash('Foto de inicio cargada.')
+  }
+
+  async function handlePageImageUpload(section, field, event) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const image = await readFileAsDataUrl(file)
+    updatePageContent(section, { [field]: image })
+    flash('Imagen de página cargada.')
+  }
+
+  function addProject() {
+    const title = `Nuevo proyecto ${content.projects.length + 1}`
+    setContent((current) => ({
+      ...current,
+      projects: [
+        ...current.projects,
+        { id: createSlug(title), cat: 'hogar', label: 'Hogar', title, location: 'Ciudad, Colombia', image: '' },
+      ],
+    }))
+    flash('Proyecto creado.')
+  }
+
+  async function handleProjectImageUpload(id, event) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const image = await readFileAsDataUrl(file)
+    updateCollection('projects', id, { image })
+    flash('Imagen de proyecto cargada.')
   }
 
   function handleCategoryIdChange(category, id) {
@@ -426,10 +521,235 @@ function Cuenta() {
 
         <div className="admin-quick-actions">
           <button onClick={goToProducts}><Package size={20} /> Crear producto</button>
+          <button onClick={addHeroSlide}><Images size={20} /> Foto de inicio</button>
           <button onClick={addBlogPost}><Newspaper size={20} /> Crear artículo</button>
           <button onClick={addCategory}><Tags size={20} /> Crear categoría</button>
           <button onClick={() => openSection('bulk')}><FileJson size={20} /> Importar masivo</button>
         </div>
+      </div>
+    )
+  }
+
+  function renderHero() {
+    return (
+      <div className="admin-panel">
+        <div className="admin-panel__header">
+          <div>
+            <p className="admin-kicker">Inicio</p>
+            <h1>Fotos y textos del inicio</h1>
+            <p>Sube las imagenes principales del home y ajusta los textos que aparecen encima de cada foto.</p>
+          </div>
+          <button className="button button--primary" onClick={addHeroSlide}><BadgePlus size={16} /> Agregar foto</button>
+        </div>
+
+        <div className="admin-editor-list">
+          {content.heroSlides.map((slide, index) => (
+            <article className="admin-editor-card admin-editor-card--hero" key={slide.id}>
+              <div className="admin-image-box admin-image-box--hero">
+                {slide.image ? <img src={slide.image} alt={slide.title || 'Foto de inicio'} /> : <Images size={30} />}
+                <label>
+                  Cargar foto
+                  <input type="file" accept="image/*" onChange={(event) => handleHeroImageUpload(slide.id, event)} />
+                </label>
+              </div>
+
+              <div className="admin-form-grid admin-form-grid--wide">
+                <label>ID<input value={slide.id} onChange={(event) => updateCollection('heroSlides', slide.id, { id: createSlug(event.target.value) })} /></label>
+                <label>Texto pequeno<input value={slide.eyebrow || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { eyebrow: event.target.value })} placeholder="Opcional" /></label>
+                <label>Linea principal<input value={slide.titleAccent || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { titleAccent: event.target.value })} /></label>
+                <label>Linea secundaria<input value={slide.title || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { title: event.target.value })} /></label>
+                <label className="admin-colspan">Descripcion<textarea value={slide.description || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { description: event.target.value })} /></label>
+                <label>Boton principal<input value={slide.primaryLabel || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { primaryLabel: event.target.value })} /></label>
+                <label>Link principal<input value={slide.primaryLink || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { primaryLink: event.target.value })} /></label>
+                <label>Boton secundario<input value={slide.secondaryLabel || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { secondaryLabel: event.target.value })} /></label>
+                <label>Link secundario<input value={slide.secondaryLink || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { secondaryLink: event.target.value })} /></label>
+                <label className="admin-check"><input type="checkbox" checked={slide.active !== false} onChange={(event) => updateCollection('heroSlides', slide.id, { active: event.target.checked })} /> Visible en inicio</label>
+              </div>
+
+              <button
+                className="admin-delete"
+                disabled={content.heroSlides.length === 1}
+                onClick={() => removeFromCollection('heroSlides', slide.id)}
+                title={content.heroSlides.length === 1 ? 'Debe quedar al menos una foto' : 'Eliminar foto'}
+              >
+                <Trash2 size={16} /> Eliminar
+              </button>
+              <span className="admin-hero-order">Foto {index + 1}</span>
+            </article>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  function renderPages() {
+    const page = content.pageContent[pageKey]
+    const selectedPage = pageOptions.find((item) => item.id === pageKey)
+    const isHeroPage = pageKey !== 'homeProducts'
+
+    return (
+      <div className="admin-panel">
+        <div className="admin-panel__header">
+          <div>
+            <p className="admin-kicker">Páginas</p>
+            <h1>Editar contenido de páginas</h1>
+            <p>Cambia textos e imágenes principales de Proyectos, Nosotros, Blog, Contacto y las secciones de productos del inicio.</p>
+          </div>
+          <div className="admin-header-actions">
+            <label className="admin-page-select">
+              Página
+              <select value={pageKey} onChange={(event) => setPageKey(event.target.value)}>
+                {pageOptions.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+              </select>
+            </label>
+          </div>
+        </div>
+
+        {isHeroPage && (
+          <article className="admin-editor-card admin-editor-card--hero">
+            <div className="admin-image-box admin-image-box--hero">
+              {page.image ? <img src={page.image} alt={selectedPage.label} /> : <Images size={30} />}
+              <label>
+                Cargar foto hero
+                <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload(pageKey, 'image', event)} />
+              </label>
+            </div>
+
+            <div className="admin-form-grid admin-form-grid--wide">
+              <label>Breadcrumb<input value={page.breadcrumb || ''} onChange={(event) => updatePageContent(pageKey, { breadcrumb: event.target.value })} /></label>
+              <label>Texto pequeño<input value={page.eyebrow || ''} onChange={(event) => updatePageContent(pageKey, { eyebrow: event.target.value })} placeholder="Opcional" /></label>
+              <label className="admin-colspan">Título<textarea value={page.title || ''} onChange={(event) => updatePageContent(pageKey, { title: event.target.value })} /></label>
+              <label className="admin-colspan">Descripción<textarea value={page.description || ''} onChange={(event) => updatePageContent(pageKey, { description: event.target.value })} /></label>
+            </div>
+          </article>
+        )}
+
+        {pageKey === 'homeProducts' && (
+          <article className="admin-create-card">
+            <div className="admin-create-card__header">
+              <div>
+                <p className="admin-kicker">Inicio / Productos</p>
+                <h2>Textos de productos en el inicio</h2>
+                <p>Estos textos aparecen encima de las líneas de producto y de los productos destacados.</p>
+              </div>
+            </div>
+            <div className="admin-form-grid admin-form-grid--wide">
+              <label>Etiqueta líneas<input value={page.categoriesEyebrow || ''} onChange={(event) => updatePageContent('homeProducts', { categoriesEyebrow: event.target.value })} /></label>
+              <label>Título líneas<input value={page.categoriesTitle || ''} onChange={(event) => updatePageContent('homeProducts', { categoriesTitle: event.target.value })} /></label>
+              <label className="admin-colspan">Descripción líneas<textarea value={page.categoriesDescription || ''} onChange={(event) => updatePageContent('homeProducts', { categoriesDescription: event.target.value })} /></label>
+              <label>Etiqueta destacados<input value={page.featuredEyebrow || ''} onChange={(event) => updatePageContent('homeProducts', { featuredEyebrow: event.target.value })} /></label>
+              <label>Título destacados<input value={page.featuredTitle || ''} onChange={(event) => updatePageContent('homeProducts', { featuredTitle: event.target.value })} /></label>
+              <label className="admin-colspan">Descripción destacados<textarea value={page.featuredDescription || ''} onChange={(event) => updatePageContent('homeProducts', { featuredDescription: event.target.value })} /></label>
+            </div>
+          </article>
+        )}
+
+        {pageKey === 'proyectos' && (
+          <div className="admin-editor-list">
+            <div className="admin-list-heading">
+              <h2>Proyectos publicados</h2>
+              <button className="button button--primary" onClick={addProject}><BadgePlus size={16} /> Agregar proyecto</button>
+            </div>
+            <div className="admin-form-grid admin-form-grid--wide admin-create-card">
+              <label>Texto botón<input value={page.ctaLabel || ''} onChange={(event) => updatePageContent('proyectos', { ctaLabel: event.target.value })} /></label>
+              <label>Link botón<input value={page.ctaLink || ''} onChange={(event) => updatePageContent('proyectos', { ctaLink: event.target.value })} /></label>
+            </div>
+            {content.projects.map((project) => (
+              <article className="admin-editor-card" key={project.id}>
+                <div className="admin-image-box">
+                  {project.image ? <img src={project.image} alt={project.title} /> : <Images size={26} />}
+                  <label>
+                    Cargar imagen
+                    <input type="file" accept="image/*" onChange={(event) => handleProjectImageUpload(project.id, event)} />
+                  </label>
+                </div>
+                <div className="admin-form-grid">
+                  <label>ID<input value={project.id} onChange={(event) => updateCollection('projects', project.id, { id: createSlug(event.target.value) })} /></label>
+                  <label>Categoría filtro<input value={project.cat} onChange={(event) => updateCollection('projects', project.id, { cat: createSlug(event.target.value) })} /></label>
+                  <label>Etiqueta<input value={project.label} onChange={(event) => updateCollection('projects', project.id, { label: event.target.value })} /></label>
+                  <label>Título<input value={project.title} onChange={(event) => updateCollection('projects', project.id, { title: event.target.value })} /></label>
+                  <label>Ubicación<input value={project.location} onChange={(event) => updateCollection('projects', project.id, { location: event.target.value })} /></label>
+                </div>
+                <button className="admin-delete" onClick={() => removeFromCollection('projects', project.id)}><Trash2 size={16} /> Eliminar</button>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {pageKey === 'nosotros' && (
+          <div className="admin-editor-list">
+            <article className="admin-editor-card admin-editor-card--hero">
+              <div className="admin-image-box admin-image-box--hero">
+                {page.historyImage ? <img src={page.historyImage} alt={page.historyTitle} /> : <Images size={30} />}
+                <label>
+                  Foto historia
+                  <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('nosotros', 'historyImage', event)} />
+                </label>
+              </div>
+              <div className="admin-form-grid admin-form-grid--wide">
+                <label className="admin-colspan">Título historia<input value={page.historyTitle || ''} onChange={(event) => updatePageContent('nosotros', { historyTitle: event.target.value })} /></label>
+                <label className="admin-colspan">Texto historia<textarea value={page.historyText || ''} onChange={(event) => updatePageContent('nosotros', { historyText: event.target.value })} /></label>
+              </div>
+            </article>
+
+            <article className="admin-editor-card admin-editor-card--hero">
+              <div className="admin-image-box admin-image-box--hero">
+                {page.locationImage ? <img src={page.locationImage} alt="Sede" /> : <Images size={30} />}
+                <label>
+                  Foto sede
+                  <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('nosotros', 'locationImage', event)} />
+                </label>
+              </div>
+              <div className="admin-form-grid admin-form-grid--wide">
+                <label className="admin-colspan">Esta foto aparece en la sección Nuestra sede<input value="Imagen editable desde este bloque" readOnly /></label>
+              </div>
+            </article>
+          </div>
+        )}
+
+        {pageKey === 'blog' && (
+          <article className="admin-create-card">
+            <div className="admin-form-grid admin-form-grid--wide">
+              <label>Título lateral<input value={page.sidebarTitle || ''} onChange={(event) => updatePageContent('blog', { sidebarTitle: event.target.value })} /></label>
+              <label>Título CTA<input value={page.ctaTitle || ''} onChange={(event) => updatePageContent('blog', { ctaTitle: event.target.value })} /></label>
+              <label className="admin-colspan">Texto CTA<textarea value={page.ctaText || ''} onChange={(event) => updatePageContent('blog', { ctaText: event.target.value })} /></label>
+            </div>
+          </article>
+        )}
+
+        {pageKey === 'contacto' && (
+          <div className="admin-editor-list">
+            <article className="admin-create-card">
+              <div className="admin-form-grid admin-form-grid--wide">
+                <label>Título formulario<input value={page.formTitle || ''} onChange={(event) => updatePageContent('contacto', { formTitle: event.target.value })} /></label>
+                <label>Subtítulo formulario<input value={page.formSubtitle || ''} onChange={(event) => updatePageContent('contacto', { formSubtitle: event.target.value })} /></label>
+                <label>Dirección título<input value={page.addressTitle || ''} onChange={(event) => updatePageContent('contacto', { addressTitle: event.target.value })} /></label>
+                <label>Dirección<textarea value={page.address || ''} onChange={(event) => updatePageContent('contacto', { address: event.target.value })} /></label>
+                <label>Teléfono título<input value={page.phoneTitle || ''} onChange={(event) => updatePageContent('contacto', { phoneTitle: event.target.value })} /></label>
+                <label>Teléfono<textarea value={page.phone || ''} onChange={(event) => updatePageContent('contacto', { phone: event.target.value })} /></label>
+                <label>Email título<input value={page.emailTitle || ''} onChange={(event) => updatePageContent('contacto', { emailTitle: event.target.value })} /></label>
+                <label>Email<input value={page.email || ''} onChange={(event) => updatePageContent('contacto', { email: event.target.value })} /></label>
+                <label>Horario título<input value={page.hoursTitle || ''} onChange={(event) => updatePageContent('contacto', { hoursTitle: event.target.value })} /></label>
+                <label>Horario<textarea value={page.hours || ''} onChange={(event) => updatePageContent('contacto', { hours: event.target.value })} /></label>
+              </div>
+            </article>
+
+            <article className="admin-editor-card admin-editor-card--hero">
+              <div className="admin-image-box admin-image-box--hero">
+                {page.mapImage ? <img src={page.mapImage} alt={page.visitTitle} /> : <Images size={30} />}
+                <label>
+                  Foto/mapa
+                  <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('contacto', 'mapImage', event)} />
+                </label>
+              </div>
+              <div className="admin-form-grid admin-form-grid--wide">
+                <label>Título visita<input value={page.visitTitle || ''} onChange={(event) => updatePageContent('contacto', { visitTitle: event.target.value })} /></label>
+                <label>WhatsApp<input value={page.whatsappLink || ''} onChange={(event) => updatePageContent('contacto', { whatsappLink: event.target.value })} /></label>
+                <label className="admin-colspan">Texto visita<textarea value={page.visitText || ''} onChange={(event) => updatePageContent('contacto', { visitText: event.target.value })} /></label>
+              </div>
+            </article>
+          </div>
+        )}
       </div>
     )
   }
@@ -474,6 +794,10 @@ function Cuenta() {
               </label>
               <label>Precio<input inputMode="numeric" value={newProduct.price} onChange={(event) => updateNewProductPrice(event.target.value)} placeholder="$0" required /></label>
               <label>Medidas<input value={newProduct.size} onChange={(event) => updateNewProduct({ size: event.target.value })} placeholder="A medida" /></label>
+              <label>Material<input value={newProduct.material} onChange={(event) => updateNewProduct({ material: event.target.value })} placeholder="Ej: MDF RH" /></label>
+              <label>Color/acabado<input value={newProduct.color} onChange={(event) => updateNewProduct({ color: event.target.value })} placeholder="Ej: Nogal y blanco" /></label>
+              <label>Entrega<input value={newProduct.leadTime} onChange={(event) => updateNewProduct({ leadTime: event.target.value })} placeholder="Ej: 20 a 30 días" /></label>
+              <label className="admin-colspan">Descripción para la ficha<textarea value={newProduct.description} onChange={(event) => updateNewProduct({ description: event.target.value })} placeholder="Describe el producto, su uso y lo que lo hace especial." /></label>
               <label className="admin-check"><input type="checkbox" checked={newProduct.featured} onChange={(event) => updateNewProduct({ featured: event.target.checked })} /> Destacado</label>
             </div>
           </div>
@@ -485,6 +809,23 @@ function Cuenta() {
             <span>Medidas: texto corto, ejemplo 200 x 40 x 180 cm o A medida.</span>
           </div>
         </form>
+
+        <div className="admin-help-grid">
+          <div className="admin-help-card">
+            <Images size={20} />
+            <div>
+              <strong>Foto del producto</strong>
+              <p>La imagen que cargues aquí aparece en la tarjeta del producto, en “Destacados de la semana” y en la ficha individual.</p>
+            </div>
+          </div>
+          <div className="admin-help-card">
+            <BadgePlus size={20} />
+            <div>
+              <strong>Producto destacado</strong>
+              <p>Marca la casilla “Destacado” para que ese producto salga en la sección principal del inicio.</p>
+            </div>
+          </div>
+        </div>
 
         <div className="admin-list-heading">
           <h2>Productos cargados</h2>
@@ -512,6 +853,10 @@ function Cuenta() {
                 </label>
                 <label>Precio<input inputMode="numeric" value={product.price} onChange={(event) => updateProductPrice(product, event.target.value)} /></label>
                 <label>Medidas<input value={product.size} onChange={(event) => updateCollection('products', product.id, { size: event.target.value })} /></label>
+                <label>Material<input value={product.material || ''} onChange={(event) => updateCollection('products', product.id, { material: event.target.value })} /></label>
+                <label>Color/acabado<input value={product.color || ''} onChange={(event) => updateCollection('products', product.id, { color: event.target.value })} /></label>
+                <label>Entrega<input value={product.leadTime || ''} onChange={(event) => updateCollection('products', product.id, { leadTime: event.target.value })} /></label>
+                <label className="admin-colspan">Descripción para la ficha<textarea value={product.description || ''} onChange={(event) => updateCollection('products', product.id, { description: event.target.value })} /></label>
                 <label className="admin-check"><input type="checkbox" checked={product.featured} onChange={(event) => updateCollection('products', product.id, { featured: event.target.checked })} /> Destacado</label>
               </div>
 
@@ -569,8 +914,26 @@ function Cuenta() {
           <div>
             <p className="admin-kicker">Categorías</p>
             <h1>Editar líneas de producto</h1>
+            <p>Estas imágenes son las fotos grandes de cada línea: se ven en el inicio, en el menú de productos y en el hero de la categoría.</p>
           </div>
           <button className="button button--primary" onClick={addCategory}><BadgePlus size={16} /> Nueva categoría</button>
+        </div>
+
+        <div className="admin-help-grid">
+          <div className="admin-help-card">
+            <Images size={20} />
+            <div>
+              <strong>Imagen de categoría</strong>
+              <p>Úsala para Centros de entretenimiento, Closets, Cocinas y las demás líneas. No es la foto de un producto específico.</p>
+            </div>
+          </div>
+          <div className="admin-help-card">
+            <Tags size={20} />
+            <div>
+              <strong>Nombre y descripción</strong>
+              <p>El nombre aparece en el menú Productos; la descripción aparece en el hero de la página de esa categoría.</p>
+            </div>
+          </div>
         </div>
 
         <div className="admin-editor-list">
@@ -650,6 +1013,8 @@ function Cuenta() {
 
   const renderers = {
     overview: renderOverview,
+    hero: renderHero,
+    pages: renderPages,
     products: renderProducts,
     blog: renderBlog,
     categories: renderCategories,

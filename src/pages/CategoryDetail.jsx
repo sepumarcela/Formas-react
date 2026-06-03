@@ -80,7 +80,7 @@ function CategoryDetail() {
                 <h3>{product.name}</h3>
                 <strong>{product.price}</strong>
                 <p>{product.size}</p>
-                <Link to="/contacto" className="cat-product-card__btn">Ver producto</Link>
+                <Link to={`/productos/${product.id}`} className="cat-product-card__btn">Ver producto</Link>
               </div>
             </article>
           ))}

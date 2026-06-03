@@ -35,21 +35,21 @@ function Header({ transparent = false }) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    function handleClick(e) {
-      if (dropRef.current && !dropRef.current.contains(e.target)) setDropOpen(false)
+    function handleClick(event) {
+      if (dropRef.current && !dropRef.current.contains(event.target)) setDropOpen(false)
     }
 
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  function handleSearch(e) {
-    e.preventDefault()
+  function handleSearch(event) {
+    event.preventDefault()
     const query = normalizeText(searchValue)
 
     if (query) {
-      const match = categories.find((cat) => (
-        normalizeText(cat.id).includes(query) || normalizeText(cat.name).includes(query)
+      const match = categories.find((category) => (
+        normalizeText(category.id).includes(query) || normalizeText(category.name).includes(query)
       ))
 
       navigate(match ? `/categorias/${match.id}` : '/')
@@ -60,83 +60,85 @@ function Header({ transparent = false }) {
 
   return (
     <header className={`site-header ${transparent ? 'site-header--transparent' : 'site-header--solid'}`}>
-      <Link to="/" className="brand">
-        <svg className="brand__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="14" y="14" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
-          <rect x="22" y="22" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
-          <path d="M14 20 L7 26 L17 30 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
-          <path d="M34 28 L41 22 L31 18 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
-        </svg>
-        <span className="brand__textwrap">
-          <span className="brand__text">FORMAS</span>
-          <span className="brand__tagline">DISEÑA TU ESTILO</span>
-        </span>
-      </Link>
+      <div className="site-header__inner">
+        <Link to="/" className="brand">
+          <svg className="brand__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="14" y="14" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            <rect x="22" y="22" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            <path d="M14 20 L7 26 L17 30 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            <path d="M34 28 L41 22 L31 18 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+          </svg>
+          <span className="brand__textwrap">
+            <span className="brand__text">FORMAS</span>
+            <span className="brand__tagline">DISEÑA TU ESTILO</span>
+          </span>
+        </Link>
 
-      <nav className={`main-nav ${menuOpen ? 'open' : ''}`}>
-        <NavLink to="/" onClick={() => setMenuOpen(false)}>Inicio</NavLink>
+        <nav className={`main-nav ${menuOpen ? 'open' : ''}`}>
+          <NavLink to="/" onClick={() => setMenuOpen(false)}>Inicio</NavLink>
 
-        <div className="nav-dropdown" ref={dropRef}>
-          <button
-            className={`nav-dropdown__trigger ${dropOpen ? 'open' : ''}`}
-            onClick={() => setDropOpen((v) => !v)}
-          >
-            Productos
-            <span className="nav-dropdown__arrow"><ChevronDown size={14} /></span>
-          </button>
+          <div className="nav-dropdown" ref={dropRef}>
+            <button
+              className={`nav-dropdown__trigger ${dropOpen ? 'open' : ''}`}
+              onClick={() => setDropOpen((current) => !current)}
+            >
+              Productos
+              <span className="nav-dropdown__arrow"><ChevronDown size={14} /></span>
+            </button>
 
-          <div className={`nav-dropdown__menu ${dropOpen ? 'open' : ''}`}>
-            <div className="nav-dropdown__col">
-              <div className="nav-dropdown__title">Categorías</div>
-              {categories.map((cat) => {
-                const Icon = categoryIcons[cat.icon] || Rows3
+            <div className={`nav-dropdown__menu ${dropOpen ? 'open' : ''}`}>
+              <div className="nav-dropdown__col">
+                <div className="nav-dropdown__title">Categorías</div>
+                {categories.map((category) => {
+                  const Icon = categoryIcons[category.icon] || Rows3
 
-                return (
-                  <Link
-                    key={cat.id}
-                    to={`/categorias/${cat.id}`}
-                    className="nav-dropdown__link"
-                    onClick={() => { setDropOpen(false); setMenuOpen(false) }}
-                  >
-                    <Icon size={18} strokeWidth={1.6} />
-                    {cat.name}
-                  </Link>
-                )
-              })}
-            </div>
-            <div className="nav-dropdown__promo">
-              <div className="nav-dropdown__promo-ph">Foto pendiente</div>
-              <strong>Diseñamos muebles</strong>
-              <span>que se adaptan a tu <em>estilo de vida.</em></span>
-              <p>Funcionalidad, diseño y calidad en cada detalle.</p>
+                  return (
+                    <Link
+                      key={category.id}
+                      to={`/categorias/${category.id}`}
+                      className="nav-dropdown__link"
+                      onClick={() => { setDropOpen(false); setMenuOpen(false) }}
+                    >
+                      <Icon size={18} strokeWidth={1.6} />
+                      {category.name}
+                    </Link>
+                  )
+                })}
+              </div>
+              <div className="nav-dropdown__promo">
+                <div className="nav-dropdown__promo-ph">Foto pendiente</div>
+                <strong>Diseñamos muebles</strong>
+                <span>que se adaptan a tu <em>estilo de vida.</em></span>
+                <p>Funcionalidad, diseño y calidad en cada detalle.</p>
+              </div>
             </div>
           </div>
+
+          <NavLink to="/proyectos" onClick={() => setMenuOpen(false)}>Proyectos</NavLink>
+          <NavLink to="/nosotros" onClick={() => setMenuOpen(false)}>Nosotros</NavLink>
+          <NavLink to="/blog" onClick={() => setMenuOpen(false)}>Blog</NavLink>
+          <NavLink to="/contacto" onClick={() => setMenuOpen(false)}>Contacto</NavLink>
+        </nav>
+
+        <div className="header-actions">
+          <button
+            className={`header-icon header-icon--search ${searchOpen ? 'active' : ''}`}
+            aria-label="Buscar"
+            aria-expanded={searchOpen}
+            onClick={() => setSearchOpen((current) => !current)}
+          >
+            <Search size={20} />
+          </button>
+          <Link to="/cuenta" className="header-icon" aria-label="Admin">
+            <User size={20} />
+          </Link>
+          <Link to="/carrito" className="header-icon" aria-label="Carrito">
+            <ShoppingCart size={20} />
+          </Link>
+          <button className="menu-toggle" onClick={() => setMenuOpen((current) => !current)}>
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
-
-        <NavLink to="/proyectos" onClick={() => setMenuOpen(false)}>Proyectos</NavLink>
-        <NavLink to="/nosotros" onClick={() => setMenuOpen(false)}>Nosotros</NavLink>
-        <NavLink to="/blog" onClick={() => setMenuOpen(false)}>Blog</NavLink>
-        <NavLink to="/contacto" onClick={() => setMenuOpen(false)}>Contacto</NavLink>
-      </nav>
-
-      <div className="header-actions">
-        <button
-          className={`header-icon header-icon--search ${searchOpen ? 'active' : ''}`}
-          aria-label="Buscar"
-          aria-expanded={searchOpen}
-          onClick={() => setSearchOpen((v) => !v)}
-        >
-          <Search size={20} />
-        </button>
-        <Link to="/cuenta" className="header-icon" aria-label="Admin">
-          <User size={20} />
-        </Link>
-        <Link to="/carrito" className="header-icon" aria-label="Carrito">
-          <ShoppingCart size={20} />
-        </Link>
-        <button className="menu-toggle" onClick={() => setMenuOpen((v) => !v)}>
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
       </div>
 
       {searchOpen && (
@@ -147,7 +149,7 @@ function Header({ transparent = false }) {
               type="text"
               placeholder="Busca productos o categorías..."
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={(event) => setSearchValue(event.target.value)}
               autoFocus
             />
             <button type="button" className="search-bar__close" onClick={() => setSearchOpen(false)}>

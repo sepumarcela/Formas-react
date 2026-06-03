@@ -2,6 +2,90 @@ export const SITE_CONTENT_KEY = 'formas-site-content-v1'
 export const SITE_CONTENT_EVENT = 'formas-site-content-updated'
 
 export const defaultSiteContent = {
+  heroSlides: [
+    {
+      id: 'inicio-principal',
+      eyebrow: '',
+      titleAccent: 'Diseña',
+      title: 'tu estilo',
+      description: 'Muebles modernos y funcionales\npara transformar cada espacio\nde tu hogar.',
+      primaryLabel: 'Ver colecciones',
+      primaryLink: '/proyectos',
+      secondaryLabel: 'Solicitar diseño',
+      secondaryLink: '/contacto',
+      image: '',
+      active: true,
+    },
+  ],
+  pageContent: {
+    homeProducts: {
+      categoriesEyebrow: 'Nuestras líneas',
+      categoriesTitle: 'Soluciones que transforman',
+      categoriesDescription: 'Muebles modernos y funcionales diseñados para cada espacio de tu hogar.',
+      featuredEyebrow: 'Destacados de la semana',
+      featuredTitle: 'Lo más elegido por nuestros clientes',
+      featuredDescription: 'Diseños funcionales, modernos y listos para inspirar nuevos espacios.',
+    },
+    proyectos: {
+      breadcrumb: 'Proyectos',
+      eyebrow: '',
+      title: 'Proyectos',
+      description: 'Descubre espacios reales transformados por Formas. Cada proyecto refleja nuestro compromiso con el diseño, la funcionalidad y los detalles que marcan la diferencia.',
+      image: '',
+      ctaLabel: 'Ver más proyectos',
+      ctaLink: '/contacto',
+    },
+    nosotros: {
+      breadcrumb: 'Nosotros',
+      eyebrow: 'Nosotros',
+      title: 'Diseñamos experiencias,\ncreamos hogares.',
+      description: 'En Formas transformamos espacios en lugares que reflejan tu estilo de vida y se adaptan a tus necesidades. Combinamos diseño, calidad y funcionalidad en cada detalle.',
+      image: '',
+      historyTitle: 'Nuestra historia',
+      historyText: 'Formas nació con la visión de ofrecer muebles personalizados de alta calidad que elevaran los espacios de nuestros clientes.\nHoy, somos un equipo apasionado por el diseño y la innovación, consolidado como una marca referente en mobiliario personalizado en Colombia.\nCada proyecto es único y refleja nuestra dedicación por crear espacios que transformen la vida de las personas.',
+      historyImage: '',
+      locationImage: '',
+    },
+    blog: {
+      breadcrumb: 'Blog',
+      eyebrow: '',
+      title: 'Blog',
+      description: 'Ideas, inspiración y consejos para diseñar espacios que reflejen tu estilo y mejoren tu día a día.',
+      image: '',
+      sidebarTitle: 'Artículos populares',
+      ctaTitle: '¿Tienes un proyecto en mente?',
+      ctaText: 'Te ayudamos a diseñar y hacer realidad el espacio que sueñas.',
+    },
+    contacto: {
+      breadcrumb: 'Contacto',
+      eyebrow: 'Contacto',
+      title: 'Hablemos de tu proyecto',
+      description: 'Estamos aquí para ayudarte a transformar tus ideas en espacios únicos y funcionales.',
+      image: '',
+      formTitle: 'Cuéntanos tu idea',
+      formSubtitle: 'Completa el formulario y uno de nuestros asesores se pondrá en contacto contigo.',
+      addressTitle: 'Visítanos',
+      address: 'Cartagena, Colombia\nCentro histórico',
+      phoneTitle: 'Llámanos',
+      phone: '+57 300 123 4567\n+57 604 444 7890',
+      emailTitle: 'Escríbenos',
+      email: 'hola@formas.com',
+      hoursTitle: 'Horario de atención',
+      hours: 'Lunes a Viernes: 8:00 a.m. - 6:00 p.m.\nSábados: 9:00 a.m. - 1:00 p.m.',
+      mapImage: '',
+      visitTitle: 'Sala de diseño',
+      visitText: 'Agenda tu visita y conoce nuestros espacios de inspiración.',
+      whatsappLink: 'https://wa.me/573001234567',
+    },
+  },
+  projects: [
+    { id: 'sala-moderna', cat: 'hogar', label: 'Hogar', title: 'Sala Moderna', location: 'Bogotá, Colombia', image: '' },
+    { id: 'cocina-contemporanea', cat: 'cocina', label: 'Cocina', title: 'Cocina Contemporánea', location: 'Medellín, Colombia', image: '' },
+    { id: 'vestier-abierto', cat: 'closet', label: 'Closet', title: 'Vestier Abierto', location: 'Cali, Colombia', image: '' },
+    { id: 'bano-minimalista', cat: 'bano', label: 'Baño', title: 'Baño Minimalista', location: 'Barranquilla, Colombia', image: '' },
+    { id: 'oficina-en-casa', cat: 'oficina', label: 'Oficina', title: 'Oficina en Casa', location: 'Bucaramanga, Colombia', image: '' },
+    { id: 'local-comercial', cat: 'comercial', label: 'Comercial', title: 'Local Comercial', location: 'Cartagena, Colombia', image: '' },
+  ],
   categories: [
     {
       id: 'centros-entretenimiento',
@@ -95,6 +179,32 @@ export function mergeSiteContent(content) {
     categories: Array.isArray(content?.categories) ? content.categories : defaultSiteContent.categories,
     products: Array.isArray(content?.products) ? content.products : defaultSiteContent.products,
     blogPosts: Array.isArray(content?.blogPosts) ? content.blogPosts : defaultSiteContent.blogPosts,
+    heroSlides: Array.isArray(content?.heroSlides) ? content.heroSlides : defaultSiteContent.heroSlides,
+    projects: Array.isArray(content?.projects) ? content.projects : defaultSiteContent.projects,
+    pageContent: {
+      ...defaultSiteContent.pageContent,
+      ...(content?.pageContent || {}),
+      homeProducts: {
+        ...defaultSiteContent.pageContent.homeProducts,
+        ...(content?.pageContent?.homeProducts || {}),
+      },
+      proyectos: {
+        ...defaultSiteContent.pageContent.proyectos,
+        ...(content?.pageContent?.proyectos || {}),
+      },
+      nosotros: {
+        ...defaultSiteContent.pageContent.nosotros,
+        ...(content?.pageContent?.nosotros || {}),
+      },
+      blog: {
+        ...defaultSiteContent.pageContent.blog,
+        ...(content?.pageContent?.blog || {}),
+      },
+      contacto: {
+        ...defaultSiteContent.pageContent.contacto,
+        ...(content?.pageContent?.contacto || {}),
+      },
+    },
   }
 }
 

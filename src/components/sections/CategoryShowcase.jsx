@@ -14,16 +14,15 @@ const categoryIcons = {
 }
 
 function CategoryShowcase() {
-  const [{ categories }] = useSiteContent()
+  const [{ categories, pageContent }] = useSiteContent()
+  const section = pageContent.homeProducts
 
   return (
     <section className="category-showcase">
       <div className="section-heading">
-        <p className="eyebrow">Nuestras líneas</p>
-        <h2>Soluciones que transforman</h2>
-        <p>
-          Muebles modernos y funcionales diseñados para cada espacio de tu hogar.
-        </p>
+        <p className="eyebrow">{section.categoriesEyebrow}</p>
+        <h2>{section.categoriesTitle}</h2>
+        <p>{section.categoriesDescription}</p>
       </div>
 
       <div className="category-grid">

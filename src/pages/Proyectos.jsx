@@ -1,17 +1,10 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Home, ShieldCheck, Users, Camera } from 'lucide-react'
+import { Camera, Home, ShieldCheck, Users } from 'lucide-react'
+import PageHero from '../components/sections/PageHero'
+import { useSiteContent } from '../hooks/useSiteContent'
 
-const proyectos = [
-  { id: 1, cat: 'hogar', label: 'Hogar', title: 'Sala Moderna', location: 'Bogotá, Colombia' },
-  { id: 2, cat: 'cocina', label: 'Cocina', title: 'Cocina Contemporánea', location: 'Medellín, Colombia' },
-  { id: 3, cat: 'closet', label: 'Closet', title: 'Vestier Abierto', location: 'Cali, Colombia' },
-  { id: 4, cat: 'bano', label: 'Baño', title: 'Baño Minimalista', location: 'Barranquilla, Colombia' },
-  { id: 5, cat: 'oficina', label: 'Oficina', title: 'Oficina en Casa', location: 'Bucaramanga, Colombia' },
-  { id: 6, cat: 'comercial', label: 'Comercial', title: 'Local Comercial', location: 'Cartagena, Colombia' },
-]
-
-const filtros = [
+const filtrosBase = [
   { id: 'all', label: 'Todos' },
   { id: 'hogar', label: 'Hogares' },
   { id: 'cocina', label: 'Cocinas' },
@@ -29,63 +22,64 @@ const ventajas = [
 ]
 
 function Proyectos() {
+  const [{ pageContent, projects }] = useSiteContent()
   const [filtro, setFiltro] = useState('all')
-  const visibles = filtro === 'all' ? proyectos : proyectos.filter((p) => p.cat === filtro)
+  const filtros = useMemo(() => {
+    const known = new Set(filtrosBase.map((item) => item.id))
+    const custom = projects
+      .filter((project) => project.cat && !known.has(project.cat))
+      .map((project) => ({ id: project.cat, label: project.label || project.cat }))
+
+    return [...filtrosBase, ...custom]
+  }, [projects])
+  const visibles = filtro === 'all' ? projects : projects.filter((project) => project.cat === filtro)
+  const hero = pageContent.proyectos
 
   return (
     <main className="page">
-      <section className="page-hero">
-        <div className="page-hero__bg-ph" />
-        <div className="page-hero__overlay" />
-        <div className="page-hero__content">
-          <div className="breadcrumb"><Link to="/">Inicio</Link> › Proyectos</div>
-          <h1>Proyectos</h1>
-          <div className="page-hero__line" />
-          <p>Descubre espacios reales transformados por Formas. Cada proyecto refleja nuestro compromiso con el diseño, la funcionalidad y los detalles que marcan la diferencia.</p>
-        </div>
-      </section>
+      <PageHero content={hero} fallbackTitle="Proyectos" />
 
       <section style={{ background: 'var(--color-bg)' }}>
         <div className="proyectos-filtros">
-          {filtros.map((f) => (
+          {filtros.map((item) => (
             <button
-              key={f.id}
-              className={`proyectos-filtro ${filtro === f.id ? 'active' : ''}`}
-              onClick={() => setFiltro(f.id)}
+              key={item.id}
+              className={`proyectos-filtro ${filtro === item.id ? 'active' : ''}`}
+              onClick={() => setFiltro(item.id)}
             >
-              {f.label}
+              {item.label}
             </button>
           ))}
         </div>
 
         <div className="proyectos-grid">
-          {visibles.map((p) => (
-            <article className="proyecto-item" key={p.id}>
+          {visibles.map((project) => (
+            <article className="proyecto-item" key={project.id}>
               <div className="proyecto-item__img">
-                <span className="proyecto-item__tag">{p.label}</span>
-                <div className="proyecto-ph">Foto pendiente</div>
+                <span className="proyecto-item__tag">{project.label}</span>
+                {project.image ? <img src={project.image} alt={project.title} /> : <div className="proyecto-ph">Foto pendiente</div>}
               </div>
               <div className="proyecto-item__body">
-                <h3>{p.title}</h3>
-                <p>{p.location}</p>
+                <h3>{project.title}</h3>
+                <p>{project.location}</p>
               </div>
             </article>
           ))}
         </div>
 
         <div style={{ textAlign: 'center', marginTop: 48 }}>
-          <Link to="/contacto" className="button button--primary">Ver más proyectos →</Link>
+          <Link to={hero.ctaLink || '/contacto'} className="button button--primary">{hero.ctaLabel || 'Ver más proyectos'} &rarr;</Link>
         </div>
       </section>
 
       <div className="cat-bottom-bar">
         <div className="cat-bottom-bar__inner">
-          {ventajas.map((v) => {
-            const Icon = v.icon
+          {ventajas.map((item) => {
+            const Icon = item.icon
             return (
-              <div className="cat-bottom-item" key={v.title}>
+              <div className="cat-bottom-item" key={item.title}>
                 <Icon size={30} strokeWidth={1.5} />
-                <div><h5>{v.title}</h5><p>{v.text}</p></div>
+                <div><h5>{item.title}</h5><p>{item.text}</p></div>
               </div>
             )
           })}

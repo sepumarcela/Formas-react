@@ -2,17 +2,16 @@ import { Link } from 'react-router-dom'
 import { useSiteContent } from '../../hooks/useSiteContent'
 
 function FeaturedProducts() {
-  const [{ products }] = useSiteContent()
+  const [{ products, pageContent }] = useSiteContent()
+  const section = pageContent.homeProducts
   const featuredProducts = products.filter((product) => product.featured).slice(0, 8)
 
   return (
     <section className="featured-products">
       <div className="section-heading">
-        <p className="eyebrow">Destacados de la semana</p>
-        <h2>Lo más elegido por nuestros clientes</h2>
-        <p>
-          Diseños funcionales, modernos y listos para inspirar nuevos espacios.
-        </p>
+        <p className="eyebrow">{section.featuredEyebrow}</p>
+        <h2>{section.featuredTitle}</h2>
+        <p>{section.featuredDescription}</p>
       </div>
 
       <div className="product-grid">
