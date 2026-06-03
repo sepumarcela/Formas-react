@@ -5,6 +5,9 @@ import {
   FileJson,
   Images,
   LayoutDashboard,
+  Lock,
+  LogOut,
+  Mail,
   Newspaper,
   Package,
   Save,
@@ -22,6 +25,10 @@ const sections = [
   { id: 'categories', label: 'Categorías', icon: Tags },
   { id: 'bulk', label: 'Carga masiva', icon: FileJson },
 ]
+
+const ADMIN_SESSION_KEY = 'formas-admin-authenticated'
+const ADMIN_EMAIL = 'admin@formas.com'
+const ADMIN_PASSWORD = 'Formas2026'
 
 const iconOptions = [
   ['tv', 'TV'],
@@ -128,6 +135,9 @@ const csvConfig = {
 
 function Cuenta() {
   const [content, setContent] = useSiteContent()
+  const [isAuthenticated, setIsAuthenticated] = useState(() => sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true')
+  const [loginForm, setLoginForm] = useState({ email: '', password: '' })
+  const [loginError, setLoginError] = useState('')
   const [activeSection, setActiveSection] = useState('overview')
   const [bulkType, setBulkType] = useState('products')
   const [csvPreview, setCsvPreview] = useState('')
@@ -143,6 +153,27 @@ function Cuenta() {
   function flash(message) {
     setNotice(message)
     window.setTimeout(() => setNotice(''), 2400)
+  }
+
+  function handleLogin(event) {
+    event.preventDefault()
+
+    if (loginForm.email.trim().toLowerCase() === ADMIN_EMAIL && loginForm.password === ADMIN_PASSWORD) {
+      sessionStorage.setItem(ADMIN_SESSION_KEY, 'true')
+      setIsAuthenticated(true)
+      setLoginError('')
+      flash('Sesión iniciada.')
+      return
+    }
+
+    setLoginError('Correo o contraseña incorrectos.')
+  }
+
+  function handleLogout() {
+    sessionStorage.removeItem(ADMIN_SESSION_KEY)
+    setIsAuthenticated(false)
+    setLoginForm({ email: '', password: '' })
+    setActiveSection('overview')
   }
 
   function updateCollection(collection, id, patch) {
@@ -504,6 +535,73 @@ function Cuenta() {
     bulk: renderBulk,
   }
 
+  if (!isAuthenticated) {
+    return (
+      <main className="page">
+        <section className="cuenta-section cuenta-section--admin">
+          <div className="cuenta-shell cuenta-shell--admin">
+            <aside className="cuenta-panel cuenta-panel--admin">
+              <p className="cuenta-panel__eyebrow">ADMIN FORMAS</p>
+              <h2>Acceso privado al gestor de contenido.</h2>
+              <p>
+                Inicia sesión para crear productos, administrar artículos, subir imágenes y hacer cargas masivas.
+              </p>
+              <div className="cuenta-panel__list">
+                <span><Package size={18} /> Productos y categorías</span>
+                <span><Newspaper size={18} /> Blog y contenido</span>
+                <span><FileJson size={18} /> Importación CSV</span>
+              </div>
+            </aside>
+
+            <div className="cuenta-card cuenta-card--admin">
+              <div className="cuenta-icon cuenta-icon--admin"><Lock size={30} /></div>
+              <p className="cuenta-admin-label">Acceso administrativo</p>
+              <h1>Iniciar sesión</h1>
+              <p className="cuenta-sub">
+                Usa las credenciales internas para entrar al panel de administración.
+              </p>
+
+              <form onSubmit={handleLogin} className="cuenta-form">
+                <div className="cuenta-field">
+                  <Mail size={18} />
+                  <input
+                    type="email"
+                    placeholder="Correo administrativo"
+                    autoComplete="username"
+                    value={loginForm.email}
+                    onChange={(event) => setLoginForm((current) => ({ ...current, email: event.target.value }))}
+                    required
+                  />
+                </div>
+                <div className="cuenta-field">
+                  <Lock size={18} />
+                  <input
+                    type="password"
+                    placeholder="Contraseña"
+                    autoComplete="current-password"
+                    value={loginForm.password}
+                    onChange={(event) => setLoginForm((current) => ({ ...current, password: event.target.value }))}
+                    required
+                  />
+                </div>
+
+                {loginError && <p className="admin-login-error">{loginError}</p>}
+
+                <button type="submit" className="button button--primary cuenta-submit">
+                  Entrar al panel
+                </button>
+              </form>
+
+              <p className="cuenta-security-note">
+                Credenciales temporales: {ADMIN_EMAIL} / {ADMIN_PASSWORD}
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+    )
+  }
+
   return (
     <main className="page admin-page">
       <aside className="admin-sidebar">
@@ -526,6 +624,10 @@ function Cuenta() {
             )
           })}
         </nav>
+        <button className="admin-logout" onClick={handleLogout}>
+          <LogOut size={18} />
+          Cerrar sesión
+        </button>
       </aside>
 
       <section className="admin-content">

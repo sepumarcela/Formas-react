@@ -1327,6 +1327,15 @@ section { padding: 100px 60px; }
   flex-shrink: 0;
   margin-top: 1px;
 }
+.admin-login-error {
+  margin: -2px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(130,40,25,0.08);
+  color: #9b321f;
+  font-size: 13px;
+  font-weight: 700;
+}
 .cuenta-switch {
   margin: 20px 0 18px;
   color: var(--color-muted);
@@ -1647,6 +1656,16 @@ section { padding: 100px 60px; }
 }
 .admin-sidebar button svg {
   color: var(--color-brand-light);
+}
+.admin-logout {
+  margin-top: 28px;
+  border-top: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 0 !important;
+  padding-top: 18px !important;
+  color: rgba(255,255,255,0.62) !important;
+}
+.admin-logout:hover {
+  color: #fff !important;
 }
 .admin-content {
   padding: 36px;
