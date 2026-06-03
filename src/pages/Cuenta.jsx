@@ -30,6 +30,19 @@ const ADMIN_SESSION_KEY = 'formas-admin-authenticated'
 const ADMIN_EMAIL = 'admin@formas.com'
 const ADMIN_PASSWORD = 'Formas2026'
 
+function getEmptyProduct(category) {
+  return {
+    id: '',
+    categoryId: category?.id || '',
+    category: category?.name || '',
+    name: '',
+    price: '',
+    size: '',
+    image: '',
+    featured: false,
+  }
+}
+
 const iconOptions = [
   ['tv', 'TV'],
   ['desk', 'Estudio'],
@@ -139,6 +152,7 @@ function Cuenta() {
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
   const [loginError, setLoginError] = useState('')
   const [activeSection, setActiveSection] = useState('overview')
+  const [newProduct, setNewProduct] = useState(() => getEmptyProduct(content.categories[0]))
   const [bulkType, setBulkType] = useState('products')
   const [csvPreview, setCsvPreview] = useState('')
   const [notice, setNotice] = useState('')
@@ -206,27 +220,56 @@ function Cuenta() {
     flash('Categoría creada.')
   }
 
-  function addProduct() {
-    const category = content.categories[0]
-    const baseName = `Nuevo producto ${content.products.length + 1}`
+  function goToProducts() {
+    setActiveSection('products')
+  }
+
+  function updateNewProduct(patch) {
+    setNewProduct((current) => ({ ...current, ...patch }))
+  }
+
+  function handleNewProductCategory(categoryId) {
+    const category = content.categories.find((item) => item.id === categoryId)
+    updateNewProduct({ categoryId, category: category?.name || '' })
+  }
+
+  async function handleNewProductImage(event) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const image = await readFileAsDataUrl(file)
+    updateNewProduct({ image })
+  }
+
+  function addProduct(event) {
+    event?.preventDefault()
+    const productName = newProduct.name.trim()
+
+    if (!productName) {
+      flash('Escribe el nombre del producto.')
+      return
+    }
+
+    const id = createSlug(newProduct.id || productName)
+    const category = content.categories.find((item) => item.id === newProduct.categoryId)
+
     setContent((current) => ({
       ...current,
       products: [
         ...current.products,
         {
-          id: createSlug(baseName),
-          categoryId: category?.id || '',
-          category: category?.name || '',
-          name: baseName,
-          price: 'Desde $0',
-          size: 'A medida',
-          image: '',
-          featured: false,
+          ...newProduct,
+          id,
+          categoryId: newProduct.categoryId || category?.id || '',
+          category: category?.name || newProduct.category,
+          name: productName,
+          price: newProduct.price || 'Desde $0',
+          size: newProduct.size || 'A medida',
         },
       ],
     }))
-    setActiveSection('products')
-    flash('Producto creado.')
+    setNewProduct(getEmptyProduct(content.categories[0]))
+    flash('Producto guardado.')
   }
 
   function addBlogPost() {
@@ -337,7 +380,7 @@ function Cuenta() {
             <h1>Administrador de contenido</h1>
             <p>Actualiza productos, categorías, blog e imágenes desde un solo lugar.</p>
           </div>
-          <button className="button button--primary" onClick={addProduct}><BadgePlus size={16} /> Nuevo producto</button>
+          <button className="button button--primary" onClick={goToProducts}><BadgePlus size={16} /> Nuevo producto</button>
         </div>
 
         <div className="admin-stats">
@@ -350,7 +393,7 @@ function Cuenta() {
         </div>
 
         <div className="admin-quick-actions">
-          <button onClick={addProduct}><Package size={20} /> Crear producto</button>
+          <button onClick={goToProducts}><Package size={20} /> Crear producto</button>
           <button onClick={addBlogPost}><Newspaper size={20} /> Crear artículo</button>
           <button onClick={addCategory}><Tags size={20} /> Crear categoría</button>
           <button onClick={() => openSection('bulk')}><FileJson size={20} /> Importar masivo</button>
@@ -367,7 +410,46 @@ function Cuenta() {
             <p className="admin-kicker">Productos</p>
             <h1>Crear, actualizar y eliminar productos</h1>
           </div>
-          <button className="button button--primary" onClick={addProduct}><BadgePlus size={16} /> Nuevo producto</button>
+          <button className="button button--primary" onClick={() => document.getElementById('admin-new-product-name')?.focus()}><BadgePlus size={16} /> Nuevo producto</button>
+        </div>
+
+        <form className="admin-create-card" onSubmit={addProduct}>
+          <div className="admin-create-card__header">
+            <div>
+              <p className="admin-kicker">Nuevo producto</p>
+              <h2>Guardar producto individual</h2>
+              <p>Completa un producto y presiona guardar. La lista inferior queda solo para edición.</p>
+            </div>
+            <button type="submit" className="button button--primary"><Save size={16} /> Guardar producto</button>
+          </div>
+
+          <div className="admin-editor-card admin-editor-card--create">
+            <div className="admin-image-box">
+              {newProduct.image ? <img src={newProduct.image} alt={newProduct.name || 'Producto nuevo'} /> : <Images size={26} />}
+              <label>
+                Cargar imagen
+                <input type="file" accept="image/*" onChange={handleNewProductImage} />
+              </label>
+            </div>
+
+            <div className="admin-form-grid">
+              <label>ID<input value={newProduct.id} onChange={(event) => updateNewProduct({ id: createSlug(event.target.value) })} placeholder="Se genera desde el nombre" /></label>
+              <label>Nombre<input id="admin-new-product-name" value={newProduct.name} onChange={(event) => updateNewProduct({ name: event.target.value })} placeholder="Ej: Cocina moderna" required /></label>
+              <label>Categoría
+                <select value={newProduct.categoryId} onChange={(event) => handleNewProductCategory(event.target.value)}>
+                  {content.categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+                </select>
+              </label>
+              <label>Precio<input value={newProduct.price} onChange={(event) => updateNewProduct({ price: event.target.value })} placeholder="Desde $0" /></label>
+              <label>Medidas<input value={newProduct.size} onChange={(event) => updateNewProduct({ size: event.target.value })} placeholder="A medida" /></label>
+              <label className="admin-check"><input type="checkbox" checked={newProduct.featured} onChange={(event) => updateNewProduct({ featured: event.target.checked })} /> Destacado</label>
+            </div>
+          </div>
+        </form>
+
+        <div className="admin-list-heading">
+          <h2>Productos cargados</h2>
+          <span>{content.products.length} productos</span>
         </div>
 
         <div className="admin-editor-list">
