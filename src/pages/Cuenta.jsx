@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import {
   BadgePlus,
   Download,
+  Eye,
+  EyeOff,
   FileJson,
   Images,
   LayoutDashboard,
@@ -151,6 +153,7 @@ function Cuenta() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true')
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
   const [loginError, setLoginError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [activeSection, setActiveSection] = useState('overview')
   const [newProduct, setNewProduct] = useState(() => getEmptyProduct(content.categories[0]))
   const [bulkType, setBulkType] = useState('products')
@@ -187,6 +190,7 @@ function Cuenta() {
     sessionStorage.removeItem(ADMIN_SESSION_KEY)
     setIsAuthenticated(false)
     setLoginForm({ email: '', password: '' })
+    setShowPassword(false)
     setActiveSection('overview')
   }
 
@@ -655,16 +659,24 @@ function Cuenta() {
                     required
                   />
                 </div>
-                <div className="cuenta-field">
+                <div className="cuenta-field cuenta-field--password">
                   <Lock size={18} />
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Contraseña"
                     autoComplete="current-password"
                     value={loginForm.password}
                     onChange={(event) => setLoginForm((current) => ({ ...current, password: event.target.value }))}
                     required
                   />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                    onClick={() => setShowPassword((current) => !current)}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
 
                 {loginError && <p className="admin-login-error">{loginError}</p>}
@@ -675,7 +687,7 @@ function Cuenta() {
               </form>
 
               <p className="cuenta-security-note">
-                Credenciales temporales: {ADMIN_EMAIL} / {ADMIN_PASSWORD}
+                Acceso temporal local. La autenticación segura se conectará al backend en Spring Boot.
               </p>
             </div>
           </div>
