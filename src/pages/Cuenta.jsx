@@ -120,6 +120,16 @@ function normalizeImagePath(image) {
   return `/images/${image}`
 }
 
+function onlyDigits(value) {
+  return String(value || '').replace(/\D/g, '')
+}
+
+function formatCop(value) {
+  const digits = onlyDigits(value)
+  if (!digits) return ''
+  return `$${Number(digits).toLocaleString('es-CO')}`
+}
+
 function downloadCsv(filename, csv) {
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
   const url = URL.createObjectURL(blob)
@@ -232,6 +242,14 @@ function Cuenta() {
     setNewProduct((current) => ({ ...current, ...patch }))
   }
 
+  function updateNewProductPrice(value) {
+    updateNewProduct({ price: formatCop(value) })
+  }
+
+  function updateProductPrice(product, value) {
+    updateCollection('products', product.id, { price: formatCop(value) })
+  }
+
   function handleNewProductCategory(categoryId) {
     const category = content.categories.find((item) => item.id === categoryId)
     updateNewProduct({ categoryId, category: category?.name || '' })
@@ -254,6 +272,16 @@ function Cuenta() {
       return
     }
 
+    if (!newProduct.categoryId) {
+      flash('Selecciona una categoría.')
+      return
+    }
+
+    if (!onlyDigits(newProduct.price)) {
+      flash('Escribe un precio válido.')
+      return
+    }
+
     const id = createSlug(newProduct.id || productName)
     const category = content.categories.find((item) => item.id === newProduct.categoryId)
 
@@ -267,7 +295,7 @@ function Cuenta() {
           categoryId: newProduct.categoryId || category?.id || '',
           category: category?.name || newProduct.category,
           name: productName,
-          price: newProduct.price || 'Desde $0',
+          price: formatCop(newProduct.price),
           size: newProduct.size || 'A medida',
         },
       ],
@@ -444,10 +472,17 @@ function Cuenta() {
                   {content.categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
                 </select>
               </label>
-              <label>Precio<input value={newProduct.price} onChange={(event) => updateNewProduct({ price: event.target.value })} placeholder="Desde $0" /></label>
+              <label>Precio<input inputMode="numeric" value={newProduct.price} onChange={(event) => updateNewProductPrice(event.target.value)} placeholder="$0" required /></label>
               <label>Medidas<input value={newProduct.size} onChange={(event) => updateNewProduct({ size: event.target.value })} placeholder="A medida" /></label>
               <label className="admin-check"><input type="checkbox" checked={newProduct.featured} onChange={(event) => updateNewProduct({ featured: event.target.checked })} /> Destacado</label>
             </div>
+          </div>
+
+          <div className="admin-field-rules">
+            <span>Nombre: obligatorio.</span>
+            <span>Precio: solo números, se guarda como pesos colombianos.</span>
+            <span>Categoría: define dónde se verá el producto.</span>
+            <span>Medidas: texto corto, ejemplo 200 x 40 x 180 cm o A medida.</span>
           </div>
         </form>
 
@@ -475,7 +510,7 @@ function Cuenta() {
                     {content.categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
                   </select>
                 </label>
-                <label>Precio<input value={product.price} onChange={(event) => updateCollection('products', product.id, { price: event.target.value })} /></label>
+                <label>Precio<input inputMode="numeric" value={product.price} onChange={(event) => updateProductPrice(product, event.target.value)} /></label>
                 <label>Medidas<input value={product.size} onChange={(event) => updateCollection('products', product.id, { size: event.target.value })} /></label>
                 <label className="admin-check"><input type="checkbox" checked={product.featured} onChange={(event) => updateCollection('products', product.id, { featured: event.target.checked })} /> Destacado</label>
               </div>
