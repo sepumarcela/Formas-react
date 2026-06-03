@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import CategoryShowcase from '../components/sections/CategoryShowcase'
 import FeaturedProducts from '../components/sections/FeaturedProducts'
@@ -6,32 +7,84 @@ import PurchaseProcess from '../components/sections/PurchaseProcess'
 import ProjectHighlights from '../components/sections/ProjectHighlights'
 import TestimonialSection from '../components/sections/TestimonialSection'
 import FinalCta from '../components/sections/FinalCta'
+import { useSiteContent } from '../hooks/useSiteContent'
+import heroImage from '../assets/hero.png'
 
 function Home() {
+  const [{ heroSlides }] = useSiteContent()
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0)
+  const activeSlides = useMemo(() => (
+    heroSlides.filter((slide) => slide.active !== false)
+  ), [heroSlides])
+  const slides = activeSlides.length ? activeSlides : heroSlides
+  const safeSlideIndex = slides.length ? activeSlideIndex % slides.length : 0
+  const currentSlide = slides[safeSlideIndex] || {}
+  const heroSrc = currentSlide.image || heroImage
+  const descriptionLines = String(currentSlide.description || '')
+    .split('\n')
+    .filter(Boolean)
+
+  useEffect(() => {
+    if (slides.length < 2) return undefined
+
+    const timer = window.setInterval(() => {
+      setActiveSlideIndex((current) => (current + 1) % slides.length)
+    }, 6000)
+
+    return () => window.clearInterval(timer)
+  }, [slides.length])
+
   return (
     <main className="page">
       <section className="home-hero">
-        {/* Cuando tengas la foto: reemplaza el div por <img src="/hero.png" className="home-hero__bg-img" alt="" /> */}
         <div className="home-hero__bg">
-          <div className="home-hero__bg-ph" />
+          <img src={heroSrc} className="home-hero__bg-img" alt="" />
           <div className="home-hero__overlay" />
         </div>
 
         <div className="home-hero__content">
+          {currentSlide.eyebrow && <p className="home-hero__eyebrow">{currentSlide.eyebrow}</p>}
           <h1>
-            <span className="home-hero__accent">Diseña</span>
-            <span className="home-hero__white">tu estilo</span>
+            <span className="home-hero__accent">{currentSlide.titleAccent || 'Diseña'}</span>
+            <span className="home-hero__white">{currentSlide.title || 'tu estilo'}</span>
           </h1>
           <div className="home-hero__line" />
           <p>
-            Muebles modernos y funcionales<br />
-            para transformar cada espacio<br />
-            de tu hogar.
+            {descriptionLines.length ? descriptionLines.map((line) => (
+              <span key={line}>{line}<br /></span>
+            )) : (
+              <>
+                Muebles modernos y funcionales<br />
+                para transformar cada espacio<br />
+                de tu hogar.
+              </>
+            )}
           </p>
           <div className="home-hero__actions">
-            <Link to="/proyectos" className="button button--primary">Ver colecciones</Link>
-            <Link to="/contacto" className="button button--outline">Solicitar diseño</Link>
+            {currentSlide.primaryLabel && (
+              <Link to={currentSlide.primaryLink || '/proyectos'} className="button button--primary">
+                {currentSlide.primaryLabel}
+              </Link>
+            )}
+            {currentSlide.secondaryLabel && (
+              <Link to={currentSlide.secondaryLink || '/contacto'} className="button button--outline">
+                {currentSlide.secondaryLabel}
+              </Link>
+            )}
           </div>
+
+          {slides.length > 1 && (
+            <div className="home-hero__dots" aria-label="Fotos de inicio">
+              {slides.map((slide, index) => (
+                <button
+                  key={slide.id}
+                  className={index === safeSlideIndex ? 'active' : ''}
+                  aria-label={`Ver foto ${index + 1}`}
+                  onClick={() => setActiveSlideIndex(index)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

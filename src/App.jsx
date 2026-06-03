@@ -6,6 +6,7 @@ import Proyectos from './pages/Proyectos'
 import Blog from './pages/Blog'
 import Contacto from './pages/Contacto'
 import CategoryDetail from './pages/CategoryDetail'
+import ProductDetail from './pages/ProductDetail'
 import Cuenta from './pages/Cuenta'
 import Carrito from './pages/Carrito'
 import './styles/global.css'
@@ -21,6 +22,7 @@ function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/categorias/:categoryId" element={<CategoryDetail />} />
+          <Route path="/productos/:productId" element={<ProductDetail />} />
           <Route path="/cuenta" element={<Cuenta />} />
           <Route path="/carrito" element={<Carrito />} />
         </Route>

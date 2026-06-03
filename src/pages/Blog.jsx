@@ -1,22 +1,15 @@
 import { Link } from 'react-router-dom'
+import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
 
 function Blog() {
-  const [{ blogPosts }] = useSiteContent()
+  const [{ blogPosts, pageContent }] = useSiteContent()
+  const page = pageContent.blog
   const categories = ['Todos', ...Array.from(new Set(blogPosts.map((post) => post.tag).filter(Boolean)))]
 
   return (
     <main className="page">
-      <section className="page-hero">
-        <div className="page-hero__bg-ph" />
-        <div className="page-hero__overlay" />
-        <div className="page-hero__content">
-          <div className="breadcrumb"><Link to="/">Inicio</Link> › Blog</div>
-          <h1>Blog</h1>
-          <div className="page-hero__line" />
-          <p>Ideas, inspiración y consejos para diseñar espacios que reflejen tu estilo y mejoren tu día a día.</p>
-        </div>
-      </section>
+      <PageHero content={page} fallbackTitle="Blog" />
 
       <section style={{ background: 'var(--color-bg)' }}>
         <div className="blog-cats">
@@ -38,7 +31,7 @@ function Blog() {
                   <span className="blog-card__date">{post.date}</span>
                   <h3>{post.title}</h3>
                   <p>{post.desc}</p>
-                  <a href="#" className="blog-card__more">Leer más →</a>
+                  <a href="#" className="blog-card__more">Leer más &rarr;</a>
                 </div>
               </article>
             ))}
@@ -46,7 +39,7 @@ function Blog() {
 
           <aside className="blog-sidebar">
             <div className="blog-sidebar__box">
-              <h4>Artículos populares</h4>
+              <h4>{page.sidebarTitle}</h4>
               {blogPosts.slice(0, 3).map((post) => (
                 <div className="blog-sidebar__art" key={post.id}>
                   {post.image ? <img className="blog-sidebar__ph" src={post.image} alt="" /> : <div className="blog-sidebar__ph" />}
@@ -58,9 +51,9 @@ function Blog() {
               ))}
             </div>
             <div className="blog-sidebar__cta">
-              <h4>¿Tienes un proyecto en mente?</h4>
-              <p>Te ayudamos a diseñar y hacer realidad el espacio que sueñas.</p>
-              <Link to="/contacto" className="button button--primary" style={{ width: '100%' }}>Cotizar ahora →</Link>
+              <h4>{page.ctaTitle}</h4>
+              <p>{page.ctaText}</p>
+              <Link to="/contacto" className="button button--primary" style={{ width: '100%' }}>Cotizar ahora &rarr;</Link>
             </div>
             <div className="blog-sidebar__box">
               <h4>Recibe inspiración en tu correo</h4>
