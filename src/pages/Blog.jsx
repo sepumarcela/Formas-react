@@ -14,7 +14,7 @@ const categorias = ['Todos', 'Diseño de interiores', 'Tips y consejos', 'Materi
 function Blog() {
   return (
     <main className="page">
-      <section className="page-hero" style={{ padding: 0 }}>
+      <section className="page-hero">
         <div className="page-hero__bg-ph" />
         <div className="page-hero__overlay" />
         <div className="page-hero__content">

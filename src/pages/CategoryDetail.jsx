@@ -98,7 +98,7 @@ function CategoryDetail() {
   return (
     <main className="page">
       {/* HERO */}
-      <section className="page-hero" style={{ padding: 0 }}>
+      <section className="page-hero">
         {category.image ? (
           <div className="page-hero__bg"><img src={category.image} alt={category.name} /></div>
         ) : (
