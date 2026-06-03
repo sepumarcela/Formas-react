@@ -1,6 +1,6 @@
 import { Bath, Bed, BookOpen, CookingPot, Monitor, PanelsTopLeft, PencilRuler, Rows3 } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { categories } from '../../data/categories'
+import { useSiteContent } from '../../hooks/useSiteContent'
 
 const categoryIcons = {
   tv: Monitor,
@@ -14,6 +14,8 @@ const categoryIcons = {
 }
 
 function CategoryShowcase() {
+  const [{ categories }] = useSiteContent()
+
   return (
     <section className="category-showcase">
       <div className="section-heading">
@@ -26,7 +28,7 @@ function CategoryShowcase() {
 
       <div className="category-grid">
         {categories.map((category) => {
-          const Icon = categoryIcons[category.icon]
+          const Icon = categoryIcons[category.icon] || Rows3
 
           return (
             <article className="category-card" key={category.id}>

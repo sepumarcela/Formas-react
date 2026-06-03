@@ -1,14 +1,28 @@
-import { useState, useEffect, useRef } from 'react'
-import { NavLink, Link, useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import {
-  Bath, Bed, BookOpen, CookingPot, Monitor,
-  PanelsTopLeft, Rows3, PencilRuler, ChevronDown, Search, User, ShoppingCart, Menu, X,
+  Bath, Bed, BookOpen, ChevronDown, CookingPot, Menu, Monitor,
+  PanelsTopLeft, PencilRuler, Rows3, Search, ShoppingCart, User, X,
 } from 'lucide-react'
-import { categories } from '../../data/categories'
+import { useSiteContent } from '../../hooks/useSiteContent'
+
+function normalizeText(value) {
+  return value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+}
 
 const categoryIcons = {
-  tv: Monitor, desk: PencilRuler, closet: PanelsTopLeft, kitchen: CookingPot,
-  bath: Bath, shelf: Rows3, bed: Bed, book: BookOpen,
+  tv: Monitor,
+  desk: PencilRuler,
+  closet: PanelsTopLeft,
+  kitchen: CookingPot,
+  bath: Bath,
+  shelf: Rows3,
+  bed: Bed,
+  book: BookOpen,
 }
 
 function Header({ transparent = false }) {
@@ -16,6 +30,7 @@ function Header({ transparent = false }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+  const [{ categories }] = useSiteContent()
   const dropRef = useRef(null)
   const navigate = useNavigate()
 
@@ -23,15 +38,21 @@ function Header({ transparent = false }) {
     function handleClick(e) {
       if (dropRef.current && !dropRef.current.contains(e.target)) setDropOpen(false)
     }
+
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
   function handleSearch(e) {
     e.preventDefault()
-    if (searchValue.trim()) {
-      // Por ahora redirige a productos; luego puedes conectar búsqueda real
-      navigate(`/categorias/${searchValue.toLowerCase().trim()}`)
+    const query = normalizeText(searchValue)
+
+    if (query) {
+      const match = categories.find((cat) => (
+        normalizeText(cat.id).includes(query) || normalizeText(cat.name).includes(query)
+      ))
+
+      navigate(match ? `/categorias/${match.id}` : '/')
       setSearchOpen(false)
       setSearchValue('')
     }
@@ -41,10 +62,10 @@ function Header({ transparent = false }) {
     <header className={`site-header ${transparent ? 'site-header--transparent' : 'site-header--solid'}`}>
       <Link to="/" className="brand">
         <svg className="brand__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="14" y="14" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-          <rect x="22" y="22" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-          <path d="M14 20 L7 26 L17 30 Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-          <path d="M34 28 L41 22 L31 18 Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+          <rect x="14" y="14" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
+          <rect x="22" y="22" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
+          <path d="M14 20 L7 26 L17 30 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+          <path d="M34 28 L41 22 L31 18 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
         </svg>
         <span className="brand__textwrap">
           <span className="brand__text">FORMAS</span>
@@ -69,6 +90,7 @@ function Header({ transparent = false }) {
               <div className="nav-dropdown__title">Categorías</div>
               {categories.map((cat) => {
                 const Icon = categoryIcons[cat.icon] || Rows3
+
                 return (
                   <Link
                     key={cat.id}
@@ -98,10 +120,15 @@ function Header({ transparent = false }) {
       </nav>
 
       <div className="header-actions">
-        <button className="header-icon" aria-label="Buscar" onClick={() => setSearchOpen((v) => !v)}>
+        <button
+          className={`header-icon header-icon--search ${searchOpen ? 'active' : ''}`}
+          aria-label="Buscar"
+          aria-expanded={searchOpen}
+          onClick={() => setSearchOpen((v) => !v)}
+        >
           <Search size={20} />
         </button>
-        <Link to="/cuenta" className="header-icon" aria-label="Cuenta">
+        <Link to="/cuenta" className="header-icon" aria-label="Admin">
           <User size={20} />
         </Link>
         <Link to="/carrito" className="header-icon" aria-label="Carrito">
@@ -112,14 +139,13 @@ function Header({ transparent = false }) {
         </button>
       </div>
 
-      {/* BARRA DE BÚSQUEDA */}
       {searchOpen && (
         <div className="search-bar">
           <form onSubmit={handleSearch} className="search-bar__form">
             <Search size={20} />
             <input
               type="text"
-              placeholder="Busca productos, categorías..."
+              placeholder="Busca productos o categorías..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               autoFocus

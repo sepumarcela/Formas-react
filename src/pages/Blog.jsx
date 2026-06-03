@@ -1,17 +1,10 @@
 import { Link } from 'react-router-dom'
-
-const articulos = [
-  { tag: 'TENDENCIAS', date: '20 de mayo, 2024', title: 'Cocinas modernas: 5 tendencias que seguirán marcando el 2024', desc: 'Descubre los estilos, colores y materiales que transformarán tu cocina en el corazón de tu hogar.' },
-  { tag: 'TIPS Y CONSEJOS', date: '8 de mayo, 2024', title: 'Cómo elegir el centro de entretenimiento perfecto para tu sala', desc: 'Te compartimos claves para lograr un diseño funcional, estético y a la medida de tu espacio.' },
-  { tag: 'DISEÑO DE INTERIORES', date: '25 de abril, 2024', title: 'Clósets que enamoran: organización con estilo', desc: 'Ideas y soluciones para mantener todo en orden sin sacrificar el diseño.' },
-  { tag: 'MATERIALES', date: '15 de mayo, 2024', title: 'Materiales en tendencia para muebles duraderos y elegantes', desc: 'Conoce los materiales más usados en el diseño de interiores moderno.' },
-  { tag: 'TIPS Y CONSEJOS', date: '3 de mayo, 2024', title: 'Baños pequeños: ideas para aprovechar cada centímetro', desc: 'Soluciones inteligentes para transformar un baño pequeño en un espacio funcional.' },
-  { tag: 'TENDENCIAS', date: '18 de abril, 2024', title: 'Iluminación: el detalle que transforma tus espacios', desc: 'Aprende a usar la luz para potenciar cada rincón de tu hogar.' },
-]
-
-const categorias = ['Todos', 'Diseño de interiores', 'Tips y consejos', 'Materiales', 'Tendencias', 'Proyectos']
+import { useSiteContent } from '../hooks/useSiteContent'
 
 function Blog() {
+  const [{ blogPosts }] = useSiteContent()
+  const categories = ['Todos', ...Array.from(new Set(blogPosts.map((post) => post.tag).filter(Boolean)))]
+
   return (
     <main className="page">
       <section className="page-hero">
@@ -28,23 +21,23 @@ function Blog() {
       <section style={{ background: 'var(--color-bg)' }}>
         <div className="blog-cats">
           <span className="blog-cats__label">Categorías:</span>
-          {categorias.map((c, i) => (
-            <button key={c} className={`blog-cat-btn ${i === 0 ? 'active' : ''}`}>{c}</button>
+          {categories.map((category, index) => (
+            <button key={category} className={`blog-cat-btn ${index === 0 ? 'active' : ''}`}>{category}</button>
           ))}
         </div>
 
         <div className="blog-layout">
           <div className="blog-grid">
-            {articulos.map((a) => (
-              <article className="blog-card" key={a.title}>
+            {blogPosts.map((post) => (
+              <article className="blog-card" key={post.id}>
                 <div className="blog-card__img">
-                  <span className="blog-card__tag">{a.tag}</span>
-                  <div className="blog-ph">Foto pendiente</div>
+                  <span className="blog-card__tag">{post.tag}</span>
+                  {post.image ? <img src={post.image} alt={post.title} /> : <div className="blog-ph">Foto pendiente</div>}
                 </div>
                 <div className="blog-card__body">
-                  <span className="blog-card__date">{a.date}</span>
-                  <h3>{a.title}</h3>
-                  <p>{a.desc}</p>
+                  <span className="blog-card__date">{post.date}</span>
+                  <h3>{post.title}</h3>
+                  <p>{post.desc}</p>
                   <a href="#" className="blog-card__more">Leer más →</a>
                 </div>
               </article>
@@ -54,12 +47,12 @@ function Blog() {
           <aside className="blog-sidebar">
             <div className="blog-sidebar__box">
               <h4>Artículos populares</h4>
-              {articulos.slice(0, 3).map((a) => (
-                <div className="blog-sidebar__art" key={a.title}>
-                  <div className="blog-sidebar__ph" />
+              {blogPosts.slice(0, 3).map((post) => (
+                <div className="blog-sidebar__art" key={post.id}>
+                  {post.image ? <img className="blog-sidebar__ph" src={post.image} alt="" /> : <div className="blog-sidebar__ph" />}
                   <div>
-                    <div className="blog-sidebar__title">{a.title}</div>
-                    <div className="blog-sidebar__date">{a.date}</div>
+                    <div className="blog-sidebar__title">{post.title}</div>
+                    <div className="blog-sidebar__date">{post.date}</div>
                   </div>
                 </div>
               ))}

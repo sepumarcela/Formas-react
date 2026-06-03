@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
-import { categories } from '../../data/categories'
+import { useSiteContent } from '../../hooks/useSiteContent'
 
 function Footer() {
+  const [{ categories }] = useSiteContent()
+
   return (
     <footer className="site-footer">
       <div className="site-footer__inner">

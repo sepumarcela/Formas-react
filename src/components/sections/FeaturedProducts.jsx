@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
-import { featuredProducts } from '../../data/featuredProducts'
+import { useSiteContent } from '../../hooks/useSiteContent'
 
 function FeaturedProducts() {
+  const [{ products }] = useSiteContent()
+  const featuredProducts = products.filter((product) => product.featured).slice(0, 8)
+
   return (
     <section className="featured-products">
       <div className="section-heading">
