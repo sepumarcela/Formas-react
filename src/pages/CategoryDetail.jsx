@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { BadgeCheck, Headphones, PencilRuler, Truck } from 'lucide-react'
 import { useSiteContent } from '../hooks/useSiteContent'
+import { getActiveDiscount } from '../utils/discounts'
 
 const badges = [
   { icon: PencilRuler, label: 'Diseños personalizados' },
@@ -71,19 +72,31 @@ function CategoryDetail() {
 
       <section style={{ background: 'var(--color-bg)' }}>
         <div className="cat-products-grid">
-          {categoryProducts.map((product) => (
-            <article className="cat-product-card" key={product.id}>
-              <div className="cat-product-card__image">
-                {product.image ? <img src={product.image} alt={product.name} /> : <span>Foto pendiente</span>}
-              </div>
-              <div className="cat-product-card__body">
-                <h3>{product.name}</h3>
-                <strong>{product.price}</strong>
-                <p>{product.size}</p>
-                <Link to={`/productos/${product.id}`} className="cat-product-card__btn">Ver producto</Link>
-              </div>
-            </article>
-          ))}
+          {categoryProducts.map((product) => {
+            const discount = getActiveDiscount(product)
+
+            return (
+              <article className="cat-product-card" key={product.id}>
+                <div className="cat-product-card__image">
+                  {discount && <span className="discount-badge">{discount.label}</span>}
+                  {product.image ? <img src={product.image} alt={product.name} /> : <span>Foto pendiente</span>}
+                </div>
+                <div className="cat-product-card__body">
+                  <h3>{product.name}</h3>
+                  {discount ? (
+                    <div className="product-price-stack">
+                      <span>{discount.originalPrice}</span>
+                      <strong>{discount.finalPrice}</strong>
+                    </div>
+                  ) : (
+                    <strong>{product.price}</strong>
+                  )}
+                  <p>{product.size}</p>
+                  <Link to={`/productos/${product.id}`} className="cat-product-card__btn">Ver producto</Link>
+                </div>
+              </article>
+            )
+          })}
         </div>
       </section>
 

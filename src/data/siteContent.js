@@ -86,6 +86,37 @@ export const defaultSiteContent = {
     { id: 'oficina-en-casa', cat: 'oficina', label: 'Oficina', title: 'Oficina en Casa', location: 'Bucaramanga, Colombia', image: '' },
     { id: 'local-comercial', cat: 'comercial', label: 'Comercial', title: 'Local Comercial', location: 'Cartagena, Colombia', image: '' },
   ],
+  projectHighlights: [
+    { id: 'cocina-moderna', category: 'Cocinas', title: 'Cocina moderna familiar', before: '', after: '' },
+    { id: 'closet-principal', category: 'Closets', title: 'Closet principal a medida', before: '', after: '' },
+    { id: 'centro-tv', category: 'Centros de entretenimiento', title: 'Sala con centro de TV', before: '', after: '' },
+  ],
+  testimonials: [
+    {
+      id: 'maria-fernanda',
+      name: 'María Fernanda G.',
+      location: 'Medellín, Antioquia',
+      text: 'Transformaron completamente nuestro apartamento. El resultado quedó cálido, funcional y muy bien terminado.',
+      image: '',
+      approved: true,
+    },
+    {
+      id: 'juan-carlos',
+      name: 'Juan Carlos R.',
+      location: 'Cali, Valle del Cauca',
+      text: 'Excelente calidad y acompañamiento. Nos ayudaron a entender qué diseño funcionaba mejor para el espacio.',
+      image: '',
+      approved: true,
+    },
+    {
+      id: 'laura-andres',
+      name: 'Laura y Andrés M.',
+      location: 'Bogotá, Cundinamarca',
+      text: 'El clóset quedó mejor de lo que imaginábamos. Todo el proceso fue claro y ordenado.',
+      image: '',
+      approved: true,
+    },
+  ],
   categories: [
     {
       id: 'centros-entretenimiento',
@@ -181,6 +212,8 @@ export function mergeSiteContent(content) {
     blogPosts: Array.isArray(content?.blogPosts) ? content.blogPosts : defaultSiteContent.blogPosts,
     heroSlides: Array.isArray(content?.heroSlides) ? content.heroSlides : defaultSiteContent.heroSlides,
     projects: Array.isArray(content?.projects) ? content.projects : defaultSiteContent.projects,
+    projectHighlights: Array.isArray(content?.projectHighlights) ? content.projectHighlights : defaultSiteContent.projectHighlights,
+    testimonials: Array.isArray(content?.testimonials) ? content.testimonials : defaultSiteContent.testimonials,
     pageContent: {
       ...defaultSiteContent.pageContent,
       ...(content?.pageContent || {}),
