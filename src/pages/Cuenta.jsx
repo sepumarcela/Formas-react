@@ -17,6 +17,7 @@ import {
   Trash2,
   Upload,
 } from 'lucide-react'
+import { deleteCategory, deleteProduct, saveCategory, saveProduct } from '../api/cmsApi'
 import { createSlug, defaultSiteContent } from '../data/siteContent'
 import { useSiteContent } from '../hooks/useSiteContent'
 
@@ -244,7 +245,19 @@ function Cuenta() {
     }))
   }
 
-  function removeFromCollection(collection, id) {
+  async function removeFromCollection(collection, id) {
+    const item = content[collection]?.find((entry) => entry.id === id)
+
+    if (item?.persisted) {
+      try {
+        if (collection === 'products') await deleteProduct(id)
+        if (collection === 'categories') await deleteCategory(id)
+      } catch {
+        flash('No se pudo eliminar en el backend. Revisa que esté prendido.')
+        return
+      }
+    }
+
     setContent((current) => ({
       ...current,
       [collection]: current[collection].filter((item) => item.id !== id),
@@ -252,14 +265,21 @@ function Cuenta() {
     flash('Elemento eliminado.')
   }
 
-  function addCategory() {
+  async function addCategory() {
     const baseName = `Nueva categoría ${content.categories.length + 1}`
+    const category = { id: createSlug(baseName), name: baseName, description: 'Descripción de la categoría.', image: '', icon: 'shelf' }
+
+    let savedCategory
+    try {
+      savedCategory = await saveCategory(category)
+    } catch {
+      flash('No se pudo guardar la categoría en el backend.')
+      return
+    }
+
     setContent((current) => ({
       ...current,
-      categories: [
-        ...current.categories,
-        { id: createSlug(baseName), name: baseName, description: 'Descripción de la categoría.', image: '', icon: 'shelf' },
-      ],
+      categories: [...current.categories, savedCategory],
     }))
     setActiveSection('categories')
     flash('Categoría creada.')
@@ -307,7 +327,7 @@ function Cuenta() {
     updateNewProduct({ image })
   }
 
-  function addProduct(event) {
+  async function addProduct(event) {
     event?.preventDefault()
     const productName = newProduct.name.trim()
 
@@ -329,24 +349,51 @@ function Cuenta() {
     const id = createSlug(newProduct.id || productName)
     const category = content.categories.find((item) => item.id === newProduct.categoryId)
 
+    const product = {
+      ...newProduct,
+      id,
+      categoryId: newProduct.categoryId || category?.id || '',
+      category: category?.name || newProduct.category,
+      name: productName,
+      price: newProduct.price,
+      netPrice: onlyDigits(newProduct.netPrice),
+      size: newProduct.size || 'A medida',
+    }
+
+    let savedProduct
+    try {
+      savedProduct = await saveProduct(product)
+    } catch {
+      flash('No se pudo guardar el producto en el backend.')
+      return
+    }
+
     setContent((current) => ({
       ...current,
-      products: [
-        ...current.products,
-        {
-          ...newProduct,
-          id,
-          categoryId: newProduct.categoryId || category?.id || '',
-          category: category?.name || newProduct.category,
-          name: productName,
-          price: newProduct.price,
-          netPrice: onlyDigits(newProduct.netPrice),
-          size: newProduct.size || 'A medida',
-        },
-      ],
+      products: [...current.products, savedProduct],
     }))
     setNewProduct(getEmptyProduct(content.categories[0]))
     flash('Producto guardado.')
+  }
+
+  async function saveExistingProduct(product) {
+    try {
+      const savedProduct = await saveProduct(product)
+      updateCollection('products', product.id, savedProduct)
+      flash('Cambios del producto guardados.')
+    } catch {
+      flash('No se pudo guardar el producto en el backend.')
+    }
+  }
+
+  async function saveExistingCategory(category) {
+    try {
+      const savedCategory = await saveCategory(category)
+      updateCollection('categories', category.id, savedCategory)
+      flash('Cambios de la categoría guardados.')
+    } catch {
+      flash('No se pudo guardar la categoría en el backend.')
+    }
   }
 
   function addBlogPost() {
@@ -1004,7 +1051,10 @@ function Cuenta() {
                 <label className="admin-check"><input type="checkbox" checked={product.featured} onChange={(event) => updateCollection('products', product.id, { featured: event.target.checked })} /> Destacado</label>
               </div>
 
-              <button className="admin-delete" onClick={() => removeFromCollection('products', product.id)}><Trash2 size={16} /> Eliminar</button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingProduct(product)}><Save size={16} /> Guardar cambios</button>
+                <button className="admin-delete" onClick={() => removeFromCollection('products', product.id)}><Trash2 size={16} /> Eliminar</button>
+              </div>
             </article>
           ))}
         </div>
@@ -1102,7 +1152,10 @@ function Cuenta() {
                 <label className="admin-colspan">Descripción<textarea value={category.description} onChange={(event) => updateCollection('categories', category.id, { description: event.target.value })} /></label>
               </div>
 
-              <button className="admin-delete" onClick={() => removeFromCollection('categories', category.id)}><Trash2 size={16} /> Eliminar</button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingCategory(category)}><Save size={16} /> Guardar cambios</button>
+                <button className="admin-delete" onClick={() => removeFromCollection('categories', category.id)}><Trash2 size={16} /> Eliminar</button>
+              </div>
             </article>
           ))}
         </div>
