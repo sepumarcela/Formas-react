@@ -2108,6 +2108,27 @@ section { padding: 100px 60px; }
 .admin-image-box input {
   display: none;
 }
+.admin-image-save {
+  width: calc(100% - 20px);
+  min-height: 38px;
+  margin: 0 10px 10px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--color-brand);
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.admin-image-save:hover {
+  background: var(--color-brand-dark);
+}
 .admin-form-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2183,9 +2204,18 @@ section { padding: 100px 60px; }
 }
 .admin-card-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  flex-wrap: nowrap;
   gap: 10px;
-  align-items: center;
+  align-items: stretch;
+  min-width: 178px;
+}
+.admin-card-actions .button,
+.admin-card-actions .admin-delete {
+  width: 100%;
+  min-height: 42px;
+  justify-content: center;
+  white-space: nowrap;
 }
 .admin-hero-order {
   position: absolute;
@@ -2298,6 +2328,16 @@ section { padding: 100px 60px; }
   .admin-editor-card--story {
     grid-template-columns: 1fr;
   }
+  .admin-card-actions {
+    grid-column: 1 / -1;
+    min-width: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .admin-card-actions .button,
+  .admin-card-actions .admin-delete {
+    flex: 1 1 180px;
+  }
   .admin-delete {
     grid-column: 1 / -1;
     justify-content: center;
@@ -2331,6 +2371,13 @@ section { padding: 100px 60px; }
   }
   .admin-panel__header h1 {
     font-size: 34px;
+  }
+  .admin-card-actions {
+    flex-direction: column;
+  }
+  .admin-card-actions .button,
+  .admin-card-actions .admin-delete {
+    flex: none;
   }
   .admin-image-box {
     min-height: 190px;

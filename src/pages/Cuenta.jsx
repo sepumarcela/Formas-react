@@ -497,6 +497,14 @@ function Cuenta() {
     }
   }
 
+  function renderCardSave(label, onClick) {
+    return (
+      <button type="button" className="admin-image-save" onClick={onClick}>
+        <Save size={14} /> {label}
+      </button>
+    )
+  }
+
   async function addBlogPost() {
     const baseTitle = `Nuevo articulo ${content.blogPosts.length + 1}`
     try {
@@ -741,6 +749,7 @@ function Cuenta() {
                   Cargar foto
                   <input type="file" accept="image/*" onChange={(event) => handleHeroImageUpload(slide.id, event)} />
                 </label>
+                {renderCardSave('Guardar foto', () => saveExistingHeroSlide(slide, index))}
               </div>
 
               <div className="admin-form-grid admin-form-grid--wide">
@@ -807,6 +816,7 @@ function Cuenta() {
                 Cargar foto hero
                 <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload(pageKey, 'image', event)} />
               </label>
+              {renderCardSave('Guardar pagina', saveCurrentPageContent)}
             </div>
 
             <div className="admin-form-grid admin-form-grid--wide">
@@ -856,6 +866,7 @@ function Cuenta() {
                     Cargar imagen
                     <input type="file" accept="image/*" onChange={(event) => handleProjectImageUpload(project.id, event)} />
                   </label>
+                  {renderCardSave('Guardar proyecto', () => saveExistingProject(project, index))}
                 </div>
                 <div className="admin-form-grid">
                   <label>ID<input value={project.id} onChange={(event) => updateCollection('projects', project.id, { id: createSlug(event.target.value) })} /></label>
@@ -882,6 +893,7 @@ function Cuenta() {
                   Foto historia
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('nosotros', 'historyImage', event)} />
                 </label>
+                {renderCardSave('Guardar pagina', saveCurrentPageContent)}
               </div>
               <div className="admin-form-grid admin-form-grid--wide">
                 <label className="admin-colspan">Título historia<input value={page.historyTitle || ''} onChange={(event) => updatePageContent('nosotros', { historyTitle: event.target.value })} /></label>
@@ -896,6 +908,7 @@ function Cuenta() {
                   Foto sede
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('nosotros', 'locationImage', event)} />
                 </label>
+                {renderCardSave('Guardar pagina', saveCurrentPageContent)}
               </div>
               <div className="admin-form-grid admin-form-grid--wide">
                 <label className="admin-colspan">Esta foto aparece en la sección Nuestra sede<input value="Imagen editable desde este bloque" readOnly /></label>
@@ -938,6 +951,7 @@ function Cuenta() {
                   Foto/mapa
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('contacto', 'mapImage', event)} />
                 </label>
+                {renderCardSave('Guardar pagina', saveCurrentPageContent)}
               </div>
               <div className="admin-form-grid admin-form-grid--wide">
                 <label>Título visita<input value={page.visitTitle || ''} onChange={(event) => updatePageContent('contacto', { visitTitle: event.target.value })} /></label>
@@ -997,6 +1011,7 @@ function Cuenta() {
                     Antes
                     <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('projectHighlights', project.id, 'before', event)} />
                   </label>
+                  {renderCardSave('Guardar', () => saveExistingProjectHighlight(project, index))}
                 </div>
                 <div className="admin-image-box">
                   {project.after ? <img src={project.after} alt={`${project.title} después`} /> : <Images size={24} />}
@@ -1004,6 +1019,7 @@ function Cuenta() {
                     Después
                     <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('projectHighlights', project.id, 'after', event)} />
                   </label>
+                  {renderCardSave('Guardar', () => saveExistingProjectHighlight(project, index))}
                 </div>
               </div>
 
@@ -1034,6 +1050,7 @@ function Cuenta() {
                   Foto cliente
                   <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('testimonials', testimonial.id, 'image', event)} />
                 </label>
+                {renderCardSave('Guardar testimonio', () => saveExistingTestimonial(testimonial))}
               </div>
 
               <div className="admin-form-grid admin-form-grid--wide">
@@ -1149,6 +1166,7 @@ function Cuenta() {
                   Cargar imagen
                   <input type="file" accept="image/*" onChange={(event) => handleImageUpload('products', product.id, event)} />
                 </label>
+                {renderCardSave('Guardar producto', () => saveExistingProduct(product))}
               </div>
 
               <div className="admin-form-grid">
@@ -1204,6 +1222,7 @@ function Cuenta() {
                   Cargar imagen
                   <input type="file" accept="image/*" onChange={(event) => handleImageUpload('blogPosts', post.id, event)} />
                 </label>
+                {renderCardSave('Guardar articulo', () => saveExistingBlogPost(post))}
               </div>
 
               <div className="admin-form-grid admin-form-grid--wide">
@@ -1264,6 +1283,7 @@ function Cuenta() {
                   Cargar imagen
                   <input type="file" accept="image/*" onChange={(event) => handleImageUpload('categories', category.id, event)} />
                 </label>
+                {renderCardSave('Guardar categoria', () => saveExistingCategory(category))}
               </div>
 
               <div className="admin-form-grid">
