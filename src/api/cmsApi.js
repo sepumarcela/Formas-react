@@ -279,10 +279,27 @@ async function optional(path, mapper) {
 }
 
 export async function loginAdmin(email, password) {
-  const response = await request('/api/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ email, password }),
-  })
+  let loginResponse
+
+  try {
+    loginResponse = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+  } catch {
+    throw new Error('No se pudo conectar con el backend. Verifica que Spring Boot este encendido.')
+  }
+
+  if (!loginResponse.ok) {
+    if (loginResponse.status === 401 || loginResponse.status === 403) {
+      throw new Error('Correo o contrasena incorrectos.')
+    }
+
+    throw new Error(`No se pudo iniciar sesion. Error ${loginResponse.status}.`)
+  }
+
+  const response = await loginResponse.json()
   sessionStorage.setItem(AUTH_TOKEN_KEY, response.token)
   return response
 }

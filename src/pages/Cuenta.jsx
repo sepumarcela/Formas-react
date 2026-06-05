@@ -240,8 +240,8 @@ function Cuenta() {
       setIsAuthenticated(true)
       setLoginError('')
       flash('Sesión iniciada.')
-    } catch {
-      setLoginError('No se pudo iniciar sesión con el backend. Verifica que Spring Boot esté encendido.')
+    } catch (error) {
+      setLoginError(error?.message || 'No se pudo iniciar sesión con el backend. Verifica que Spring Boot esté encendido.')
     }
   }
 
