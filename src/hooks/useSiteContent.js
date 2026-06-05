@@ -17,6 +17,15 @@ export function useSiteContent() {
           ...current,
           categories: catalog.categories.length ? catalog.categories : current.categories,
           products: catalog.products.length ? catalog.products : current.products,
+          heroSlides: catalog.heroSlides.length ? catalog.heroSlides : current.heroSlides,
+          projects: catalog.projects.length ? catalog.projects : current.projects,
+          projectHighlights: catalog.projectHighlights.length ? catalog.projectHighlights : current.projectHighlights,
+          testimonials: catalog.testimonials.length ? catalog.testimonials : current.testimonials,
+          blogPosts: catalog.blogPosts.length ? catalog.blogPosts : current.blogPosts,
+          pageContent: {
+            ...current.pageContent,
+            ...catalog.pageContent,
+          },
         }))
       } catch {
         // Si el backend no está prendido, la web usa el contenido local.

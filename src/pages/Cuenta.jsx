@@ -17,7 +17,25 @@ import {
   Trash2,
   Upload,
 } from 'lucide-react'
-import { deleteCategory, deleteProduct, saveCategory, saveProduct } from '../api/cmsApi'
+import {
+  deleteBlogPost,
+  deleteCategory,
+  deleteHeroSlide,
+  deleteProduct,
+  deleteProject,
+  deleteProjectHighlight,
+  deleteTestimonial,
+  loginAdmin,
+  logoutAdmin,
+  saveBlogPost,
+  saveCategory,
+  saveHeroSlide,
+  savePageContent,
+  saveProduct,
+  saveProject,
+  saveProjectHighlight,
+  saveTestimonial,
+} from '../api/cmsApi'
 import { createSlug, defaultSiteContent } from '../data/siteContent'
 import { useSiteContent } from '../hooks/useSiteContent'
 
@@ -214,8 +232,19 @@ function Cuenta() {
     window.setTimeout(() => setNotice(''), 2400)
   }
 
-  function handleLogin(event) {
+  async function handleLogin(event) {
     event.preventDefault()
+
+    try {
+      await loginAdmin(loginForm.email.trim().toLowerCase(), loginForm.password)
+      sessionStorage.setItem(ADMIN_SESSION_KEY, 'true')
+      setIsAuthenticated(true)
+      setLoginError('')
+      flash('Sesión iniciada.')
+      return
+    } catch {
+      // Si el backend está apagado, se conserva el login local para poder ver el panel.
+    }
 
     if (loginForm.email.trim().toLowerCase() === ADMIN_EMAIL && loginForm.password === ADMIN_PASSWORD) {
       sessionStorage.setItem(ADMIN_SESSION_KEY, 'true')
@@ -230,6 +259,7 @@ function Cuenta() {
 
   function handleLogout() {
     sessionStorage.removeItem(ADMIN_SESSION_KEY)
+    logoutAdmin()
     setIsAuthenticated(false)
     setLoginForm({ email: '', password: '' })
     setShowPassword(false)
@@ -252,6 +282,11 @@ function Cuenta() {
       try {
         if (collection === 'products') await deleteProduct(id)
         if (collection === 'categories') await deleteCategory(id)
+        if (collection === 'heroSlides') await deleteHeroSlide(id)
+        if (collection === 'blogPosts') await deleteBlogPost(id)
+        if (collection === 'projects') await deleteProject(id)
+        if (collection === 'projectHighlights') await deleteProjectHighlight(id)
+        if (collection === 'testimonials') await deleteTestimonial(id)
       } catch {
         flash('No se pudo eliminar en el backend. Revisa que esté prendido.')
         return
@@ -396,37 +431,101 @@ function Cuenta() {
     }
   }
 
-  function addBlogPost() {
-    const baseTitle = `Nuevo artículo ${content.blogPosts.length + 1}`
-    setContent((current) => ({
-      ...current,
-      blogPosts: [
-        ...current.blogPosts,
-        {
-          id: createSlug(baseTitle),
-          tag: 'TENDENCIAS',
-          date: new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }),
-          title: baseTitle,
-          desc: 'Resumen del artículo.',
-          image: '',
-          body: '',
-        },
-      ],
-    }))
-    setActiveSection('blog')
-    flash('Artículo creado.')
+  async function saveExistingHeroSlide(slide, index) {
+    try {
+      const savedSlide = await saveHeroSlide(slide, index)
+      updateCollection('heroSlides', slide.id, savedSlide)
+      flash('Foto de inicio guardada.')
+    } catch {
+      flash('No se pudo guardar la foto de inicio en el backend.')
+    }
   }
 
-  function addHeroSlide() {
-    setContent((current) => ({
-      ...current,
-      heroSlides: [
-        ...current.heroSlides,
-        getEmptyHeroSlide(current.heroSlides.length + 1),
-      ],
-    }))
-    setActiveSection('hero')
-    flash('Foto de inicio creada.')
+  async function saveExistingBlogPost(post) {
+    try {
+      const savedPost = await saveBlogPost(post)
+      updateCollection('blogPosts', post.id, savedPost)
+      flash('Artículo guardado.')
+    } catch {
+      flash('No se pudo guardar el artículo en el backend.')
+    }
+  }
+
+  async function saveExistingProject(project, index) {
+    try {
+      const savedProject = await saveProject(project, index)
+      updateCollection('projects', project.id, savedProject)
+      flash('Proyecto guardado.')
+    } catch {
+      flash('No se pudo guardar el proyecto en el backend.')
+    }
+  }
+
+  async function saveExistingProjectHighlight(project, index) {
+    try {
+      const savedProject = await saveProjectHighlight(project, index)
+      updateCollection('projectHighlights', project.id, savedProject)
+      flash('Proyecto realizado guardado.')
+    } catch {
+      flash('No se pudo guardar el proyecto realizado en el backend.')
+    }
+  }
+
+  async function saveExistingTestimonial(testimonial) {
+    try {
+      const savedTestimonial = await saveTestimonial(testimonial)
+      updateCollection('testimonials', testimonial.id, savedTestimonial)
+      flash('Testimonio guardado.')
+    } catch {
+      flash('No se pudo guardar el testimonio en el backend.')
+    }
+  }
+
+  async function saveCurrentPageContent() {
+    try {
+      const savedPage = await savePageContent(pageKey, content.pageContent[pageKey])
+      setContent((current) => ({
+        ...current,
+        pageContent: {
+          ...current.pageContent,
+          [pageKey]: savedPage,
+        },
+      }))
+      flash('Contenido de página guardado.')
+    } catch {
+      flash('No se pudo guardar la página en el backend.')
+    }
+  }
+
+  async function addBlogPost() {
+    const baseTitle = `Nuevo articulo ${content.blogPosts.length + 1}`
+    try {
+      const savedPost = await saveBlogPost({
+        id: createSlug(baseTitle),
+        tag: 'TENDENCIAS',
+        date: new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }),
+        title: baseTitle,
+        desc: 'Resumen del articulo.',
+        image: '',
+        body: '',
+      })
+      setContent((current) => ({ ...current, blogPosts: [...current.blogPosts, savedPost] }))
+      setActiveSection('blog')
+      flash('Articulo creado.')
+    } catch {
+      flash('No se pudo crear el articulo en el backend.')
+    }
+  }
+
+  async function addHeroSlide() {
+    try {
+      const savedSlide = await saveHeroSlide(getEmptyHeroSlide(content.heroSlides.length + 1), content.heroSlides.length)
+      setContent((current) => ({ ...current, heroSlides: [...current.heroSlides, savedSlide] }))
+      setActiveSection('hero')
+      flash('Foto de inicio creada.')
+    } catch {
+      flash('No se pudo crear la foto de inicio en el backend.')
+    }
   }
 
   async function handleImageUpload(collection, id, event) {
@@ -456,16 +555,18 @@ function Cuenta() {
     flash('Imagen de página cargada.')
   }
 
-  function addProject() {
+  async function addProject() {
     const title = `Nuevo proyecto ${content.projects.length + 1}`
-    setContent((current) => ({
-      ...current,
-      projects: [
-        ...current.projects,
+    try {
+      const savedProject = await saveProject(
         { id: createSlug(title), cat: 'hogar', label: 'Hogar', title, location: 'Ciudad, Colombia', image: '' },
-      ],
-    }))
-    flash('Proyecto creado.')
+        content.projects.length,
+      )
+      setContent((current) => ({ ...current, projects: [...current.projects, savedProject] }))
+      flash('Proyecto creado.')
+    } catch {
+      flash('No se pudo crear el proyecto en el backend.')
+    }
   }
 
   async function handleProjectImageUpload(id, event) {
@@ -477,28 +578,36 @@ function Cuenta() {
     flash('Imagen de proyecto cargada.')
   }
 
-  function addProjectHighlight() {
-    const title = `Nuevo antes y después ${content.projectHighlights.length + 1}`
-    setContent((current) => ({
-      ...current,
-      projectHighlights: [
-        ...current.projectHighlights,
+  async function addProjectHighlight() {
+    const title = `Nuevo antes y despues ${content.projectHighlights.length + 1}`
+    try {
+      const savedProject = await saveProjectHighlight(
         { id: createSlug(title), category: 'Cocinas', title, before: '', after: '' },
-      ],
-    }))
-    flash('Proyecto realizado creado.')
+        content.projectHighlights.length,
+      )
+      setContent((current) => ({ ...current, projectHighlights: [...current.projectHighlights, savedProject] }))
+      flash('Proyecto realizado creado.')
+    } catch {
+      flash('No se pudo crear el proyecto realizado en el backend.')
+    }
   }
 
-  function addTestimonial() {
+  async function addTestimonial() {
     const name = `Cliente ${content.testimonials.length + 1}`
-    setContent((current) => ({
-      ...current,
-      testimonials: [
-        ...current.testimonials,
-        { id: createSlug(name), name, location: 'Ciudad, Colombia', text: 'Escribe aquí el testimonio real del cliente.', image: '', approved: true },
-      ],
-    }))
-    flash('Testimonio creado.')
+    try {
+      const savedTestimonial = await saveTestimonial({
+        id: createSlug(name),
+        name,
+        location: 'Ciudad, Colombia',
+        text: 'Escribe aqui el testimonio real del cliente.',
+        image: '',
+        approved: true,
+      })
+      setContent((current) => ({ ...current, testimonials: [...current.testimonials, savedTestimonial] }))
+      flash('Testimonio creado.')
+    } catch {
+      flash('No se pudo crear el testimonio en el backend.')
+    }
   }
 
   async function handleCollectionImageUpload(collection, id, field, event) {
@@ -647,14 +756,17 @@ function Cuenta() {
                 <label className="admin-check"><input type="checkbox" checked={slide.active !== false} onChange={(event) => updateCollection('heroSlides', slide.id, { active: event.target.checked })} /> Visible en inicio</label>
               </div>
 
-              <button
-                className="admin-delete"
-                disabled={content.heroSlides.length === 1}
-                onClick={() => removeFromCollection('heroSlides', slide.id)}
-                title={content.heroSlides.length === 1 ? 'Debe quedar al menos una foto' : 'Eliminar foto'}
-              >
-                <Trash2 size={16} /> Eliminar
-              </button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingHeroSlide(slide, index)}><Save size={16} /> Guardar cambios</button>
+                <button
+                  className="admin-delete"
+                  disabled={content.heroSlides.length === 1}
+                  onClick={() => removeFromCollection('heroSlides', slide.id)}
+                  title={content.heroSlides.length === 1 ? 'Debe quedar al menos una foto' : 'Eliminar foto'}
+                >
+                  <Trash2 size={16} /> Eliminar
+                </button>
+              </div>
               <span className="admin-hero-order">Foto {index + 1}</span>
             </article>
           ))}
@@ -677,6 +789,7 @@ function Cuenta() {
             <p>Cambia textos e imágenes principales de Proyectos, Nosotros, Blog, Contacto y las secciones de productos del inicio.</p>
           </div>
           <div className="admin-header-actions">
+            <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> Guardar página</button>
             <label className="admin-page-select">
               Página
               <select value={pageKey} onChange={(event) => setPageKey(event.target.value)}>
@@ -751,7 +864,10 @@ function Cuenta() {
                   <label>Título<input value={project.title} onChange={(event) => updateCollection('projects', project.id, { title: event.target.value })} /></label>
                   <label>Ubicación<input value={project.location} onChange={(event) => updateCollection('projects', project.id, { location: event.target.value })} /></label>
                 </div>
-                <button className="admin-delete" onClick={() => removeFromCollection('projects', project.id)}><Trash2 size={16} /> Eliminar</button>
+                <div className="admin-card-actions">
+                  <button className="button button--primary" onClick={() => saveExistingProject(project, index)}><Save size={16} /> Guardar cambios</button>
+                  <button className="admin-delete" onClick={() => removeFromCollection('projects', project.id)}><Trash2 size={16} /> Eliminar</button>
+                </div>
               </article>
             ))}
           </div>
@@ -897,7 +1013,10 @@ function Cuenta() {
                 <label>Título<input value={project.title} onChange={(event) => updateCollection('projectHighlights', project.id, { title: event.target.value })} /></label>
               </div>
 
-              <button className="admin-delete" onClick={() => removeFromCollection('projectHighlights', project.id)}><Trash2 size={16} /> Eliminar</button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingProjectHighlight(project, index)}><Save size={16} /> Guardar cambios</button>
+                <button className="admin-delete" onClick={() => removeFromCollection('projectHighlights', project.id)}><Trash2 size={16} /> Eliminar</button>
+              </div>
             </article>
           ))}
         </div>
@@ -925,7 +1044,10 @@ function Cuenta() {
                 <label className="admin-colspan">Testimonio<textarea value={testimonial.text} onChange={(event) => updateCollection('testimonials', testimonial.id, { text: event.target.value })} /></label>
               </div>
 
-              <button className="admin-delete" onClick={() => removeFromCollection('testimonials', testimonial.id)}><Trash2 size={16} /> Eliminar</button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingTestimonial(testimonial)}><Save size={16} /> Guardar cambios</button>
+                <button className="admin-delete" onClick={() => removeFromCollection('testimonials', testimonial.id)}><Trash2 size={16} /> Eliminar</button>
+              </div>
             </article>
           ))}
         </div>
@@ -1093,7 +1215,10 @@ function Cuenta() {
                 <label className="admin-colspan">Contenido largo<textarea value={post.body} onChange={(event) => updateCollection('blogPosts', post.id, { body: event.target.value })} /></label>
               </div>
 
-              <button className="admin-delete" onClick={() => removeFromCollection('blogPosts', post.id)}><Trash2 size={16} /> Eliminar</button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingBlogPost(post)}><Save size={16} /> Guardar cambios</button>
+                <button className="admin-delete" onClick={() => removeFromCollection('blogPosts', post.id)}><Trash2 size={16} /> Eliminar</button>
+              </div>
             </article>
           ))}
         </div>
