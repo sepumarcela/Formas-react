@@ -254,6 +254,26 @@ function Cuenta() {
     setActiveSection('overview')
   }
 
+  function requireBackendSession() {
+    if (hasAdminToken()) return true
+
+    sessionStorage.removeItem(ADMIN_SESSION_KEY)
+    setIsAuthenticated(false)
+    setLoginError('Inicia sesión otra vez para guardar cambios en Neon.')
+    flash('Inicia sesión otra vez para guardar en Neon.')
+    return false
+  }
+
+  function reportBackendError(defaultMessage, error) {
+    if (!hasAdminToken()) {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY)
+      setIsAuthenticated(false)
+      setLoginError('Inicia sesión otra vez para guardar cambios en Neon.')
+    }
+
+    flash(error?.message || defaultMessage)
+  }
+
   function updateCollection(collection, id, patch) {
     setContent((current) => ({
       ...current,
@@ -420,12 +440,14 @@ function Cuenta() {
   }
 
   async function saveExistingHeroSlide(slide, index) {
+    if (!requireBackendSession()) return
+
     try {
       const savedSlide = await saveHeroSlide(slide, index)
       updateCollection('heroSlides', slide.id, savedSlide)
       flash('Foto de inicio guardada.')
-    } catch {
-      flash('No se pudo guardar la foto de inicio en el backend.')
+    } catch (error) {
+      reportBackendError('No se pudo guardar la foto de inicio en el backend.', error)
     }
   }
 

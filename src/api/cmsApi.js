@@ -261,6 +261,7 @@ async function request(path, options = {}) {
     if (response.status === 401 || response.status === 403) {
       sessionStorage.removeItem(AUTH_TOKEN_KEY)
       sessionStorage.removeItem('formas-admin-authenticated')
+      throw new Error('Tu sesión venció. Inicia sesión otra vez para guardar en Neon.')
     }
     throw new Error(message || `Error ${response.status} en ${path}`)
   }
