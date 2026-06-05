@@ -1,22 +1,9 @@
-const testimonials = [
-  {
-    name: 'María Fernanda G.',
-    location: 'Medellín, Antioquia',
-    text: 'Transformaron completamente nuestro apartamento. El resultado quedó cálido, funcional y muy bien terminado.',
-  },
-  {
-    name: 'Juan Carlos R.',
-    location: 'Cali, Valle del Cauca',
-    text: 'Excelente calidad y acompañamiento. Nos ayudaron a entender qué diseño funcionaba mejor para el espacio.',
-  },
-  {
-    name: 'Laura y Andrés M.',
-    location: 'Bogotá, Cundinamarca',
-    text: 'El clóset quedó mejor de lo que imaginábamos. Todo el proceso fue claro y ordenado.',
-  },
-]
+import { useSiteContent } from '../../hooks/useSiteContent'
 
 function TestimonialSection() {
+  const [{ testimonials }] = useSiteContent()
+  const visibleTestimonials = testimonials.filter((testimonial) => testimonial.approved !== false)
+
   return (
     <section className="testimonials">
       <div className="section-heading">
@@ -26,10 +13,10 @@ function TestimonialSection() {
       </div>
 
       <div className="testimonial-grid">
-        {testimonials.map((testimonial) => (
-          <article className="testimonial-card" key={testimonial.name}>
+        {visibleTestimonials.map((testimonial) => (
+          <article className="testimonial-card" key={testimonial.id}>
             <div className="testimonial-card__image">
-              <span>Foto pendiente</span>
+              {testimonial.image ? <img src={testimonial.image} alt={testimonial.name} /> : <span>Foto pendiente</span>}
             </div>
 
             <div className="testimonial-card__body">

@@ -17,6 +17,7 @@ import {
   Trash2,
   Upload,
 } from 'lucide-react'
+import { deleteCategory, deleteProduct, saveCategory, saveProduct } from '../api/cmsApi'
 import { createSlug, defaultSiteContent } from '../data/siteContent'
 import { useSiteContent } from '../hooks/useSiteContent'
 
@@ -24,6 +25,7 @@ const sections = [
   { id: 'overview', label: 'Resumen', icon: LayoutDashboard },
   { id: 'hero', label: 'Inicio', icon: Images },
   { id: 'pages', label: 'Páginas', icon: LayoutDashboard },
+  { id: 'stories', label: 'Historias', icon: Images },
   { id: 'products', label: 'Productos', icon: Package },
   { id: 'blog', label: 'Blog', icon: Newspaper },
   { id: 'categories', label: 'Categorías', icon: Tags },
@@ -49,11 +51,16 @@ function getEmptyProduct(category) {
     category: category?.name || '',
     name: '',
     price: '',
+    netPrice: '',
     size: '',
     description: '',
     material: '',
     color: '',
     leadTime: '',
+    discountPercent: '',
+    discountLabel: '',
+    discountStart: '',
+    discountEnd: '',
     image: '',
     featured: false,
   }
@@ -154,12 +161,6 @@ function onlyDigits(value) {
   return String(value || '').replace(/\D/g, '')
 }
 
-function formatCop(value) {
-  const digits = onlyDigits(value)
-  if (!digits) return ''
-  return `$${Number(digits).toLocaleString('es-CO')}`
-}
-
 function downloadCsv(filename, csv) {
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
   const url = URL.createObjectURL(blob)
@@ -174,7 +175,7 @@ const csvConfig = {
   products: {
     label: 'Productos',
     filename: 'productos-formas.csv',
-    headers: ['id', 'categoryId', 'category', 'name', 'price', 'size', 'description', 'material', 'color', 'leadTime', 'image', 'featured'],
+    headers: ['id', 'categoryId', 'category', 'name', 'price', 'netPrice', 'size', 'description', 'material', 'color', 'leadTime', 'discountPercent', 'discountLabel', 'discountStart', 'discountEnd', 'image', 'featured'],
   },
   categories: {
     label: 'Categorías',
@@ -244,7 +245,19 @@ function Cuenta() {
     }))
   }
 
-  function removeFromCollection(collection, id) {
+  async function removeFromCollection(collection, id) {
+    const item = content[collection]?.find((entry) => entry.id === id)
+
+    if (item?.persisted) {
+      try {
+        if (collection === 'products') await deleteProduct(id)
+        if (collection === 'categories') await deleteCategory(id)
+      } catch {
+        flash('No se pudo eliminar en el backend. Revisa que esté prendido.')
+        return
+      }
+    }
+
     setContent((current) => ({
       ...current,
       [collection]: current[collection].filter((item) => item.id !== id),
@@ -252,14 +265,21 @@ function Cuenta() {
     flash('Elemento eliminado.')
   }
 
-  function addCategory() {
+  async function addCategory() {
     const baseName = `Nueva categoría ${content.categories.length + 1}`
+    const category = { id: createSlug(baseName), name: baseName, description: 'Descripción de la categoría.', image: '', icon: 'shelf' }
+
+    let savedCategory
+    try {
+      savedCategory = await saveCategory(category)
+    } catch {
+      flash('No se pudo guardar la categoría en el backend.')
+      return
+    }
+
     setContent((current) => ({
       ...current,
-      categories: [
-        ...current.categories,
-        { id: createSlug(baseName), name: baseName, description: 'Descripción de la categoría.', image: '', icon: 'shelf' },
-      ],
+      categories: [...current.categories, savedCategory],
     }))
     setActiveSection('categories')
     flash('Categoría creada.')
@@ -274,11 +294,11 @@ function Cuenta() {
   }
 
   function updateNewProductPrice(value) {
-    updateNewProduct({ price: formatCop(value) })
+    updateNewProduct({ price: value })
   }
 
   function updateProductPrice(product, value) {
-    updateCollection('products', product.id, { price: formatCop(value) })
+    updateCollection('products', product.id, { price: value })
   }
 
   function updatePageContent(section, patch) {
@@ -307,7 +327,7 @@ function Cuenta() {
     updateNewProduct({ image })
   }
 
-  function addProduct(event) {
+  async function addProduct(event) {
     event?.preventDefault()
     const productName = newProduct.name.trim()
 
@@ -321,31 +341,59 @@ function Cuenta() {
       return
     }
 
-    if (!onlyDigits(newProduct.price)) {
-      flash('Escribe un precio válido.')
+    if (!newProduct.price.trim()) {
+      flash('Escribe el precio visible del producto.')
       return
     }
 
     const id = createSlug(newProduct.id || productName)
     const category = content.categories.find((item) => item.id === newProduct.categoryId)
 
+    const product = {
+      ...newProduct,
+      id,
+      categoryId: newProduct.categoryId || category?.id || '',
+      category: category?.name || newProduct.category,
+      name: productName,
+      price: newProduct.price,
+      netPrice: onlyDigits(newProduct.netPrice),
+      size: newProduct.size || 'A medida',
+    }
+
+    let savedProduct
+    try {
+      savedProduct = await saveProduct(product)
+    } catch {
+      flash('No se pudo guardar el producto en el backend.')
+      return
+    }
+
     setContent((current) => ({
       ...current,
-      products: [
-        ...current.products,
-        {
-          ...newProduct,
-          id,
-          categoryId: newProduct.categoryId || category?.id || '',
-          category: category?.name || newProduct.category,
-          name: productName,
-          price: formatCop(newProduct.price),
-          size: newProduct.size || 'A medida',
-        },
-      ],
+      products: [...current.products, savedProduct],
     }))
     setNewProduct(getEmptyProduct(content.categories[0]))
     flash('Producto guardado.')
+  }
+
+  async function saveExistingProduct(product) {
+    try {
+      const savedProduct = await saveProduct(product)
+      updateCollection('products', product.id, savedProduct)
+      flash('Cambios del producto guardados.')
+    } catch {
+      flash('No se pudo guardar el producto en el backend.')
+    }
+  }
+
+  async function saveExistingCategory(category) {
+    try {
+      const savedCategory = await saveCategory(category)
+      updateCollection('categories', category.id, savedCategory)
+      flash('Cambios de la categoría guardados.')
+    } catch {
+      flash('No se pudo guardar la categoría en el backend.')
+    }
   }
 
   function addBlogPost() {
@@ -427,6 +475,39 @@ function Cuenta() {
     const image = await readFileAsDataUrl(file)
     updateCollection('projects', id, { image })
     flash('Imagen de proyecto cargada.')
+  }
+
+  function addProjectHighlight() {
+    const title = `Nuevo antes y después ${content.projectHighlights.length + 1}`
+    setContent((current) => ({
+      ...current,
+      projectHighlights: [
+        ...current.projectHighlights,
+        { id: createSlug(title), category: 'Cocinas', title, before: '', after: '' },
+      ],
+    }))
+    flash('Proyecto realizado creado.')
+  }
+
+  function addTestimonial() {
+    const name = `Cliente ${content.testimonials.length + 1}`
+    setContent((current) => ({
+      ...current,
+      testimonials: [
+        ...current.testimonials,
+        { id: createSlug(name), name, location: 'Ciudad, Colombia', text: 'Escribe aquí el testimonio real del cliente.', image: '', approved: true },
+      ],
+    }))
+    flash('Testimonio creado.')
+  }
+
+  async function handleCollectionImageUpload(collection, id, field, event) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const image = await readFileAsDataUrl(file)
+    updateCollection(collection, id, { [field]: image })
+    flash('Imagen cargada.')
   }
 
   function handleCategoryIdChange(category, id) {
@@ -544,7 +625,7 @@ function Cuenta() {
 
         <div className="admin-editor-list">
           {content.heroSlides.map((slide, index) => (
-            <article className="admin-editor-card admin-editor-card--hero" key={slide.id}>
+            <article className="admin-editor-card admin-editor-card--hero" key={`hero-slide-${index}`}>
               <div className="admin-image-box admin-image-box--hero">
                 {slide.image ? <img src={slide.image} alt={slide.title || 'Foto de inicio'} /> : <Images size={30} />}
                 <label>
@@ -555,13 +636,13 @@ function Cuenta() {
 
               <div className="admin-form-grid admin-form-grid--wide">
                 <label>ID<input value={slide.id} onChange={(event) => updateCollection('heroSlides', slide.id, { id: createSlug(event.target.value) })} /></label>
-                <label>Texto pequeno<input value={slide.eyebrow || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { eyebrow: event.target.value })} placeholder="Opcional" /></label>
-                <label>Linea principal<input value={slide.titleAccent || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { titleAccent: event.target.value })} /></label>
-                <label>Linea secundaria<input value={slide.title || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { title: event.target.value })} /></label>
-                <label className="admin-colspan">Descripcion<textarea value={slide.description || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { description: event.target.value })} /></label>
-                <label>Boton principal<input value={slide.primaryLabel || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { primaryLabel: event.target.value })} /></label>
+                <label>Texto pequeño<input value={slide.eyebrow || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { eyebrow: event.target.value })} placeholder="Opcional" /></label>
+                <label>Línea principal<input value={slide.titleAccent || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { titleAccent: event.target.value })} /></label>
+                <label>Línea secundaria<input value={slide.title || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { title: event.target.value })} /></label>
+                <label className="admin-colspan">Descripción<textarea value={slide.description || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { description: event.target.value })} /></label>
+                <label>Botón principal<input value={slide.primaryLabel || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { primaryLabel: event.target.value })} /></label>
                 <label>Link principal<input value={slide.primaryLink || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { primaryLink: event.target.value })} /></label>
-                <label>Boton secundario<input value={slide.secondaryLabel || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { secondaryLabel: event.target.value })} /></label>
+                <label>Botón secundario<input value={slide.secondaryLabel || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { secondaryLabel: event.target.value })} /></label>
                 <label>Link secundario<input value={slide.secondaryLink || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { secondaryLink: event.target.value })} /></label>
                 <label className="admin-check"><input type="checkbox" checked={slide.active !== false} onChange={(event) => updateCollection('heroSlides', slide.id, { active: event.target.checked })} /> Visible en inicio</label>
               </div>
@@ -654,8 +735,8 @@ function Cuenta() {
               <label>Texto botón<input value={page.ctaLabel || ''} onChange={(event) => updatePageContent('proyectos', { ctaLabel: event.target.value })} /></label>
               <label>Link botón<input value={page.ctaLink || ''} onChange={(event) => updatePageContent('proyectos', { ctaLink: event.target.value })} /></label>
             </div>
-            {content.projects.map((project) => (
-              <article className="admin-editor-card" key={project.id}>
+            {content.projects.map((project, index) => (
+              <article className="admin-editor-card" key={`project-${index}`}>
                 <div className="admin-image-box">
                   {project.image ? <img src={project.image} alt={project.title} /> : <Images size={26} />}
                   <label>
@@ -754,6 +835,104 @@ function Cuenta() {
     )
   }
 
+  function renderStories() {
+    return (
+      <div className="admin-panel">
+        <div className="admin-panel__header">
+          <div>
+            <p className="admin-kicker">Historias</p>
+            <h1>Proyectos realizados y testimonios</h1>
+            <p>Administra el antes/después de trabajos terminados y los testimonios reales que aparecen en el inicio.</p>
+          </div>
+          <div className="admin-header-actions">
+            <button className="button button--soft" onClick={addTestimonial}><BadgePlus size={16} /> Testimonio</button>
+            <button className="button button--primary" onClick={addProjectHighlight}><BadgePlus size={16} /> Proyecto realizado</button>
+          </div>
+        </div>
+
+        <div className="admin-help-grid">
+          <div className="admin-help-card">
+            <Images size={20} />
+            <div>
+              <strong>Proyectos realizados</strong>
+              <p>Carga una imagen de antes y otra de después. Estas tarjetas salen en el home como evidencia visual de los trabajos.</p>
+            </div>
+          </div>
+          <div className="admin-help-card">
+            <Newspaper size={20} />
+            <div>
+              <strong>Testimonios reales</strong>
+              <p>Usa testimonios autorizados por clientes. Puedes ocultar uno desmarcando “Visible en inicio”.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="admin-list-heading">
+          <h2>Proyectos realizados</h2>
+          <span>{content.projectHighlights.length} registros</span>
+        </div>
+        <div className="admin-editor-list">
+          {content.projectHighlights.map((project, index) => (
+            <article className="admin-editor-card admin-editor-card--story" key={`project-highlight-${index}`}>
+              <div className="admin-before-after">
+                <div className="admin-image-box">
+                  {project.before ? <img src={project.before} alt={`${project.title} antes`} /> : <Images size={24} />}
+                  <label>
+                    Antes
+                    <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('projectHighlights', project.id, 'before', event)} />
+                  </label>
+                </div>
+                <div className="admin-image-box">
+                  {project.after ? <img src={project.after} alt={`${project.title} después`} /> : <Images size={24} />}
+                  <label>
+                    Después
+                    <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('projectHighlights', project.id, 'after', event)} />
+                  </label>
+                </div>
+              </div>
+
+              <div className="admin-form-grid">
+                <label>ID<input value={project.id} onChange={(event) => updateCollection('projectHighlights', project.id, { id: createSlug(event.target.value) })} /></label>
+                <label>Categoría<input value={project.category} onChange={(event) => updateCollection('projectHighlights', project.id, { category: event.target.value })} /></label>
+                <label>Título<input value={project.title} onChange={(event) => updateCollection('projectHighlights', project.id, { title: event.target.value })} /></label>
+              </div>
+
+              <button className="admin-delete" onClick={() => removeFromCollection('projectHighlights', project.id)}><Trash2 size={16} /> Eliminar</button>
+            </article>
+          ))}
+        </div>
+
+        <div className="admin-list-heading admin-list-heading--spaced">
+          <h2>Testimonios</h2>
+          <span>{content.testimonials.length} testimonios</span>
+        </div>
+        <div className="admin-editor-list">
+          {content.testimonials.map((testimonial, index) => (
+            <article className="admin-editor-card" key={`testimonial-${index}`}>
+              <div className="admin-image-box">
+                {testimonial.image ? <img src={testimonial.image} alt={testimonial.name} /> : <Images size={26} />}
+                <label>
+                  Foto cliente
+                  <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('testimonials', testimonial.id, 'image', event)} />
+                </label>
+              </div>
+
+              <div className="admin-form-grid admin-form-grid--wide">
+                <label>ID<input value={testimonial.id} onChange={(event) => updateCollection('testimonials', testimonial.id, { id: createSlug(event.target.value) })} /></label>
+                <label>Nombre<input value={testimonial.name} onChange={(event) => updateCollection('testimonials', testimonial.id, { name: event.target.value })} /></label>
+                <label>Ubicación<input value={testimonial.location} onChange={(event) => updateCollection('testimonials', testimonial.id, { location: event.target.value })} /></label>
+                <label className="admin-check"><input type="checkbox" checked={testimonial.approved !== false} onChange={(event) => updateCollection('testimonials', testimonial.id, { approved: event.target.checked })} /> Visible en inicio</label>
+                <label className="admin-colspan">Testimonio<textarea value={testimonial.text} onChange={(event) => updateCollection('testimonials', testimonial.id, { text: event.target.value })} /></label>
+              </div>
+
+              <button className="admin-delete" onClick={() => removeFromCollection('testimonials', testimonial.id)}><Trash2 size={16} /> Eliminar</button>
+            </article>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   function renderProducts() {
     return (
       <div className="admin-panel">
@@ -792,11 +971,16 @@ function Cuenta() {
                   {content.categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
                 </select>
               </label>
-              <label>Precio<input inputMode="numeric" value={newProduct.price} onChange={(event) => updateNewProductPrice(event.target.value)} placeholder="$0" required /></label>
+              <label>Precio visible<input value={newProduct.price} onChange={(event) => updateNewProductPrice(event.target.value)} placeholder="Ej: Desde $1.200.000 o $4.500.000" required /></label>
+              <label>Precio neto descuento<input inputMode="numeric" value={newProduct.netPrice} onChange={(event) => updateNewProduct({ netPrice: onlyDigits(event.target.value) })} placeholder="Ej: 4500000" /></label>
               <label>Medidas<input value={newProduct.size} onChange={(event) => updateNewProduct({ size: event.target.value })} placeholder="A medida" /></label>
               <label>Material<input value={newProduct.material} onChange={(event) => updateNewProduct({ material: event.target.value })} placeholder="Ej: MDF RH" /></label>
               <label>Color/acabado<input value={newProduct.color} onChange={(event) => updateNewProduct({ color: event.target.value })} placeholder="Ej: Nogal y blanco" /></label>
               <label>Entrega<input value={newProduct.leadTime} onChange={(event) => updateNewProduct({ leadTime: event.target.value })} placeholder="Ej: 20 a 30 días" /></label>
+              <label>Descuento %<input inputMode="numeric" value={newProduct.discountPercent} onChange={(event) => updateNewProduct({ discountPercent: onlyDigits(event.target.value) })} placeholder="Ej: 15" /></label>
+              <label>Texto oferta<input value={newProduct.discountLabel} onChange={(event) => updateNewProduct({ discountLabel: event.target.value })} placeholder="Ej: Oferta de lanzamiento" /></label>
+              <label>Inicio oferta<input type="date" value={newProduct.discountStart} onChange={(event) => updateNewProduct({ discountStart: event.target.value })} /></label>
+              <label>Fin oferta<input type="date" value={newProduct.discountEnd} onChange={(event) => updateNewProduct({ discountEnd: event.target.value })} /></label>
               <label className="admin-colspan">Descripción para la ficha<textarea value={newProduct.description} onChange={(event) => updateNewProduct({ description: event.target.value })} placeholder="Describe el producto, su uso y lo que lo hace especial." /></label>
               <label className="admin-check"><input type="checkbox" checked={newProduct.featured} onChange={(event) => updateNewProduct({ featured: event.target.checked })} /> Destacado</label>
             </div>
@@ -804,9 +988,11 @@ function Cuenta() {
 
           <div className="admin-field-rules">
             <span>Nombre: obligatorio.</span>
-            <span>Precio: solo números, se guarda como pesos colombianos.</span>
+            <span>Precio visible: texto libre, ejemplo Desde $1.200.000 o Cotizar.</span>
+            <span>Precio neto: solo para calcular descuentos, no se muestra en la tarjeta.</span>
             <span>Categoría: define dónde se verá el producto.</span>
             <span>Medidas: texto corto, ejemplo 200 x 40 x 180 cm o A medida.</span>
+            <span>Descuento: si tiene porcentaje y está vigente, se verá como etiqueta de oferta.</span>
           </div>
         </form>
 
@@ -833,8 +1019,8 @@ function Cuenta() {
         </div>
 
         <div className="admin-editor-list">
-          {content.products.map((product) => (
-            <article className="admin-editor-card" key={product.id}>
+          {content.products.map((product, index) => (
+            <article className="admin-editor-card" key={`product-${index}`}>
               <div className="admin-image-box">
                 {product.image ? <img src={product.image} alt={product.name} /> : <Images size={26} />}
                 <label>
@@ -851,16 +1037,24 @@ function Cuenta() {
                     {content.categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
                   </select>
                 </label>
-                <label>Precio<input inputMode="numeric" value={product.price} onChange={(event) => updateProductPrice(product, event.target.value)} /></label>
+                <label>Precio visible<input value={product.price} onChange={(event) => updateProductPrice(product, event.target.value)} /></label>
+                <label>Precio neto descuento<input inputMode="numeric" value={product.netPrice || ''} onChange={(event) => updateCollection('products', product.id, { netPrice: onlyDigits(event.target.value) })} /></label>
                 <label>Medidas<input value={product.size} onChange={(event) => updateCollection('products', product.id, { size: event.target.value })} /></label>
                 <label>Material<input value={product.material || ''} onChange={(event) => updateCollection('products', product.id, { material: event.target.value })} /></label>
                 <label>Color/acabado<input value={product.color || ''} onChange={(event) => updateCollection('products', product.id, { color: event.target.value })} /></label>
                 <label>Entrega<input value={product.leadTime || ''} onChange={(event) => updateCollection('products', product.id, { leadTime: event.target.value })} /></label>
+                <label>Descuento %<input inputMode="numeric" value={product.discountPercent || ''} onChange={(event) => updateCollection('products', product.id, { discountPercent: onlyDigits(event.target.value) })} /></label>
+                <label>Texto oferta<input value={product.discountLabel || ''} onChange={(event) => updateCollection('products', product.id, { discountLabel: event.target.value })} /></label>
+                <label>Inicio oferta<input type="date" value={product.discountStart || ''} onChange={(event) => updateCollection('products', product.id, { discountStart: event.target.value })} /></label>
+                <label>Fin oferta<input type="date" value={product.discountEnd || ''} onChange={(event) => updateCollection('products', product.id, { discountEnd: event.target.value })} /></label>
                 <label className="admin-colspan">Descripción para la ficha<textarea value={product.description || ''} onChange={(event) => updateCollection('products', product.id, { description: event.target.value })} /></label>
                 <label className="admin-check"><input type="checkbox" checked={product.featured} onChange={(event) => updateCollection('products', product.id, { featured: event.target.checked })} /> Destacado</label>
               </div>
 
-              <button className="admin-delete" onClick={() => removeFromCollection('products', product.id)}><Trash2 size={16} /> Eliminar</button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingProduct(product)}><Save size={16} /> Guardar cambios</button>
+                <button className="admin-delete" onClick={() => removeFromCollection('products', product.id)}><Trash2 size={16} /> Eliminar</button>
+              </div>
             </article>
           ))}
         </div>
@@ -880,8 +1074,8 @@ function Cuenta() {
         </div>
 
         <div className="admin-editor-list">
-          {content.blogPosts.map((post) => (
-            <article className="admin-editor-card" key={post.id}>
+          {content.blogPosts.map((post, index) => (
+            <article className="admin-editor-card" key={`blog-post-${index}`}>
               <div className="admin-image-box">
                 {post.image ? <img src={post.image} alt={post.title} /> : <Images size={26} />}
                 <label>
@@ -937,8 +1131,8 @@ function Cuenta() {
         </div>
 
         <div className="admin-editor-list">
-          {content.categories.map((category) => (
-            <article className="admin-editor-card" key={category.id}>
+          {content.categories.map((category, index) => (
+            <article className="admin-editor-card" key={`category-${index}`}>
               <div className="admin-image-box">
                 {category.image ? <img src={category.image} alt={category.name} /> : <Images size={26} />}
                 <label>
@@ -958,7 +1152,10 @@ function Cuenta() {
                 <label className="admin-colspan">Descripción<textarea value={category.description} onChange={(event) => updateCollection('categories', category.id, { description: event.target.value })} /></label>
               </div>
 
-              <button className="admin-delete" onClick={() => removeFromCollection('categories', category.id)}><Trash2 size={16} /> Eliminar</button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingCategory(category)}><Save size={16} /> Guardar cambios</button>
+                <button className="admin-delete" onClick={() => removeFromCollection('categories', category.id)}><Trash2 size={16} /> Eliminar</button>
+              </div>
             </article>
           ))}
         </div>
@@ -1015,6 +1212,7 @@ function Cuenta() {
     overview: renderOverview,
     hero: renderHero,
     pages: renderPages,
+    stories: renderStories,
     products: renderProducts,
     blog: renderBlog,
     categories: renderCategories,
