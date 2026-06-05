@@ -257,11 +257,12 @@ async function request(path, options = {}) {
   })
 
   if (!response.ok) {
+    const message = await response.text().catch(() => '')
     if (response.status === 401 || response.status === 403) {
       sessionStorage.removeItem(AUTH_TOKEN_KEY)
       sessionStorage.removeItem('formas-admin-authenticated')
     }
-    throw new Error(`Error ${response.status} en ${path}`)
+    throw new Error(message || `Error ${response.status} en ${path}`)
   }
 
   return response.status === 204 ? null : response.json()
@@ -287,6 +288,10 @@ export async function loginAdmin(email, password) {
 
 export function logoutAdmin() {
   sessionStorage.removeItem(AUTH_TOKEN_KEY)
+}
+
+export function hasAdminToken() {
+  return Boolean(sessionStorage.getItem(AUTH_TOKEN_KEY))
 }
 
 export async function fetchCatalogContent() {

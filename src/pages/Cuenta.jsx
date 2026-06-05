@@ -25,6 +25,7 @@ import {
   deleteProject,
   deleteProjectHighlight,
   deleteTestimonial,
+  hasAdminToken,
   loginAdmin,
   logoutAdmin,
   saveBlogPost,
@@ -59,8 +60,6 @@ const pageOptions = [
 ]
 
 const ADMIN_SESSION_KEY = 'formas-admin-authenticated'
-const ADMIN_EMAIL = 'admin@formas.com'
-const ADMIN_PASSWORD = 'Formas2026'
 
 function getEmptyProduct(category) {
   return {
@@ -209,7 +208,7 @@ const csvConfig = {
 
 function Cuenta() {
   const [content, setContent] = useSiteContent()
-  const [isAuthenticated, setIsAuthenticated] = useState(() => sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true')
+  const [isAuthenticated, setIsAuthenticated] = useState(() => sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true' && hasAdminToken())
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
   const [loginError, setLoginError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -241,20 +240,9 @@ function Cuenta() {
       setIsAuthenticated(true)
       setLoginError('')
       flash('Sesión iniciada.')
-      return
     } catch {
-      // Si el backend está apagado, se conserva el login local para poder ver el panel.
+      setLoginError('No se pudo iniciar sesión con el backend. Verifica que Spring Boot esté encendido.')
     }
-
-    if (loginForm.email.trim().toLowerCase() === ADMIN_EMAIL && loginForm.password === ADMIN_PASSWORD) {
-      sessionStorage.setItem(ADMIN_SESSION_KEY, 'true')
-      setIsAuthenticated(true)
-      setLoginError('')
-      flash('Sesión iniciada.')
-      return
-    }
-
-    setLoginError('Correo o contraseña incorrectos.')
   }
 
   function handleLogout() {
