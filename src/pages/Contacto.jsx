@@ -1,17 +1,45 @@
 import { useState } from 'react'
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 import PageHero from '../components/sections/PageHero'
+import { submitContactForm } from '../api/cmsApi'
 import { useSiteContent } from '../hooks/useSiteContent'
 
 function Contacto() {
   const [{ pageContent }] = useSiteContent()
   const page = pageContent.contacto
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
+  const mapUrl = page.mapEmbedUrl || (
+    page.mapAddress
+      ? `https://www.google.com/maps?q=${encodeURIComponent(page.mapAddress)}&output=embed`
+      : ''
+  )
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
-    setSent(true)
-    setTimeout(() => setSent(false), 3000)
+    const form = event.currentTarget
+    const data = new FormData(form)
+
+    setSending(true)
+    setError('')
+
+    try {
+      await submitContactForm({
+        name: data.get('name'),
+        phone: data.get('phone'),
+        email: data.get('email'),
+        interest: data.get('interest'),
+        message: data.get('message'),
+      })
+      form.reset()
+      setSent(true)
+      setTimeout(() => setSent(false), 3000)
+    } catch {
+      setError('No se pudo enviar el mensaje. Inténtalo de nuevo.')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -25,11 +53,11 @@ function Contacto() {
             <p className="contacto-form-sub">{page.formSubtitle}</p>
             <form onSubmit={handleSubmit} className="contacto-form">
               <div className="contacto-form-row">
-                <input type="text" placeholder="Nombre completo" required />
-                <input type="tel" placeholder="Teléfono" />
+                <input name="name" type="text" placeholder="Nombre completo" required />
+                <input name="phone" type="tel" placeholder="Teléfono" />
               </div>
-              <input type="email" placeholder="Correo electrónico" required />
-              <select>
+              <input name="email" type="email" placeholder="Correo electrónico" required />
+              <select name="interest">
                 <option value="">Estoy interesado en...</option>
                 <option>Centros de entretenimiento</option>
                 <option>Closets</option>
@@ -41,9 +69,10 @@ function Contacto() {
                 <option>Alcobas infantiles</option>
                 <option>Otro</option>
               </select>
-              <textarea rows={4} placeholder="Cuéntanos sobre tu proyecto, medidas aproximadas, materiales de preferencia..." />
+              <textarea name="message" rows={4} placeholder="Cuéntanos sobre tu proyecto, medidas aproximadas, materiales de preferencia..." />
+              {error && <p className="contacto-form-note">{error}</p>}
               <button type="submit" className="button button--primary" style={{ width: '100%' }}>
-                {sent ? 'Mensaje enviado' : 'Enviar mensaje'}
+                {sending ? 'Enviando...' : sent ? 'Mensaje enviado' : 'Enviar mensaje'}
               </button>
               <p className="contacto-form-note">Tu información está protegida. No compartimos tus datos.</p>
             </form>
@@ -55,11 +84,19 @@ function Contacto() {
             <div className="contacto-info-item"><div className="contacto-info-icon"><Phone size={20} /></div><div><strong>{page.phoneTitle}</strong><p>{page.phone.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
             <div className="contacto-info-item"><div className="contacto-info-icon"><Mail size={20} /></div><div><strong>{page.emailTitle}</strong><p>{page.email}</p></div></div>
             <div className="contacto-info-item"><div className="contacto-info-icon"><Clock size={20} /></div><div><strong>{page.hoursTitle}</strong><p>{page.hours.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
-            <div className="contacto-social"><a href="#">IG</a><a href="#">FB</a><a href="#">PT</a><a href="#">YT</a></div>
           </div>
 
           <div className="contacto-mapa">
-            {page.mapImage ? <img src={page.mapImage} alt={page.visitTitle} /> : <div className="contacto-mapa-ph">Mapa pendiente</div>}
+            {mapUrl ? (
+              <iframe
+                title={page.visitTitle || 'Ubicación'}
+                src={mapUrl}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            ) : (
+              <div className="contacto-mapa-ph">Mapa pendiente</div>
+            )}
             <div className="contacto-mapa-card">
               <h5>{page.visitTitle}</h5>
               <p>{page.visitText}</p>

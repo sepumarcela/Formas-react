@@ -2,7 +2,7 @@ import { useSiteContent } from '../../hooks/useSiteContent'
 
 function TestimonialSection() {
   const [{ testimonials }] = useSiteContent()
-  const visibleTestimonials = testimonials.filter((testimonial) => testimonial.approved !== false)
+  const visibleTestimonials = testimonials.filter((testimonial) => testimonial.active !== false && testimonial.approved !== false)
 
   return (
     <section className="testimonials">

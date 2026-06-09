@@ -31,6 +31,7 @@ function Header({ transparent = false }) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [{ categories }] = useSiteContent()
+  const visibleCategories = categories.filter((category) => category.active !== false)
   const dropRef = useRef(null)
   const navigate = useNavigate()
 
@@ -48,7 +49,7 @@ function Header({ transparent = false }) {
     const query = normalizeText(searchValue)
 
     if (query) {
-      const match = categories.find((category) => (
+      const match = visibleCategories.find((category) => (
         normalizeText(category.id).includes(query) || normalizeText(category.name).includes(query)
       ))
 
@@ -89,7 +90,7 @@ function Header({ transparent = false }) {
             <div className={`nav-dropdown__menu ${dropOpen ? 'open' : ''}`}>
               <div className="nav-dropdown__col">
                 <div className="nav-dropdown__title">Categorías</div>
-                {categories.map((category) => {
+                {visibleCategories.map((category) => {
                   const Icon = categoryIcons[category.icon] || Rows3
 
                   return (

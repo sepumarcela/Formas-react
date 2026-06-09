@@ -5,7 +5,7 @@ import { getActiveDiscount } from '../../utils/discounts'
 function FeaturedProducts() {
   const [{ products, pageContent }] = useSiteContent()
   const section = pageContent.homeProducts
-  const featuredProducts = products.filter((product) => product.featured).slice(0, 8)
+  const featuredProducts = products.filter((product) => product.featured && product.active !== false).slice(0, 8)
 
   return (
     <section className="featured-products">

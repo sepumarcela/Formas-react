@@ -17,7 +17,27 @@ import {
   Trash2,
   Upload,
 } from 'lucide-react'
-import { deleteCategory, deleteProduct, saveCategory, saveProduct } from '../api/cmsApi'
+import {
+  deleteBlogPost,
+  deleteCategory,
+  deleteHeroSlide,
+  deleteProduct,
+  deleteProject,
+  deleteProjectHighlight,
+  deleteTestimonial,
+  hasAdminToken,
+  loginAdmin,
+  logoutAdmin,
+  saveBlogPost,
+  saveCategory,
+  saveHeroSlide,
+  savePageContent,
+  saveProduct,
+  saveProject,
+  saveProjectHighlight,
+  saveTestimonial,
+  uploadImage,
+} from '../api/cmsApi'
 import { createSlug, defaultSiteContent } from '../data/siteContent'
 import { useSiteContent } from '../hooks/useSiteContent'
 
@@ -41,8 +61,6 @@ const pageOptions = [
 ]
 
 const ADMIN_SESSION_KEY = 'formas-admin-authenticated'
-const ADMIN_EMAIL = 'admin@formas.com'
-const ADMIN_PASSWORD = 'Formas2026'
 
 function getEmptyProduct(category) {
   return {
@@ -92,15 +110,6 @@ const iconOptions = [
   ['bed', 'Alcoba'],
   ['book', 'Biblioteca'],
 ]
-
-function readFileAsDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result)
-    reader.onerror = reject
-    reader.readAsDataURL(file)
-  })
-}
 
 function parseCsvLine(line) {
   const values = []
@@ -189,9 +198,20 @@ const csvConfig = {
   },
 }
 
+const imageFolders = {
+  products: 'productos',
+  categories: 'categorias',
+  heroSlides: 'inicio',
+  blogPosts: 'blog',
+  projects: 'proyectos',
+  projectHighlights: 'proyectos',
+  testimonials: 'testimonios',
+  pages: 'paginas',
+}
+
 function Cuenta() {
   const [content, setContent] = useSiteContent()
-  const [isAuthenticated, setIsAuthenticated] = useState(() => sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true')
+  const [isAuthenticated, setIsAuthenticated] = useState(() => sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true' && hasAdminToken())
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
   const [loginError, setLoginError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -214,26 +234,47 @@ function Cuenta() {
     window.setTimeout(() => setNotice(''), 2400)
   }
 
-  function handleLogin(event) {
+  async function handleLogin(event) {
     event.preventDefault()
 
-    if (loginForm.email.trim().toLowerCase() === ADMIN_EMAIL && loginForm.password === ADMIN_PASSWORD) {
+    try {
+      await loginAdmin(loginForm.email.trim().toLowerCase(), loginForm.password)
       sessionStorage.setItem(ADMIN_SESSION_KEY, 'true')
       setIsAuthenticated(true)
       setLoginError('')
       flash('Sesión iniciada.')
-      return
+    } catch (error) {
+      setLoginError(error?.message || 'No se pudo iniciar sesión con el backend. Verifica que Spring Boot esté encendido.')
     }
-
-    setLoginError('Correo o contraseña incorrectos.')
   }
 
   function handleLogout() {
     sessionStorage.removeItem(ADMIN_SESSION_KEY)
+    logoutAdmin()
     setIsAuthenticated(false)
     setLoginForm({ email: '', password: '' })
     setShowPassword(false)
     setActiveSection('overview')
+  }
+
+  function requireBackendSession() {
+    if (hasAdminToken()) return true
+
+    sessionStorage.removeItem(ADMIN_SESSION_KEY)
+    setIsAuthenticated(false)
+    setLoginError('Inicia sesión otra vez para guardar cambios.')
+    flash('Inicia sesión otra vez para guardar cambios.')
+    return false
+  }
+
+  function reportBackendError(defaultMessage, error) {
+    if (!hasAdminToken()) {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY)
+      setIsAuthenticated(false)
+      setLoginError('Inicia sesión otra vez para guardar cambios.')
+    }
+
+    flash(error?.message || defaultMessage)
   }
 
   function updateCollection(collection, id, patch) {
@@ -245,6 +286,34 @@ function Cuenta() {
     }))
   }
 
+  async function persistImagePatch(collection, id, patch) {
+    const item = content[collection]?.find((entry) => entry.id === id)
+    if (!item) return
+
+    const nextItem = { ...item, ...patch }
+    const displayOrder = content[collection]?.findIndex((entry) => entry.id === id) || 0
+
+    updateCollection(collection, id, patch)
+
+    try {
+      let saved
+      if (collection === 'products') saved = await saveProduct(nextItem)
+      if (collection === 'categories') saved = await saveCategory(nextItem)
+      if (collection === 'heroSlides') saved = await saveHeroSlide(nextItem, displayOrder)
+      if (collection === 'blogPosts') saved = await saveBlogPost(nextItem)
+      if (collection === 'projects') saved = await saveProject(nextItem, displayOrder)
+      if (collection === 'projectHighlights') saved = await saveProjectHighlight(nextItem, displayOrder)
+      if (collection === 'testimonials') saved = await saveTestimonial(nextItem)
+
+      if (saved) {
+        updateCollection(collection, id, saved)
+        flash('Imagen subida y guardada.')
+      }
+    } catch (error) {
+      reportBackendError('La imagen se subió, pero no se pudo guardar la información asociada.', error)
+    }
+  }
+
   async function removeFromCollection(collection, id) {
     const item = content[collection]?.find((entry) => entry.id === id)
 
@@ -252,6 +321,11 @@ function Cuenta() {
       try {
         if (collection === 'products') await deleteProduct(id)
         if (collection === 'categories') await deleteCategory(id)
+        if (collection === 'heroSlides') await deleteHeroSlide(id)
+        if (collection === 'blogPosts') await deleteBlogPost(id)
+        if (collection === 'projects') await deleteProject(id)
+        if (collection === 'projectHighlights') await deleteProjectHighlight(id)
+        if (collection === 'testimonials') await deleteTestimonial(id)
       } catch {
         flash('No se pudo eliminar en el backend. Revisa que esté prendido.')
         return
@@ -323,8 +397,13 @@ function Cuenta() {
     const file = event.target.files?.[0]
     if (!file) return
 
-    const image = await readFileAsDataUrl(file)
-    updateNewProduct({ image })
+    try {
+      const image = await uploadImage(imageFolders.products, file)
+      updateNewProduct({ image })
+      flash('Imagen subida.')
+    } catch (error) {
+      reportBackendError('No se pudo subir la imagen al backend.', error)
+    }
   }
 
   async function addProduct(event) {
@@ -396,118 +475,227 @@ function Cuenta() {
     }
   }
 
-  function addBlogPost() {
-    const baseTitle = `Nuevo artículo ${content.blogPosts.length + 1}`
-    setContent((current) => ({
-      ...current,
-      blogPosts: [
-        ...current.blogPosts,
-        {
-          id: createSlug(baseTitle),
-          tag: 'TENDENCIAS',
-          date: new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }),
-          title: baseTitle,
-          desc: 'Resumen del artículo.',
-          image: '',
-          body: '',
-        },
-      ],
-    }))
-    setActiveSection('blog')
-    flash('Artículo creado.')
+  async function saveExistingHeroSlide(slide, index) {
+    if (!requireBackendSession()) return
+
+    try {
+      const savedSlide = await saveHeroSlide(slide, index)
+      updateCollection('heroSlides', slide.id, savedSlide)
+      flash('Foto de inicio guardada.')
+    } catch (error) {
+      reportBackendError('No se pudo guardar la foto de inicio en el backend.', error)
+    }
   }
 
-  function addHeroSlide() {
-    setContent((current) => ({
-      ...current,
-      heroSlides: [
-        ...current.heroSlides,
-        getEmptyHeroSlide(current.heroSlides.length + 1),
-      ],
-    }))
-    setActiveSection('hero')
-    flash('Foto de inicio creada.')
+  async function saveExistingBlogPost(post) {
+    try {
+      const savedPost = await saveBlogPost(post)
+      updateCollection('blogPosts', post.id, savedPost)
+      flash('Artículo guardado.')
+    } catch {
+      flash('No se pudo guardar el artículo en el backend.')
+    }
+  }
+
+  async function saveExistingProject(project, index) {
+    try {
+      const savedProject = await saveProject(project, index)
+      updateCollection('projects', project.id, savedProject)
+      flash('Proyecto guardado.')
+    } catch {
+      flash('No se pudo guardar el proyecto en el backend.')
+    }
+  }
+
+  async function saveExistingProjectHighlight(project, index) {
+    try {
+      const savedProject = await saveProjectHighlight(project, index)
+      updateCollection('projectHighlights', project.id, savedProject)
+      flash('Proyecto realizado guardado.')
+    } catch {
+      flash('No se pudo guardar el proyecto realizado en el backend.')
+    }
+  }
+
+  async function saveExistingTestimonial(testimonial) {
+    try {
+      const savedTestimonial = await saveTestimonial(testimonial)
+      updateCollection('testimonials', testimonial.id, savedTestimonial)
+      flash('Testimonio guardado.')
+    } catch {
+      flash('No se pudo guardar el testimonio en el backend.')
+    }
+  }
+
+  async function saveCurrentPageContent() {
+    try {
+      const savedPage = await savePageContent(pageKey, content.pageContent[pageKey])
+      setContent((current) => ({
+        ...current,
+        pageContent: {
+          ...current.pageContent,
+          [pageKey]: savedPage,
+        },
+      }))
+      flash('Contenido de página guardado.')
+    } catch {
+      flash('No se pudo guardar la página en el backend.')
+    }
+  }
+
+  function renderCardSave(label, onClick) {
+    return (
+      <button type="button" className="admin-image-save" onClick={onClick}>
+        <Save size={14} /> {label}
+      </button>
+    )
+  }
+
+  async function addBlogPost() {
+    const baseTitle = `Nuevo artículo ${content.blogPosts.length + 1}`
+    try {
+      const savedPost = await saveBlogPost({
+        id: createSlug(baseTitle),
+        tag: 'TENDENCIAS',
+        date: new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }),
+        title: baseTitle,
+        desc: 'Resumen del artículo.',
+        image: '',
+        body: '',
+      })
+      setContent((current) => ({ ...current, blogPosts: [...current.blogPosts, savedPost] }))
+      setActiveSection('blog')
+      flash('Artículo creado.')
+    } catch {
+      flash('No se pudo crear el artículo en el backend.')
+    }
+  }
+
+  async function addHeroSlide() {
+    try {
+      const savedSlide = await saveHeroSlide(getEmptyHeroSlide(content.heroSlides.length + 1), content.heroSlides.length)
+      setContent((current) => ({ ...current, heroSlides: [...current.heroSlides, savedSlide] }))
+      setActiveSection('hero')
+      flash('Foto de inicio creada.')
+    } catch {
+      flash('No se pudo crear la foto de inicio en el backend.')
+    }
   }
 
   async function handleImageUpload(collection, id, event) {
     const file = event.target.files?.[0]
     if (!file) return
 
-    const image = await readFileAsDataUrl(file)
-    updateCollection(collection, id, { image })
-    flash('Imagen cargada.')
+    try {
+      const image = await uploadImage(imageFolders[collection] || 'imagenes', file)
+      await persistImagePatch(collection, id, { image })
+    } catch (error) {
+      reportBackendError('No se pudo subir la imagen al backend.', error)
+    }
   }
 
   async function handleHeroImageUpload(id, event) {
     const file = event.target.files?.[0]
     if (!file) return
 
-    const image = await readFileAsDataUrl(file)
-    updateCollection('heroSlides', id, { image })
-    flash('Foto de inicio cargada.')
+    try {
+      const image = await uploadImage(imageFolders.heroSlides, file)
+      await persistImagePatch('heroSlides', id, { image })
+    } catch (error) {
+      reportBackendError('No se pudo subir la foto de inicio al backend.', error)
+    }
   }
 
   async function handlePageImageUpload(section, field, event) {
     const file = event.target.files?.[0]
     if (!file) return
 
-    const image = await readFileAsDataUrl(file)
-    updatePageContent(section, { [field]: image })
-    flash('Imagen de página cargada.')
+    try {
+      const image = await uploadImage(imageFolders.pages, file)
+      const nextPage = { ...content.pageContent[section], [field]: image }
+      updatePageContent(section, { [field]: image })
+      const savedPage = await savePageContent(section, nextPage)
+      setContent((current) => ({
+        ...current,
+        pageContent: {
+          ...current.pageContent,
+          [section]: savedPage,
+        },
+      }))
+      flash('Imagen de página subida y guardada.')
+    } catch (error) {
+      reportBackendError('No se pudo subir la imagen de página al backend.', error)
+    }
   }
 
-  function addProject() {
+  async function addProject() {
     const title = `Nuevo proyecto ${content.projects.length + 1}`
-    setContent((current) => ({
-      ...current,
-      projects: [
-        ...current.projects,
+    try {
+      const savedProject = await saveProject(
         { id: createSlug(title), cat: 'hogar', label: 'Hogar', title, location: 'Ciudad, Colombia', image: '' },
-      ],
-    }))
-    flash('Proyecto creado.')
+        content.projects.length,
+      )
+      setContent((current) => ({ ...current, projects: [...current.projects, savedProject] }))
+      flash('Proyecto creado.')
+    } catch {
+      flash('No se pudo crear el proyecto en el backend.')
+    }
   }
 
   async function handleProjectImageUpload(id, event) {
     const file = event.target.files?.[0]
     if (!file) return
 
-    const image = await readFileAsDataUrl(file)
-    updateCollection('projects', id, { image })
-    flash('Imagen de proyecto cargada.')
+    try {
+      const image = await uploadImage(imageFolders.projects, file)
+      await persistImagePatch('projects', id, { image })
+    } catch (error) {
+      reportBackendError('No se pudo subir la imagen del proyecto al backend.', error)
+    }
   }
 
-  function addProjectHighlight() {
+  async function addProjectHighlight() {
     const title = `Nuevo antes y después ${content.projectHighlights.length + 1}`
-    setContent((current) => ({
-      ...current,
-      projectHighlights: [
-        ...current.projectHighlights,
+    try {
+      const savedProject = await saveProjectHighlight(
         { id: createSlug(title), category: 'Cocinas', title, before: '', after: '' },
-      ],
-    }))
-    flash('Proyecto realizado creado.')
+        content.projectHighlights.length,
+      )
+      setContent((current) => ({ ...current, projectHighlights: [...current.projectHighlights, savedProject] }))
+      flash('Proyecto realizado creado.')
+    } catch {
+      flash('No se pudo crear el proyecto realizado en el backend.')
+    }
   }
 
-  function addTestimonial() {
+  async function addTestimonial() {
     const name = `Cliente ${content.testimonials.length + 1}`
-    setContent((current) => ({
-      ...current,
-      testimonials: [
-        ...current.testimonials,
-        { id: createSlug(name), name, location: 'Ciudad, Colombia', text: 'Escribe aquí el testimonio real del cliente.', image: '', approved: true },
-      ],
-    }))
-    flash('Testimonio creado.')
+    try {
+      const savedTestimonial = await saveTestimonial({
+        id: createSlug(name),
+        name,
+        location: 'Ciudad, Colombia',
+        text: 'Escribe aquí el testimonio real del cliente.',
+        image: '',
+        approved: true,
+      })
+      setContent((current) => ({ ...current, testimonials: [...current.testimonials, savedTestimonial] }))
+      flash('Testimonio creado.')
+    } catch {
+      flash('No se pudo crear el testimonio en el backend.')
+    }
   }
 
   async function handleCollectionImageUpload(collection, id, field, event) {
     const file = event.target.files?.[0]
     if (!file) return
 
-    const image = await readFileAsDataUrl(file)
-    updateCollection(collection, id, { [field]: image })
-    flash('Imagen cargada.')
+    try {
+      const image = await uploadImage(imageFolders[collection] || 'imagenes', file)
+      await persistImagePatch(collection, id, { [field]: image })
+    } catch (error) {
+      reportBackendError('No se pudo subir la imagen al backend.', error)
+    }
   }
 
   function handleCategoryIdChange(category, id) {
@@ -632,10 +820,11 @@ function Cuenta() {
                   Cargar foto
                   <input type="file" accept="image/*" onChange={(event) => handleHeroImageUpload(slide.id, event)} />
                 </label>
+                {renderCardSave('Guardar foto', () => saveExistingHeroSlide(slide, index))}
               </div>
 
               <div className="admin-form-grid admin-form-grid--wide">
-                <label>ID<input value={slide.id} onChange={(event) => updateCollection('heroSlides', slide.id, { id: createSlug(event.target.value) })} /></label>
+                <label>ID<input value={slide.id} readOnly title="Este ID lo asigna el backend automaticamente." /></label>
                 <label>Texto pequeño<input value={slide.eyebrow || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { eyebrow: event.target.value })} placeholder="Opcional" /></label>
                 <label>Línea principal<input value={slide.titleAccent || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { titleAccent: event.target.value })} /></label>
                 <label>Línea secundaria<input value={slide.title || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { title: event.target.value })} /></label>
@@ -647,14 +836,17 @@ function Cuenta() {
                 <label className="admin-check"><input type="checkbox" checked={slide.active !== false} onChange={(event) => updateCollection('heroSlides', slide.id, { active: event.target.checked })} /> Visible en inicio</label>
               </div>
 
-              <button
-                className="admin-delete"
-                disabled={content.heroSlides.length === 1}
-                onClick={() => removeFromCollection('heroSlides', slide.id)}
-                title={content.heroSlides.length === 1 ? 'Debe quedar al menos una foto' : 'Eliminar foto'}
-              >
-                <Trash2 size={16} /> Eliminar
-              </button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingHeroSlide(slide, index)}><Save size={16} /> Guardar cambios</button>
+                <button
+                  className="admin-delete"
+                  disabled={content.heroSlides.length === 1}
+                  onClick={() => removeFromCollection('heroSlides', slide.id)}
+                  title={content.heroSlides.length === 1 ? 'Debe quedar al menos una foto' : 'Eliminar foto'}
+                >
+                  <Trash2 size={16} /> Eliminar
+                </button>
+              </div>
               <span className="admin-hero-order">Foto {index + 1}</span>
             </article>
           ))}
@@ -677,6 +869,7 @@ function Cuenta() {
             <p>Cambia textos e imágenes principales de Proyectos, Nosotros, Blog, Contacto y las secciones de productos del inicio.</p>
           </div>
           <div className="admin-header-actions">
+            <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> Guardar página</button>
             <label className="admin-page-select">
               Página
               <select value={pageKey} onChange={(event) => setPageKey(event.target.value)}>
@@ -694,6 +887,7 @@ function Cuenta() {
                 Cargar foto hero
                 <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload(pageKey, 'image', event)} />
               </label>
+              {renderCardSave('Guardar página', saveCurrentPageContent)}
             </div>
 
             <div className="admin-form-grid admin-form-grid--wide">
@@ -722,6 +916,28 @@ function Cuenta() {
               <label>Título destacados<input value={page.featuredTitle || ''} onChange={(event) => updatePageContent('homeProducts', { featuredTitle: event.target.value })} /></label>
               <label className="admin-colspan">Descripción destacados<textarea value={page.featuredDescription || ''} onChange={(event) => updatePageContent('homeProducts', { featuredDescription: event.target.value })} /></label>
             </div>
+            <div className="admin-list-heading">
+              <h2>Bloque final de contacto</h2>
+            </div>
+            <div className="admin-editor-card admin-editor-card--hero">
+              <div className="admin-image-box admin-image-box--hero">
+                {page.finalImage ? <img src={page.finalImage} alt={page.finalTitle || 'Bloque final'} /> : <Images size={30} />}
+                <label>
+                  Cargar foto final
+                  <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('homeProducts', 'finalImage', event)} />
+                </label>
+                {renderCardSave('Guardar página', saveCurrentPageContent)}
+              </div>
+              <div className="admin-form-grid admin-form-grid--wide">
+                <label>Texto pequeño<input value={page.finalEyebrow || ''} onChange={(event) => updatePageContent('homeProducts', { finalEyebrow: event.target.value })} /></label>
+                <label>Título<input value={page.finalTitle || ''} onChange={(event) => updatePageContent('homeProducts', { finalTitle: event.target.value })} /></label>
+                <label className="admin-colspan">Texto<textarea value={page.finalText || ''} onChange={(event) => updatePageContent('homeProducts', { finalText: event.target.value })} /></label>
+                <label>Botón principal<input value={page.finalPrimaryLabel || ''} onChange={(event) => updatePageContent('homeProducts', { finalPrimaryLabel: event.target.value })} /></label>
+                <label>Link botón principal<input value={page.finalPrimaryLink || ''} onChange={(event) => updatePageContent('homeProducts', { finalPrimaryLink: event.target.value })} /></label>
+                <label>Texto WhatsApp<input value={page.finalWhatsappLabel || ''} onChange={(event) => updatePageContent('homeProducts', { finalWhatsappLabel: event.target.value })} /></label>
+                <label>Link WhatsApp<input value={page.finalWhatsappLink || ''} onChange={(event) => updatePageContent('homeProducts', { finalWhatsappLink: event.target.value })} /></label>
+              </div>
+            </div>
           </article>
         )}
 
@@ -743,6 +959,7 @@ function Cuenta() {
                     Cargar imagen
                     <input type="file" accept="image/*" onChange={(event) => handleProjectImageUpload(project.id, event)} />
                   </label>
+                  {renderCardSave('Guardar proyecto', () => saveExistingProject(project, index))}
                 </div>
                 <div className="admin-form-grid">
                   <label>ID<input value={project.id} onChange={(event) => updateCollection('projects', project.id, { id: createSlug(event.target.value) })} /></label>
@@ -751,7 +968,10 @@ function Cuenta() {
                   <label>Título<input value={project.title} onChange={(event) => updateCollection('projects', project.id, { title: event.target.value })} /></label>
                   <label>Ubicación<input value={project.location} onChange={(event) => updateCollection('projects', project.id, { location: event.target.value })} /></label>
                 </div>
-                <button className="admin-delete" onClick={() => removeFromCollection('projects', project.id)}><Trash2 size={16} /> Eliminar</button>
+                <div className="admin-card-actions">
+                  <button className="button button--primary" onClick={() => saveExistingProject(project, index)}><Save size={16} /> Guardar cambios</button>
+                  <button className="admin-delete" onClick={() => removeFromCollection('projects', project.id)}><Trash2 size={16} /> Eliminar</button>
+                </div>
               </article>
             ))}
           </div>
@@ -766,6 +986,7 @@ function Cuenta() {
                   Foto historia
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('nosotros', 'historyImage', event)} />
                 </label>
+                {renderCardSave('Guardar página', saveCurrentPageContent)}
               </div>
               <div className="admin-form-grid admin-form-grid--wide">
                 <label className="admin-colspan">Título historia<input value={page.historyTitle || ''} onChange={(event) => updatePageContent('nosotros', { historyTitle: event.target.value })} /></label>
@@ -780,6 +1001,7 @@ function Cuenta() {
                   Foto sede
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('nosotros', 'locationImage', event)} />
                 </label>
+                {renderCardSave('Guardar página', saveCurrentPageContent)}
               </div>
               <div className="admin-form-grid admin-form-grid--wide">
                 <label className="admin-colspan">Esta foto aparece en la sección Nuestra sede<input value="Imagen editable desde este bloque" readOnly /></label>
@@ -815,18 +1037,14 @@ function Cuenta() {
               </div>
             </article>
 
-            <article className="admin-editor-card admin-editor-card--hero">
-              <div className="admin-image-box admin-image-box--hero">
-                {page.mapImage ? <img src={page.mapImage} alt={page.visitTitle} /> : <Images size={30} />}
-                <label>
-                  Foto/mapa
-                  <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('contacto', 'mapImage', event)} />
-                </label>
-              </div>
+            <article className="admin-create-card">
               <div className="admin-form-grid admin-form-grid--wide">
                 <label>Título visita<input value={page.visitTitle || ''} onChange={(event) => updatePageContent('contacto', { visitTitle: event.target.value })} /></label>
                 <label>WhatsApp<input value={page.whatsappLink || ''} onChange={(event) => updatePageContent('contacto', { whatsappLink: event.target.value })} /></label>
+                <label className="admin-colspan">Dirección para mapa<input value={page.mapAddress || ''} onChange={(event) => updatePageContent('contacto', { mapAddress: event.target.value })} placeholder="Ej: Centro histórico, Cartagena, Colombia" /></label>
+                <label className="admin-colspan">Enlace embebido de Google Maps opcional<input value={page.mapEmbedUrl || ''} onChange={(event) => updatePageContent('contacto', { mapEmbedUrl: event.target.value })} placeholder="Opcional: pega aqui el src de un mapa embebido" /></label>
                 <label className="admin-colspan">Texto visita<textarea value={page.visitText || ''} onChange={(event) => updatePageContent('contacto', { visitText: event.target.value })} /></label>
+                <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> Guardar ubicación</button>
               </div>
             </article>
           </div>
@@ -881,6 +1099,7 @@ function Cuenta() {
                     Antes
                     <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('projectHighlights', project.id, 'before', event)} />
                   </label>
+                  {renderCardSave('Guardar', () => saveExistingProjectHighlight(project, index))}
                 </div>
                 <div className="admin-image-box">
                   {project.after ? <img src={project.after} alt={`${project.title} después`} /> : <Images size={24} />}
@@ -888,6 +1107,7 @@ function Cuenta() {
                     Después
                     <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('projectHighlights', project.id, 'after', event)} />
                   </label>
+                  {renderCardSave('Guardar', () => saveExistingProjectHighlight(project, index))}
                 </div>
               </div>
 
@@ -897,7 +1117,10 @@ function Cuenta() {
                 <label>Título<input value={project.title} onChange={(event) => updateCollection('projectHighlights', project.id, { title: event.target.value })} /></label>
               </div>
 
-              <button className="admin-delete" onClick={() => removeFromCollection('projectHighlights', project.id)}><Trash2 size={16} /> Eliminar</button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingProjectHighlight(project, index)}><Save size={16} /> Guardar cambios</button>
+                <button className="admin-delete" onClick={() => removeFromCollection('projectHighlights', project.id)}><Trash2 size={16} /> Eliminar</button>
+              </div>
             </article>
           ))}
         </div>
@@ -915,6 +1138,7 @@ function Cuenta() {
                   Foto cliente
                   <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('testimonials', testimonial.id, 'image', event)} />
                 </label>
+                {renderCardSave('Guardar testimonio', () => saveExistingTestimonial(testimonial))}
               </div>
 
               <div className="admin-form-grid admin-form-grid--wide">
@@ -925,7 +1149,10 @@ function Cuenta() {
                 <label className="admin-colspan">Testimonio<textarea value={testimonial.text} onChange={(event) => updateCollection('testimonials', testimonial.id, { text: event.target.value })} /></label>
               </div>
 
-              <button className="admin-delete" onClick={() => removeFromCollection('testimonials', testimonial.id)}><Trash2 size={16} /> Eliminar</button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingTestimonial(testimonial)}><Save size={16} /> Guardar cambios</button>
+                <button className="admin-delete" onClick={() => removeFromCollection('testimonials', testimonial.id)}><Trash2 size={16} /> Eliminar</button>
+              </div>
             </article>
           ))}
         </div>
@@ -1027,6 +1254,7 @@ function Cuenta() {
                   Cargar imagen
                   <input type="file" accept="image/*" onChange={(event) => handleImageUpload('products', product.id, event)} />
                 </label>
+                {renderCardSave('Guardar producto', () => saveExistingProduct(product))}
               </div>
 
               <div className="admin-form-grid">
@@ -1082,6 +1310,7 @@ function Cuenta() {
                   Cargar imagen
                   <input type="file" accept="image/*" onChange={(event) => handleImageUpload('blogPosts', post.id, event)} />
                 </label>
+                {renderCardSave('Guardar artículo', () => saveExistingBlogPost(post))}
               </div>
 
               <div className="admin-form-grid admin-form-grid--wide">
@@ -1093,7 +1322,10 @@ function Cuenta() {
                 <label className="admin-colspan">Contenido largo<textarea value={post.body} onChange={(event) => updateCollection('blogPosts', post.id, { body: event.target.value })} /></label>
               </div>
 
-              <button className="admin-delete" onClick={() => removeFromCollection('blogPosts', post.id)}><Trash2 size={16} /> Eliminar</button>
+              <div className="admin-card-actions">
+                <button className="button button--primary" onClick={() => saveExistingBlogPost(post)}><Save size={16} /> Guardar cambios</button>
+                <button className="admin-delete" onClick={() => removeFromCollection('blogPosts', post.id)}><Trash2 size={16} /> Eliminar</button>
+              </div>
             </article>
           ))}
         </div>
@@ -1139,6 +1371,7 @@ function Cuenta() {
                   Cargar imagen
                   <input type="file" accept="image/*" onChange={(event) => handleImageUpload('categories', category.id, event)} />
                 </label>
+                {renderCardSave('Guardar categoría', () => saveExistingCategory(category))}
               </div>
 
               <div className="admin-form-grid">
@@ -1172,7 +1405,7 @@ function Cuenta() {
           <div>
             <p className="admin-kicker">Carga masiva</p>
             <h1>Importar desde Excel o CSV</h1>
-            <p>Exporta una plantilla, edítala en Excel y vuelve a cargarla como CSV. Para imágenes usa nombres como <strong>cocina.jpg</strong> y guarda los archivos en <strong>public/images</strong>.</p>
+            <p>Exporta una plantilla, edítala en Excel y vuelve a cargarla como CSV. Las imágenes que subas desde el panel quedan guardadas en <strong>uploads</strong> del backend.</p>
           </div>
           <div className="admin-header-actions">
             <button className="button button--soft" onClick={resetContent}>Restaurar demo</button>

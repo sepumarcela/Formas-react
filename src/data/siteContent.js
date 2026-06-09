@@ -25,6 +25,14 @@ export const defaultSiteContent = {
       featuredEyebrow: 'Destacados de la semana',
       featuredTitle: 'Lo más elegido por nuestros clientes',
       featuredDescription: 'Diseños funcionales, modernos y listos para inspirar nuevos espacios.',
+      finalEyebrow: 'Hablemos de tu proyecto',
+      finalTitle: '¿Listo para transformar tu espacio?',
+      finalText: 'Cuéntanos qué necesitas y te ayudamos a crear un mueble a medida para tu hogar.',
+      finalPrimaryLabel: 'Solicitar cotización',
+      finalPrimaryLink: '/contacto',
+      finalWhatsappLabel: 'Hablar por WhatsApp',
+      finalWhatsappLink: 'https://wa.me/573001234567',
+      finalImage: '',
     },
     proyectos: {
       breadcrumb: 'Proyectos',
@@ -72,7 +80,8 @@ export const defaultSiteContent = {
       email: 'hola@formas.com',
       hoursTitle: 'Horario de atención',
       hours: 'Lunes a Viernes: 8:00 a.m. - 6:00 p.m.\nSábados: 9:00 a.m. - 1:00 p.m.',
-      mapImage: '',
+      mapAddress: 'Cartagena, Colombia Centro histórico',
+      mapEmbedUrl: '',
       visitTitle: 'Sala de diseño',
       visitText: 'Agenda tu visita y conoce nuestros espacios de inspiración.',
       whatsappLink: 'https://wa.me/573001234567',
@@ -255,6 +264,8 @@ export function loadSiteContent() {
 export function saveSiteContent(content) {
   const nextContent = mergeSiteContent(content)
   window.localStorage.setItem(SITE_CONTENT_KEY, JSON.stringify(nextContent))
-  window.dispatchEvent(new CustomEvent(SITE_CONTENT_EVENT, { detail: nextContent }))
+  window.queueMicrotask(() => {
+    window.dispatchEvent(new CustomEvent(SITE_CONTENT_EVENT, { detail: nextContent }))
+  })
   return nextContent
 }
