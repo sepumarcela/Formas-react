@@ -10,7 +10,7 @@ function ProductDetail() {
   const { productId } = useParams()
   const [{ categories, products }] = useSiteContent()
   const [relatedStart, setRelatedStart] = useState(0)
-  const product = products.find((item) => item.id === productId)
+  const product = products.find((item) => item.id === productId && item.active !== false)
 
   if (!product) {
     return (
@@ -26,7 +26,7 @@ function ProductDetail() {
 
   const category = categories.find((item) => item.id === product.categoryId)
   const discount = getActiveDiscount(product)
-  const related = products.filter((item) => item.categoryId === product.categoryId && item.id !== product.id)
+  const related = products.filter((item) => item.categoryId === product.categoryId && item.id !== product.id && item.active !== false)
   const visibleRelated = related.slice(relatedStart, relatedStart + relatedWindowSize)
   const canGoBack = relatedStart > 0
   const canGoNext = relatedStart + relatedWindowSize < related.length

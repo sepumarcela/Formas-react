@@ -24,15 +24,16 @@ const ventajas = [
 function Proyectos() {
   const [{ pageContent, projects }] = useSiteContent()
   const [filtro, setFiltro] = useState('all')
+  const activeProjects = useMemo(() => projects.filter((project) => project.active !== false), [projects])
   const filtros = useMemo(() => {
     const known = new Set(filtrosBase.map((item) => item.id))
-    const custom = projects
+    const custom = activeProjects
       .filter((project) => project.cat && !known.has(project.cat))
       .map((project) => ({ id: project.cat, label: project.label || project.cat }))
 
     return [...filtrosBase, ...custom]
-  }, [projects])
-  const visibles = filtro === 'all' ? projects : projects.filter((project) => project.cat === filtro)
+  }, [activeProjects])
+  const visibles = filtro === 'all' ? activeProjects : activeProjects.filter((project) => project.cat === filtro)
   const hero = pageContent.proyectos
 
   return (

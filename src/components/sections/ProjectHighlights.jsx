@@ -2,6 +2,7 @@ import { useSiteContent } from '../../hooks/useSiteContent'
 
 function ProjectHighlights() {
   const [{ projectHighlights }] = useSiteContent()
+  const visibleProjects = projectHighlights.filter((project) => project.active !== false)
 
   return (
     <section className="project-highlights">
@@ -15,7 +16,7 @@ function ProjectHighlights() {
       </div>
 
       <div className="project-highlight-grid">
-        {projectHighlights.map((project) => (
+        {visibleProjects.map((project) => (
           <article className="project-highlight-card" key={project.id}>
             <div className="project-highlight-card__media">
               <div data-label="Antes">

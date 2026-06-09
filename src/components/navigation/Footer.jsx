@@ -3,6 +3,7 @@ import { useSiteContent } from '../../hooks/useSiteContent'
 
 function Footer() {
   const [{ categories }] = useSiteContent()
+  const visibleCategories = categories.filter((category) => category.active !== false)
 
   return (
     <footer className="site-footer">
@@ -21,7 +22,7 @@ function Footer() {
         <div className="site-footer__col">
           <h4>Productos</h4>
           <ul>
-            {categories.slice(0, 6).map((cat) => (
+            {visibleCategories.slice(0, 6).map((cat) => (
               <li key={cat.id}>
                 <Link to={`/categorias/${cat.id}`}>{cat.name}</Link>
               </li>

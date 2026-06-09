@@ -13,7 +13,7 @@ const badges = [
 function CategoryDetail() {
   const { categoryId } = useParams()
   const [{ categories, products }] = useSiteContent()
-  const category = categories.find((item) => item.id === categoryId)
+  const category = categories.find((item) => item.id === categoryId && item.active !== false)
 
   if (!category) {
     return (
@@ -27,7 +27,7 @@ function CategoryDetail() {
     )
   }
 
-  const categoryProducts = products.filter((product) => product.categoryId === category.id)
+  const categoryProducts = products.filter((product) => product.categoryId === category.id && product.active !== false)
 
   return (
     <main className="page">

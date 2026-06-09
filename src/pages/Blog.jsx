@@ -1,11 +1,33 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageHero from '../components/sections/PageHero'
+import { subscribeNewsletter } from '../api/cmsApi'
 import { useSiteContent } from '../hooks/useSiteContent'
 
 function Blog() {
   const [{ blogPosts, pageContent }] = useSiteContent()
   const page = pageContent.blog
-  const categories = ['Todos', ...Array.from(new Set(blogPosts.map((post) => post.tag).filter(Boolean)))]
+  const activePosts = blogPosts.filter((post) => post.active !== false)
+  const categories = ['Todos', ...Array.from(new Set(activePosts.map((post) => post.tag).filter(Boolean)))]
+  const [newsletterEmail, setNewsletterEmail] = useState('')
+  const [newsletterMessage, setNewsletterMessage] = useState('')
+  const [subscribing, setSubscribing] = useState(false)
+
+  async function handleNewsletterSubmit(event) {
+    event.preventDefault()
+    setSubscribing(true)
+    setNewsletterMessage('')
+
+    try {
+      await subscribeNewsletter(newsletterEmail)
+      setNewsletterEmail('')
+      setNewsletterMessage('Listo. Guardamos tu correo para enviarte novedades.')
+    } catch {
+      setNewsletterMessage('No se pudo guardar el correo. Inténtalo de nuevo.')
+    } finally {
+      setSubscribing(false)
+    }
+  }
 
   return (
     <main className="page">
@@ -21,7 +43,7 @@ function Blog() {
 
         <div className="blog-layout">
           <div className="blog-grid">
-            {blogPosts.map((post) => (
+            {activePosts.map((post) => (
               <article className="blog-card" key={post.id}>
                 <div className="blog-card__img">
                   <span className="blog-card__tag">{post.tag}</span>
@@ -40,7 +62,7 @@ function Blog() {
           <aside className="blog-sidebar">
             <div className="blog-sidebar__box">
               <h4>{page.sidebarTitle}</h4>
-              {blogPosts.slice(0, 3).map((post) => (
+              {activePosts.slice(0, 3).map((post) => (
                 <div className="blog-sidebar__art" key={post.id}>
                   {post.image ? <img className="blog-sidebar__ph" src={post.image} alt="" /> : <div className="blog-sidebar__ph" />}
                   <div>
@@ -55,11 +77,21 @@ function Blog() {
               <p>{page.ctaText}</p>
               <Link to="/contacto" className="button button--primary" style={{ width: '100%' }}>Cotizar ahora &rarr;</Link>
             </div>
-            <div className="blog-sidebar__box">
+            <form className="blog-sidebar__box" onSubmit={handleNewsletterSubmit}>
               <h4>Recibe inspiración en tu correo</h4>
-              <input type="email" placeholder="tu@correo.com" className="blog-newsletter-input" />
-              <button className="button button--primary" style={{ width: '100%' }}>Suscribirme</button>
-            </div>
+              <input
+                type="email"
+                placeholder="tu@correo.com"
+                className="blog-newsletter-input"
+                value={newsletterEmail}
+                onChange={(event) => setNewsletterEmail(event.target.value)}
+                required
+              />
+              <button className="button button--primary" style={{ width: '100%' }} disabled={subscribing}>
+                {subscribing ? 'Guardando...' : 'Suscribirme'}
+              </button>
+              {newsletterMessage && <p className="blog-newsletter-message">{newsletterMessage}</p>}
+            </form>
           </aside>
         </div>
       </section>

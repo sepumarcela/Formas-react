@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useSiteContent } from '../../hooks/useSiteContent'
 
 function WhatsAppLogo() {
   return (
@@ -18,35 +19,37 @@ function WhatsAppLogo() {
 }
 
 function FinalCta() {
+  const [{ pageContent }] = useSiteContent()
+  const section = pageContent.homeProducts
+
   return (
     <section className="final-cta">
       <div className="final-cta__content">
-        <p className="eyebrow">Hablemos de tu proyecto</p>
-        <h2>¿Listo para transformar tu espacio?</h2>
+        <p className="eyebrow">{section.finalEyebrow || 'Hablemos de tu proyecto'}</p>
+        <h2>{section.finalTitle || '¿Listo para transformar tu espacio?'}</h2>
         <p>
-          Cuéntanos qué necesitas y te ayudamos a crear un mueble a medida para
-          tu hogar.
+          {section.finalText || 'Cuéntanos qué necesitas y te ayudamos a crear un mueble a medida para tu hogar.'}
         </p>
 
         <div className="final-cta__actions">
-          <Link className="button button--primary" to="/contacto">
-            Solicitar cotización
+          <Link className="button button--primary" to={section.finalPrimaryLink || '/contacto'}>
+            {section.finalPrimaryLabel || 'Solicitar cotización'}
           </Link>
 
           <a
             className="whatsapp-button"
-            href="https://wa.me/573001234567"
+            href={section.finalWhatsappLink || 'https://wa.me/573001234567'}
             target="_blank"
             rel="noreferrer"
           >
             <WhatsAppLogo />
-            Hablar por WhatsApp
+            {section.finalWhatsappLabel || 'Hablar por WhatsApp'}
           </a>
         </div>
       </div>
 
       <div className="final-cta__photo">
-        <span>Foto pendiente</span>
+        {section.finalImage ? <img src={section.finalImage} alt={section.finalTitle || 'Proyecto Formas'} /> : <span>Foto pendiente</span>}
       </div>
     </section>
   )

@@ -5,12 +5,36 @@ function text(value) {
   return value || ''
 }
 
+function assetUrl(value) {
+  if (!value) return ''
+  if (value.startsWith('/uploads/')) return `${API_BASE_URL}${value}`
+  return value
+}
+
+function backendAssetPath(value) {
+  if (!value) return ''
+  if (value.startsWith('data:image/')) return ''
+  if (value.startsWith(`${API_BASE_URL}/uploads/`)) {
+    return value.slice(API_BASE_URL.length)
+  }
+  return value
+}
+
+function mapPageAssets(extra, mapper) {
+  return {
+    ...extra,
+    ...(extra.historyImage ? { historyImage: mapper(extra.historyImage) } : {}),
+    ...(extra.locationImage ? { locationImage: mapper(extra.locationImage) } : {}),
+    ...(extra.finalImage ? { finalImage: mapper(extra.finalImage) } : {}),
+  }
+}
+
 function toFrontendCategory(category) {
   return {
     id: category.id,
     name: text(category.name),
     description: text(category.description),
-    image: category.image || category.heroImage || '',
+    image: assetUrl(category.image || category.heroImage || ''),
     icon: category.icon || 'shelf',
     active: category.active !== false,
     persisted: true,
@@ -22,8 +46,8 @@ function toBackendCategory(category) {
     id: category.id,
     name: category.name,
     description: text(category.description),
-    image: text(category.image),
-    heroImage: category.heroImage || category.image || '',
+    image: backendAssetPath(text(category.image)),
+    heroImage: backendAssetPath(category.heroImage || category.image || ''),
     active: category.active !== false,
     displayOrder: category.displayOrder || 0,
   }
@@ -48,7 +72,7 @@ function toFrontendProduct(product, categories = []) {
     discountLabel: text(product.discountLabel),
     discountStart: text(product.discountStart),
     discountEnd: text(product.discountEnd),
-    image: text(product.image),
+    image: assetUrl(text(product.image)),
     featured: Boolean(product.featured),
     active: product.active !== false,
     persisted: true,
@@ -67,7 +91,7 @@ function toBackendProduct(product) {
     material: text(product.material),
     colorFinish: text(product.color),
     leadTime: text(product.leadTime),
-    image: text(product.image),
+    image: backendAssetPath(text(product.image)),
     discountPercent: product.discountPercent ? Number(product.discountPercent) : null,
     discountLabel: text(product.discountLabel),
     discountStart: product.discountStart || null,
@@ -88,7 +112,7 @@ function toFrontendHeroSlide(slide) {
     primaryLink: text(slide.primaryUrl),
     secondaryLabel: text(slide.secondaryLabel),
     secondaryLink: text(slide.secondaryUrl),
-    image: text(slide.image),
+    image: assetUrl(text(slide.image)),
     active: slide.active !== false,
     persisted: true,
   }
@@ -105,7 +129,7 @@ function toBackendHeroSlide(slide, displayOrder = 0) {
     primaryUrl: text(slide.primaryLink),
     secondaryLabel: text(slide.secondaryLabel),
     secondaryUrl: text(slide.secondaryLink),
-    image: text(slide.image),
+    image: backendAssetPath(text(slide.image)),
     active: slide.active !== false,
     displayOrder,
   }
@@ -118,7 +142,7 @@ function toFrontendBlogPost(post) {
     date: post.displayDate || text(post.publishedAt),
     title: text(post.title),
     desc: text(post.excerpt),
-    image: text(post.image),
+    image: assetUrl(text(post.image)),
     body: text(post.content),
     active: post.active !== false,
     persisted: true,
@@ -133,7 +157,7 @@ function toBackendBlogPost(post) {
     displayDate: text(post.date),
     excerpt: text(post.desc),
     content: text(post.body),
-    image: text(post.image),
+    image: backendAssetPath(text(post.image)),
     publishedAt: /^\d{4}-\d{2}-\d{2}$/.test(post.date || '') ? post.date : null,
     active: post.active !== false,
   }
@@ -146,7 +170,7 @@ function toFrontendProject(project) {
     label: text(project.label),
     title: text(project.title),
     location: text(project.location),
-    image: text(project.image),
+    image: assetUrl(text(project.image)),
     active: project.active !== false,
     persisted: true,
   }
@@ -159,7 +183,7 @@ function toBackendProject(project, displayOrder = 0) {
     label: text(project.label),
     title: project.title,
     location: text(project.location),
-    image: text(project.image),
+    image: backendAssetPath(text(project.image)),
     active: project.active !== false,
     displayOrder,
   }
@@ -171,8 +195,8 @@ function toFrontendProjectHighlight(project) {
     category: text(project.category),
     title: text(project.title),
     description: text(project.description),
-    before: text(project.beforeImage),
-    after: text(project.afterImage),
+    before: assetUrl(text(project.beforeImage)),
+    after: assetUrl(text(project.afterImage)),
     active: project.active !== false,
     persisted: true,
   }
@@ -184,8 +208,8 @@ function toBackendProjectHighlight(project, displayOrder = 0) {
     category: text(project.category),
     title: project.title,
     description: text(project.description),
-    beforeImage: text(project.before),
-    afterImage: text(project.after),
+    beforeImage: backendAssetPath(text(project.before)),
+    afterImage: backendAssetPath(text(project.after)),
     active: project.active !== false,
     displayOrder,
   }
@@ -197,7 +221,7 @@ function toFrontendTestimonial(testimonial) {
     name: text(testimonial.name),
     location: text(testimonial.location),
     text: text(testimonial.text),
-    image: text(testimonial.image),
+    image: assetUrl(text(testimonial.image)),
     approved: testimonial.approved !== false,
     active: testimonial.active !== false,
     persisted: true,
@@ -210,21 +234,21 @@ function toBackendTestimonial(testimonial) {
     name: testimonial.name,
     location: text(testimonial.location),
     text: text(testimonial.text),
-    image: text(testimonial.image),
+    image: backendAssetPath(text(testimonial.image)),
     approved: testimonial.approved !== false,
     active: testimonial.active !== false,
   }
 }
 
 function toFrontendPage(page) {
-  const extra = page.contentJson ? JSON.parse(page.contentJson) : {}
+  const extra = mapPageAssets(page.contentJson ? JSON.parse(page.contentJson) : {}, assetUrl)
   return {
     ...extra,
     breadcrumb: text(page.breadcrumb),
     eyebrow: text(page.eyebrow),
     title: text(page.title),
     description: text(page.description),
-    image: text(page.heroImage),
+    image: assetUrl(text(page.heroImage)),
     ctaLabel: text(page.ctaLabel),
     persisted: true,
   }
@@ -232,15 +256,16 @@ function toFrontendPage(page) {
 
 function toBackendPage(pageKey, page) {
   const { breadcrumb, eyebrow, title, description, image, ctaLabel, ...extra } = page
+  const cleanExtra = mapPageAssets(extra, backendAssetPath)
   return {
     pageKey,
     breadcrumb: text(breadcrumb),
     eyebrow: text(eyebrow),
     title: text(title),
     description: text(description),
-    heroImage: text(image),
+    heroImage: backendAssetPath(text(image)),
     ctaLabel: text(ctaLabel),
-    contentJson: JSON.stringify(extra),
+    contentJson: JSON.stringify(cleanExtra),
     active: true,
   }
 }
@@ -261,9 +286,13 @@ async function request(path, options = {}) {
     if (response.status === 401 || response.status === 403) {
       sessionStorage.removeItem(AUTH_TOKEN_KEY)
       sessionStorage.removeItem('formas-admin-authenticated')
-      throw new Error('Tu sesión venció. Inicia sesión otra vez para guardar en Neon.')
+      const error = new Error('Tu sesión venció. Inicia sesión otra vez para guardar cambios.')
+      error.status = response.status
+      throw error
     }
-    throw new Error(message || `Error ${response.status} en ${path}`)
+    const error = new Error(message || `Error ${response.status} en ${path}`)
+    error.status = response.status
+    throw error
   }
 
   return response.status === 204 ? null : response.json()
@@ -288,15 +317,15 @@ export async function loginAdmin(email, password) {
       body: JSON.stringify({ email, password }),
     })
   } catch {
-    throw new Error('No se pudo conectar con el backend. Verifica que Spring Boot este encendido.')
+    throw new Error('No se pudo conectar con el backend. Verifica que Spring Boot esté encendido.')
   }
 
   if (!loginResponse.ok) {
     if (loginResponse.status === 401 || loginResponse.status === 403) {
-      throw new Error('Correo o contrasena incorrectos.')
+      throw new Error('Correo o contraseña incorrectos.')
     }
 
-    throw new Error(`No se pudo iniciar sesion. Error ${loginResponse.status}.`)
+    throw new Error(`No se pudo iniciar sesión. Error ${loginResponse.status}.`)
   }
 
   const response = await loginResponse.json()
@@ -310,6 +339,48 @@ export function logoutAdmin() {
 
 export function hasAdminToken() {
   return Boolean(sessionStorage.getItem(AUTH_TOKEN_KEY))
+}
+
+export async function uploadImage(folder, file) {
+  const token = sessionStorage.getItem(AUTH_TOKEN_KEY)
+  const formData = new FormData()
+  formData.append('folder', folder)
+  formData.append('file', file)
+
+  const response = await fetch(`${API_BASE_URL}/api/import/images/file`, {
+    method: 'POST',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  })
+
+  if (!response.ok) {
+    const message = await response.text().catch(() => '')
+    if (response.status === 401 || response.status === 403) {
+      sessionStorage.removeItem(AUTH_TOKEN_KEY)
+      sessionStorage.removeItem('formas-admin-authenticated')
+      throw new Error('Tu sesión venció. Inicia sesión otra vez para subir imágenes.')
+    }
+    throw new Error(message || `No se pudo subir la imagen. Error ${response.status}.`)
+  }
+
+  const data = await response.json()
+  return assetUrl(data.url)
+}
+
+export async function submitContactForm(submission) {
+  return request('/api/contact-submissions', {
+    method: 'POST',
+    body: JSON.stringify(submission),
+  })
+}
+
+export async function subscribeNewsletter(email) {
+  return request('/api/newsletter-subscriptions', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  })
 }
 
 export async function fetchCatalogContent() {
@@ -356,7 +427,12 @@ export async function saveCategory(category) {
 }
 
 export async function saveHeroSlide(slide, displayOrder = 0) {
-  return saveEntity(slide, '/api/hero-slides', toBackendHeroSlide, toFrontendHeroSlide, displayOrder)
+  const persisted = slide.persisted && typeof slide.id === 'number'
+  const saved = await request(persisted ? `/api/hero-slides/${encodeURIComponent(slide.id)}` : '/api/hero-slides', {
+    method: persisted ? 'PUT' : 'POST',
+    body: JSON.stringify(toBackendHeroSlide(slide, displayOrder)),
+  })
+  return toFrontendHeroSlide(saved)
 }
 
 export async function saveBlogPost(post) {
@@ -377,10 +453,10 @@ export async function saveTestimonial(testimonial) {
 
 export async function savePageContent(pageKey, page) {
   const saved = await request(`/api/pages/${encodeURIComponent(pageKey)}`, {
-    method: page.persisted ? 'PUT' : 'POST',
+    method: 'PUT',
     body: JSON.stringify(toBackendPage(pageKey, page)),
   }).catch(async (error) => {
-    if (page.persisted) throw error
+    if (error.status !== 404 && error.status !== 405) throw error
     return request('/api/pages', {
       method: 'POST',
       body: JSON.stringify(toBackendPage(pageKey, page)),

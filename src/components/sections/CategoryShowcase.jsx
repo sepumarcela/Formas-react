@@ -16,6 +16,7 @@ const categoryIcons = {
 function CategoryShowcase() {
   const [{ categories, pageContent }] = useSiteContent()
   const section = pageContent.homeProducts
+  const visibleCategories = categories.filter((category) => category.active !== false)
 
   return (
     <section className="category-showcase">
@@ -26,7 +27,7 @@ function CategoryShowcase() {
       </div>
 
       <div className="category-grid">
-        {categories.map((category) => {
+        {visibleCategories.map((category) => {
           const Icon = categoryIcons[category.icon] || Rows3
 
           return (
