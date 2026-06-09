@@ -2,15 +2,16 @@ import { Link } from 'react-router-dom'
 import { useSiteContent } from '../../hooks/useSiteContent'
 
 function Footer() {
-  const [{ categories }] = useSiteContent()
+  const [{ categories, pageContent }] = useSiteContent()
   const visibleCategories = categories.filter((category) => category.active !== false)
+  const logoImage = pageContent.homeProducts?.logoImage
+  const logoHeight = pageContent.homeProducts?.logoHeight || 120
 
   return (
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
-          {/* Reemplaza por <img src="/logo-blanco.png" className="site-footer__brand-logo" /> cuando tengas el logo */}
-          <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>FORMAS</div>
+          {logoImage ? <img src={logoImage} className="site-footer__brand-logo" alt="FORMAS" style={{ '--logo-height': `${Math.min(Number(logoHeight), 90)}px` }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>FORMAS</div>}
           <p>Diseñamos y fabricamos muebles premium para transformar tu hogar con estilo y funcionalidad.</p>
           <div className="site-footer__social">
             <a href="#">Instagram</a>
@@ -43,15 +44,15 @@ function Footer() {
         <div className="site-footer__col">
           <h4>Contacto</h4>
           <ul>
-            <li>hola@formas.com</li>
+            <li>sac@formas.com</li>
             <li>+57 300 123 4567</li>
-            <li>Cartagena, Colombia</li>
+            <li>Medellín, Colombia</li>
           </ul>
         </div>
       </div>
 
       <div className="site-footer__bottom">
-        © 2026 FORMAS · Diseña tu estilo · Cartagena, Colombia
+        © 2026 FORMAS · Diseña tu estilo · Medellín, Colombia
       </div>
     </footer>
   )

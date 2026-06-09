@@ -11,7 +11,7 @@ import { useSiteContent } from '../hooks/useSiteContent'
 import heroImage from '../assets/hero.png'
 
 function Home() {
-  const [{ heroSlides }] = useSiteContent()
+  const [{ heroSlides, pageContent }] = useSiteContent()
   const [activeSlideIndex, setActiveSlideIndex] = useState(0)
   const activeSlides = useMemo(() => (
     heroSlides.filter((slide) => slide.active !== false)
@@ -20,6 +20,7 @@ function Home() {
   const safeSlideIndex = slides.length ? activeSlideIndex % slides.length : 0
   const currentSlide = slides[safeSlideIndex] || {}
   const heroSrc = currentSlide.image || heroImage
+  const heroImageFit = pageContent.homeProducts?.heroImageFit || 'cover'
   const descriptionLines = String(currentSlide.description || '')
     .split('\n')
     .filter(Boolean)
@@ -38,7 +39,7 @@ function Home() {
     <main className="page">
       <section className="home-hero">
         <div className="home-hero__bg">
-          <img src={heroSrc} className="home-hero__bg-img" alt="" />
+          <img src={heroSrc} className={`home-hero__bg-img home-hero__bg-img--${heroImageFit}`} alt="" />
           <div className="home-hero__overlay" />
         </div>
 

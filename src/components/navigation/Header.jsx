@@ -30,7 +30,9 @@ function Header({ transparent = false }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
-  const [{ categories }] = useSiteContent()
+  const [{ categories, pageContent }] = useSiteContent()
+  const logoImage = pageContent.homeProducts?.logoImage
+  const logoHeight = pageContent.homeProducts?.logoHeight || 120
   const visibleCategories = categories.filter((category) => category.active !== false)
   const dropRef = useRef(null)
   const navigate = useNavigate()
@@ -63,16 +65,22 @@ function Header({ transparent = false }) {
     <header className={`site-header ${transparent ? 'site-header--transparent' : 'site-header--solid'}`}>
       <div className="site-header__inner">
         <Link to="/" className="brand">
-          <svg className="brand__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="14" y="14" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            <rect x="22" y="22" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            <path d="M14 20 L7 26 L17 30 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            <path d="M34 28 L41 22 L31 18 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
-          </svg>
-          <span className="brand__textwrap">
-            <span className="brand__text">FORMAS</span>
-            <span className="brand__tagline">DISEÑA TU ESTILO</span>
-          </span>
+          {logoImage ? (
+            <img className="brand__logo-img" src={logoImage} alt="FORMAS" style={{ '--logo-height': `${logoHeight}px` }} />
+          ) : (
+            <>
+              <svg className="brand__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="14" y="14" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                <rect x="22" y="22" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                <path d="M14 20 L7 26 L17 30 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                <path d="M34 28 L41 22 L31 18 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+              </svg>
+              <span className="brand__textwrap">
+                <span className="brand__text">FORMAS</span>
+                <span className="brand__tagline">DISEÑA TU ESTILO</span>
+              </span>
+            </>
+          )}
         </Link>
 
         <nav className={`main-nav ${menuOpen ? 'open' : ''}`}>

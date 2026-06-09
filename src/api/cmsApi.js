@@ -26,6 +26,7 @@ function mapPageAssets(extra, mapper) {
     ...(extra.historyImage ? { historyImage: mapper(extra.historyImage) } : {}),
     ...(extra.locationImage ? { locationImage: mapper(extra.locationImage) } : {}),
     ...(extra.finalImage ? { finalImage: mapper(extra.finalImage) } : {}),
+    ...(extra.logoImage ? { logoImage: mapper(extra.logoImage) } : {}),
   }
 }
 
@@ -423,7 +424,17 @@ export async function saveProduct(product) {
 }
 
 export async function saveCategory(category) {
-  return saveEntity(category, '/api/categories', toBackendCategory, toFrontendCategory)
+  const saved = await request(category.persisted ? `/api/categories/${encodeURIComponent(category.id)}` : '/api/categories', {
+    method: category.persisted ? 'PUT' : 'POST',
+    body: JSON.stringify(toBackendCategory(category)),
+  }).catch(async (error) => {
+    if (error.status !== 404 && error.status !== 405) throw error
+    return request('/api/categories', {
+      method: 'POST',
+      body: JSON.stringify(toBackendCategory({ ...category, persisted: false })),
+    })
+  })
+  return toFrontendCategory(saved)
 }
 
 export async function saveHeroSlide(slide, displayOrder = 0) {
