@@ -698,19 +698,6 @@ function Cuenta() {
     }
   }
 
-  function handleCategoryIdChange(category, id) {
-    const nextId = createSlug(id)
-    setContent((current) => ({
-      ...current,
-      categories: current.categories.map((item) => (
-        item.id === category.id ? { ...item, id: nextId } : item
-      )),
-      products: current.products.map((product) => (
-        product.categoryId === category.id ? { ...product, categoryId: nextId } : product
-      )),
-    }))
-  }
-
   function handleProductCategory(product, categoryId) {
     const category = content.categories.find((item) => item.id === categoryId)
     updateCollection('products', product.id, { categoryId, category: category?.name || product.category })
@@ -906,6 +893,31 @@ function Cuenta() {
                 <p className="admin-kicker">Inicio / Productos</p>
                 <h2>Textos de productos en el inicio</h2>
                 <p>Estos textos aparecen encima de las líneas de producto y de los productos destacados.</p>
+              </div>
+            </div>
+            <div className="admin-editor-card admin-editor-card--hero">
+              <div className="admin-image-box admin-image-box--hero">
+                {page.logoImage ? <img src={page.logoImage} alt="Logo FORMAS" /> : <Images size={30} />}
+                <label>
+                  Cargar logo
+                  <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('homeProducts', 'logoImage', event)} />
+                </label>
+                {renderCardSave('Guardar página', saveCurrentPageContent)}
+              </div>
+              <div>
+                <h3>Logo principal</h3>
+                <p className="contacto-form-note" style={{ textAlign: 'left' }}>
+                  Este logo aparece arriba a la izquierda y también puede usarse en el pie de página.
+                </p>
+              </div>
+              <div className="admin-form-grid">
+                <label>Alto del logo (px)<input inputMode="numeric" value={page.logoHeight || '120'} onChange={(event) => updatePageContent('homeProducts', { logoHeight: onlyDigits(event.target.value) })} /></label>
+                <label>Ajuste imagen inicio
+                  <select value={page.heroImageFit || 'cover'} onChange={(event) => updatePageContent('homeProducts', { heroImageFit: event.target.value })}>
+                    <option value="cover">Cubrir cuadro</option>
+                    <option value="contain">Mostrar completa</option>
+                  </select>
+                </label>
               </div>
             </div>
             <div className="admin-form-grid admin-form-grid--wide">
@@ -1375,7 +1387,7 @@ function Cuenta() {
               </div>
 
               <div className="admin-form-grid">
-                <label>ID<input value={category.id} onChange={(event) => handleCategoryIdChange(category, event.target.value)} /></label>
+                <label>ID<input value={category.id} readOnly title="El ID se genera al crear la categoría y no debe cambiarse." /></label>
                 <label>Nombre<input value={category.name} onChange={(event) => updateCollection('categories', category.id, { name: event.target.value })} /></label>
                 <label>Icono
                   <select value={category.icon} onChange={(event) => updateCollection('categories', category.id, { icon: event.target.value })}>

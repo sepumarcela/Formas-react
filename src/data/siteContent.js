@@ -20,6 +20,9 @@ export const defaultSiteContent = {
   pageContent: {
     homeProducts: {
       categoriesEyebrow: 'Nuestras líneas',
+      logoImage: '',
+      logoHeight: '120',
+      heroImageFit: 'cover',
       categoriesTitle: 'Soluciones que transforman',
       categoriesDescription: 'Muebles modernos y funcionales diseñados para cada espacio de tu hogar.',
       featuredEyebrow: 'Destacados de la semana',
