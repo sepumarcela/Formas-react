@@ -113,7 +113,7 @@ const iconOptions = [
   ['book', 'Biblioteca'],
 ]
 
-function parseCsvLine(line) {
+function parseCsvLine(line, delimiter = ',') {
   const values = []
   let current = ''
   let quoted = false
@@ -127,7 +127,7 @@ function parseCsvLine(line) {
       index += 1
     } else if (char === '"') {
       quoted = !quoted
-    } else if (char === ',' && !quoted) {
+    } else if (char === delimiter && !quoted) {
       values.push(current)
       current = ''
     } else {
@@ -140,14 +140,46 @@ function parseCsvLine(line) {
 }
 
 function parseCsv(text) {
-  const rows = text
+  const lines = text
     .replace(/^\uFEFF/, '')
     .split(/\r?\n/)
     .filter((line) => line.trim())
-    .map(parseCsvLine)
+
+  const firstLine = lines[0] || ''
+  const delimiter = firstLine.split(';').length > firstLine.split(',').length ? ';' : ','
+  const rows = lines.map((line) => parseCsvLine(line, delimiter))
 
   const headers = rows.shift()?.map((header) => header.trim()) || []
-  return rows.map((row) => Object.fromEntries(headers.map((header, index) => [header, row[index] || ''])))
+  return rows.map((row) => Object.fromEntries(headers.map((header, index) => [header, (row[index] || '').trim()])))
+}
+
+async function readCsvFile(file) {
+  const buffer = await file.arrayBuffer()
+  const utf8Text = new TextDecoder('utf-8').decode(buffer)
+  if (!utf8Text.includes('\uFFFD')) return utf8Text
+
+  return new TextDecoder('windows-1252').decode(buffer)
+}
+
+function cleanNumber(value) {
+  return String(value || '').replace(/[^\d]/g, '')
+}
+
+function cleanDate(value) {
+  const text = String(value || '').trim()
+  return /^\d{4}-\d{2}-\d{2}$/.test(text) ? text : ''
+}
+
+async function saveRowsOneByOne(rows, saver) {
+  const saved = []
+  for (let index = 0; index < rows.length; index += 1) {
+    try {
+      saved.push(await saver(rows[index]))
+    } catch (error) {
+      throw new Error(`No se pudo guardar la fila ${index + 2} (${rows[index].id || rows[index].name || 'sin ID'}). ${error.message || ''}`)
+    }
+  }
+  return saved
 }
 
 function escapeCsv(value) {
@@ -731,13 +763,17 @@ function Cuenta() {
         ...row,
         id: createSlug(row.id || row.name || row.title || crypto.randomUUID()),
         image: normalizeImagePath(row.image),
+        netPrice: bulkType === 'products' ? cleanNumber(row.netPrice) : row.netPrice,
+        discountPercent: bulkType === 'products' ? cleanNumber(row.discountPercent) : row.discountPercent,
+        discountStart: bulkType === 'products' ? cleanDate(row.discountStart) : row.discountStart,
+        discountEnd: bulkType === 'products' ? cleanDate(row.discountEnd) : row.discountEnd,
         featured: bulkType === 'products' ? ['true', '1', 'si', 'sí', 'yes'].includes(String(row.featured).toLowerCase()) : row.featured,
       }))
 
       let savedRows = rows
-      if (bulkType === 'products') savedRows = await Promise.all(rows.map((row) => saveProduct(row)))
-      if (bulkType === 'categories') savedRows = await Promise.all(rows.map((row) => saveCategory(row)))
-      if (bulkType === 'blogPosts') savedRows = await Promise.all(rows.map((row) => saveBlogPost(row)))
+      if (bulkType === 'products') savedRows = await saveRowsOneByOne(rows, saveProduct)
+      if (bulkType === 'categories') savedRows = await saveRowsOneByOne(rows, saveCategory)
+      if (bulkType === 'blogPosts') savedRows = await saveRowsOneByOne(rows, saveBlogPost)
 
       setContent((current) => ({
         ...current,
@@ -753,7 +789,7 @@ function Cuenta() {
     const file = event.target.files?.[0]
     if (!file) return
 
-    const text = await file.text()
+    const text = await readCsvFile(file)
     setCsvPreview(text)
     flash('CSV cargado. Revísalo y presiona Guardar CSV.')
   }
