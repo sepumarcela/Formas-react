@@ -25,6 +25,7 @@ import {
   deleteProject,
   deleteProjectHighlight,
   deleteTestimonial,
+  fetchCatalogContent,
   hasAdminToken,
   loginAdmin,
   logoutAdmin,
@@ -37,8 +38,9 @@ import {
   saveProjectHighlight,
   saveTestimonial,
   uploadImage,
+  uploadProductImagesZip,
 } from '../api/cmsApi'
-import { createSlug, defaultSiteContent } from '../data/siteContent'
+import { createSlug } from '../data/siteContent'
 import { useSiteContent } from '../hooks/useSiteContent'
 
 const sections = [
@@ -703,11 +705,6 @@ function Cuenta() {
     updateCollection('products', product.id, { categoryId, category: category?.name || product.category })
   }
 
-  function resetContent() {
-    setContent(defaultSiteContent)
-    flash('Contenido restaurado al estado inicial.')
-  }
-
   function openSection(sectionId) {
     if (sectionId === 'bulk') {
       setCsvPreview(toCsv(content[bulkType], csvConfig[bulkType].headers))
@@ -726,7 +723,7 @@ function Cuenta() {
     flash('Plantilla cargada.')
   }
 
-  function importCsvText(text = csvPreview) {
+  async function importCsvText(text = csvPreview) {
     try {
       const rows = parseCsv(text).map((row) => ({
         ...row,
@@ -735,13 +732,18 @@ function Cuenta() {
         featured: bulkType === 'products' ? ['true', '1', 'si', 'sí', 'yes'].includes(String(row.featured).toLowerCase()) : row.featured,
       }))
 
+      let savedRows = rows
+      if (bulkType === 'products') savedRows = await Promise.all(rows.map((row) => saveProduct(row)))
+      if (bulkType === 'categories') savedRows = await Promise.all(rows.map((row) => saveCategory(row)))
+      if (bulkType === 'blogPosts') savedRows = await Promise.all(rows.map((row) => saveBlogPost(row)))
+
       setContent((current) => ({
         ...current,
-        [bulkType]: rows,
+        [bulkType]: savedRows,
       }))
-      flash(`${csvConfig[bulkType].label} importado desde CSV.`)
-    } catch {
-      flash('No se pudo leer el CSV.')
+      flash(`${csvConfig[bulkType].label} guardado desde CSV en el backend.`)
+    } catch (error) {
+      reportBackendError('No se pudo guardar el CSV en el backend.', error)
     }
   }
 
@@ -751,7 +753,27 @@ function Cuenta() {
 
     const text = await file.text()
     setCsvPreview(text)
-    importCsvText(text)
+    flash('CSV cargado. Revísalo y presiona Guardar CSV.')
+  }
+
+  async function handleProductImagesZip(event) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    try {
+      const result = await uploadProductImagesZip(file)
+      const catalog = await fetchCatalogContent()
+      setContent((current) => ({
+        ...current,
+        products: catalog.products.length ? catalog.products : current.products,
+      }))
+      const unmatched = result.unmatchedFiles?.length ? ` ${result.unmatchedFiles.length} imagen(es) no encontraron producto.` : ''
+      flash(`${result.matched} imagen(es) asignadas a productos.${unmatched}`)
+    } catch (error) {
+      reportBackendError('No se pudo cargar el ZIP de imágenes.', error)
+    } finally {
+      event.target.value = ''
+    }
   }
 
   function renderOverview() {
@@ -1420,7 +1442,6 @@ function Cuenta() {
             <p>Exporta una plantilla, edítala en Excel y vuelve a cargarla como CSV. Las imágenes que subas desde el panel quedan guardadas en <strong>uploads</strong> del backend.</p>
           </div>
           <div className="admin-header-actions">
-            <button className="button button--soft" onClick={resetContent}>Restaurar demo</button>
             <button className="button button--primary" onClick={() => importCsvText()}><Save size={16} /> Guardar CSV</button>
           </div>
         </div>
@@ -1441,12 +1462,25 @@ function Cuenta() {
             <Upload size={16} /> Cargar CSV
             <input type="file" accept=".csv,text/csv" onChange={handleCsvFile} />
           </label>
+          {bulkType === 'products' && (
+            <label className="admin-upload-csv">
+              <Images size={16} /> Cargar ZIP de imágenes
+              <input type="file" accept=".zip,application/zip" onChange={handleProductImagesZip} />
+            </label>
+          )}
         </div>
 
         <div className="admin-csv-schema">
           <strong>Columnas requeridas para {config.label}:</strong>
           <code>{config.headers.join(', ')}</code>
         </div>
+
+        {bulkType === 'products' && (
+          <div className="admin-csv-schema">
+            <strong>Imágenes masivas:</strong>
+            <span>Sube un ZIP con fotos llamadas igual que el ID del producto, por ejemplo <code>centro-tv-nogal-001.jpg</code>. El sistema las asigna automáticamente.</span>
+          </div>
+        )}
 
         <textarea className="admin-json-editor" value={csvPreview} onChange={(event) => setCsvPreview(event.target.value)} spellCheck="false" />
       </div>

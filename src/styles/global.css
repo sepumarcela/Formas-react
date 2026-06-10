@@ -1240,7 +1240,7 @@ section { padding: 100px 60px; }
   .site-footer { padding: 60px 24px 32px; }
   .final-cta__content { padding: 50px 24px; }
   .final-cta__content h2 { font-size: 42px; }
-  .page-hero { min-height: 80vh; margin-top: -72px; padding-top: 110px; }
+  .page-hero { min-height: 80vh; margin-top: -72px; padding-top: 168px; }
   .page-hero h1 { font-size: 40px; }
   .page-hero__content {
     padding-left: var(--page-inline);

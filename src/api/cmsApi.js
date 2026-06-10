@@ -370,6 +370,32 @@ export async function uploadImage(folder, file) {
   return assetUrl(data.url)
 }
 
+export async function uploadProductImagesZip(file) {
+  const token = sessionStorage.getItem(AUTH_TOKEN_KEY)
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const response = await fetch(`${API_BASE_URL}/api/import/products/images/zip`, {
+    method: 'POST',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  })
+
+  if (!response.ok) {
+    const message = await response.text().catch(() => '')
+    if (response.status === 401 || response.status === 403) {
+      sessionStorage.removeItem(AUTH_TOKEN_KEY)
+      sessionStorage.removeItem('formas-admin-authenticated')
+      throw new Error('Tu sesión venció. Inicia sesión otra vez para subir imágenes.')
+    }
+    throw new Error(message || `No se pudo subir el ZIP de imágenes. Error ${response.status}.`)
+  }
+
+  return response.json()
+}
+
 export async function submitContactForm(submission) {
   return request('/api/contact-submissions', {
     method: 'POST',
