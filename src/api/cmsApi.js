@@ -49,6 +49,7 @@ function toBackendCategory(category) {
     description: text(category.description),
     image: backendAssetPath(text(category.image)),
     heroImage: backendAssetPath(category.heroImage || category.image || ''),
+    icon: category.icon || 'shelf',
     active: category.active !== false,
     displayOrder: category.displayOrder || 0,
   }

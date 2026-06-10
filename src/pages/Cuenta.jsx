@@ -328,9 +328,11 @@ function Cuenta() {
         if (collection === 'projects') await deleteProject(id)
         if (collection === 'projectHighlights') await deleteProjectHighlight(id)
         if (collection === 'testimonials') await deleteTestimonial(id)
-      } catch {
-        flash('No se pudo eliminar en el backend. Revisa que esté prendido.')
-        return
+      } catch (error) {
+        if (error?.status !== 404) {
+          reportBackendError('No se pudo eliminar en el backend.', error)
+          return
+        }
       }
     }
 
@@ -926,9 +928,9 @@ function Cuenta() {
                 </label>
                 {renderCardSave('Guardar página', saveCurrentPageContent)}
               </div>
-              <div>
+              <div className="admin-logo-copy">
                 <h3>Logo principal</h3>
-                <p className="contacto-form-note" style={{ textAlign: 'left' }}>
+                <p>
                   Este logo aparece arriba a la izquierda y también puede usarse en el pie de página.
                 </p>
               </div>
@@ -953,7 +955,7 @@ function Cuenta() {
             <div className="admin-list-heading">
               <h2>Bloque final de contacto</h2>
             </div>
-            <div className="admin-editor-card admin-editor-card--hero">
+            <div className="admin-editor-card admin-editor-card--hero admin-editor-card--final-cta">
               <div className="admin-image-box admin-image-box--hero">
                 {page.finalImage ? <img src={page.finalImage} alt={page.finalTitle || 'Bloque final'} /> : <Images size={30} />}
                 <label>
@@ -1075,7 +1077,7 @@ function Cuenta() {
               <div className="admin-form-grid admin-form-grid--wide">
                 <label>Título visita<input value={page.visitTitle || ''} onChange={(event) => updatePageContent('contacto', { visitTitle: event.target.value })} /></label>
                 <label>WhatsApp<input value={page.whatsappLink || ''} onChange={(event) => updatePageContent('contacto', { whatsappLink: event.target.value })} /></label>
-                <label className="admin-colspan">Dirección para mapa<input value={page.mapAddress || ''} onChange={(event) => updatePageContent('contacto', { mapAddress: event.target.value })} placeholder="Ej: Centro histórico, Cartagena, Colombia" /></label>
+                <label className="admin-colspan">Dirección para mapa<input value={page.mapAddress || ''} onChange={(event) => updatePageContent('contacto', { mapAddress: event.target.value })} placeholder="Ej: Medellín, Colombia" /></label>
                 <label className="admin-colspan">Enlace embebido de Google Maps opcional<input value={page.mapEmbedUrl || ''} onChange={(event) => updatePageContent('contacto', { mapEmbedUrl: event.target.value })} placeholder="Opcional: pega aqui el src de un mapa embebido" /></label>
                 <label className="admin-colspan">Texto visita<textarea value={page.visitText || ''} onChange={(event) => updatePageContent('contacto', { visitText: event.target.value })} /></label>
                 <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> Guardar ubicación</button>

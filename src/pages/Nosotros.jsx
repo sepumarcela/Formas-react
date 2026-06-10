@@ -81,7 +81,7 @@ function Nosotros() {
           <div className="nosotros-ubicacion__info">
             <h3>Sala de diseño</h3>
             <p className="sub">Agenda tu visita y conoce nuestros espacios</p>
-            <div className="ubi-row"><MapPin size={20} /><p>Cartagena, Colombia<br />Centro histórico</p></div>
+            <div className="ubi-row"><MapPin size={20} /><p>Medellín, Colombia</p></div>
             <div className="ubi-row"><Clock size={20} /><p>Lunes a Viernes: 8:00 a.m. - 6:00 p.m.<br />Sábados: 9:00 a.m. - 1:00 p.m.</p></div>
             <Link to="/contacto" className="button button--primary" style={{ marginTop: 20, alignSelf: 'flex-start' }}>Contactarnos &rarr;</Link>
           </div>
