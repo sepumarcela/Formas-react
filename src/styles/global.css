@@ -233,10 +233,10 @@ picture,
   position: relative;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   overflow: hidden;
   margin-top: -92px;
-  padding-top: 150px;
+  padding-top: 220px;
   padding-left: 0;
   padding-right: 0;
   padding-bottom: 60px;
@@ -791,10 +791,10 @@ section { padding: 100px 60px; }
   position: relative;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   overflow: hidden;
   margin-top: -88px;
-  padding-top: 140px;
+  padding-top: 220px;
   padding-left: 0 !important;
   padding-right: 0 !important;
   padding-bottom: 60px;
