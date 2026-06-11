@@ -20,7 +20,12 @@ function FeaturedProducts() {
           const discount = getActiveDiscount(product)
 
           return (
-            <article className="product-card" key={product.id}>
+            <Link
+              className="product-card"
+              key={product.id}
+              to={`/productos/${product.id}`}
+              aria-label={`Ver producto ${product.name}`}
+            >
               <div className="product-card__image">
                 {discount && <span className="discount-badge">{discount.label}</span>}
                 {product.image ? (
@@ -41,9 +46,9 @@ function FeaturedProducts() {
                 ) : (
                   <strong>{product.price}</strong>
                 )}
-                <Link to="/contacto">Cotizar</Link>
+                <span className="product-card__cta">Cotizar</span>
               </div>
-            </article>
+            </Link>
           )
         })}
       </div>

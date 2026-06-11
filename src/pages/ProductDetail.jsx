@@ -1,14 +1,16 @@
 import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
+import { addCartItem } from '../utils/cart'
 import { getActiveDiscount } from '../utils/discounts'
 
 const relatedWindowSize = 3
 
 function ProductDetail() {
   const { productId } = useParams()
+  const navigate = useNavigate()
   const [{ categories, products }] = useSiteContent()
   const [relatedStart, setRelatedStart] = useState(0)
   const product = products.find((item) => item.id === productId && item.active !== false)
@@ -46,6 +48,11 @@ function ProductDetail() {
       const max = Math.max(related.length - relatedWindowSize, 0)
       return Math.min(Math.max(next, 0), max)
     })
+  }
+
+  function handleAddToCart() {
+    addCartItem(product)
+    navigate('/carrito')
   }
 
   return (
@@ -90,7 +97,7 @@ function ProductDetail() {
 
             <div className="product-actions">
               <Link to="/contacto" className="button button--primary">Cotizar este producto</Link>
-              <Link to="/carrito" className="button button--outline">Agregar al carrito</Link>
+              <button type="button" className="button button--outline" onClick={handleAddToCart}>Agregar al carrito</button>
             </div>
           </div>
         </div>
@@ -149,7 +156,12 @@ function ProductDetail() {
               const relatedDiscount = getActiveDiscount(item)
 
               return (
-                <article className="cat-product-card" key={item.id}>
+                <Link
+                  className="cat-product-card"
+                  key={item.id}
+                  to={`/productos/${item.id}`}
+                  aria-label={`Ver producto ${item.name}`}
+                >
                   <div className="cat-product-card__image">
                     {relatedDiscount && <span className="discount-badge">{relatedDiscount.label}</span>}
                     {item.image ? <img src={item.image} alt={item.name} /> : <span>Foto pendiente</span>}
@@ -165,9 +177,9 @@ function ProductDetail() {
                       <strong>{item.price}</strong>
                     )}
                     <p>{item.size}</p>
-                    <Link to={`/productos/${item.id}`} className="cat-product-card__btn">Ver producto</Link>
+                    <span className="cat-product-card__btn">Ver producto</span>
                   </div>
-                </article>
+                </Link>
               )
             })}
           </div>

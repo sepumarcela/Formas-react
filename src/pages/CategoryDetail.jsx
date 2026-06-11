@@ -76,7 +76,12 @@ function CategoryDetail() {
             const discount = getActiveDiscount(product)
 
             return (
-              <article className="cat-product-card" key={product.id}>
+              <Link
+                className="cat-product-card"
+                key={product.id}
+                to={`/productos/${product.id}`}
+                aria-label={`Ver producto ${product.name}`}
+              >
                 <div className="cat-product-card__image">
                   {discount && <span className="discount-badge">{discount.label}</span>}
                   {product.image ? <img src={product.image} alt={product.name} /> : <span>Foto pendiente</span>}
@@ -92,9 +97,9 @@ function CategoryDetail() {
                     <strong>{product.price}</strong>
                   )}
                   <p>{product.size}</p>
-                  <Link to={`/productos/${product.id}`} className="cat-product-card__btn">Ver producto</Link>
+                  <span className="cat-product-card__btn">Ver producto</span>
                 </div>
-              </article>
+              </Link>
             )
           })}
         </div>

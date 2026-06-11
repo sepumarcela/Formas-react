@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import {
   ChevronDown, Menu, Search, ShoppingCart, User, X,
 } from 'lucide-react'
 import { PiBathtubDuotone, PiBedDuotone, PiBookOpenTextDuotone, PiCookingPotDuotone, PiGridFourDuotone, PiRulerDuotone, PiSquaresFourDuotone, PiTelevisionDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../../hooks/useSiteContent'
+import { CART_UPDATED_EVENT, loadCartItems } from '../../utils/cart'
 
 function normalizeText(value) {
   return value
@@ -30,12 +31,15 @@ function Header({ transparent = false }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+  const [cartCount, setCartCount] = useState(() => loadCartItems().reduce((sum, item) => sum + item.quantity, 0))
   const [{ categories, pageContent }] = useSiteContent()
   const logoImage = pageContent.homeProducts?.logoImage
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
   const visibleCategories = categories.filter((category) => category.active !== false)
   const dropRef = useRef(null)
   const navigate = useNavigate()
+  const location = useLocation()
+  const usesDarkHeader = location.pathname.startsWith('/cuenta') || location.pathname.startsWith('/carrito')
 
   useEffect(() => {
     function handleClick(event) {
@@ -44,6 +48,25 @@ function Header({ transparent = false }) {
 
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  useEffect(() => {
+    function syncCart(event) {
+      const nextItems = event.detail || loadCartItems()
+      setCartCount(nextItems.reduce((sum, item) => sum + item.quantity, 0))
+    }
+
+    function syncStorage(event) {
+      if (!event.key || event.key === 'formas-cart-v1') syncCart({})
+    }
+
+    window.addEventListener(CART_UPDATED_EVENT, syncCart)
+    window.addEventListener('storage', syncStorage)
+
+    return () => {
+      window.removeEventListener(CART_UPDATED_EVENT, syncCart)
+      window.removeEventListener('storage', syncStorage)
+    }
   }, [])
 
   function handleSearch(event) {
@@ -62,7 +85,7 @@ function Header({ transparent = false }) {
   }
 
   return (
-    <header className={`site-header ${transparent ? 'site-header--transparent' : 'site-header--solid'}`}>
+    <header className={`site-header ${transparent ? 'site-header--transparent' : 'site-header--solid'} ${usesDarkHeader ? 'site-header--admin' : ''}`}>
       <div className="site-header__inner">
         <Link to="/" className="brand">
           {logoImage ? (
@@ -143,6 +166,7 @@ function Header({ transparent = false }) {
           </Link>
           <Link to="/carrito" className="header-icon" aria-label="Carrito">
             <ShoppingCart size={20} />
+            {cartCount > 0 && <span className="header-cart-count">{cartCount}</span>}
           </Link>
           <button className="menu-toggle" onClick={() => setMenuOpen((current) => !current)}>
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
