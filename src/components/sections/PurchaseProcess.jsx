@@ -1,35 +1,35 @@
-import { ClipboardList, Factory, Home, MessageCircle, PencilRuler } from 'lucide-react'
+import { PiChatsCircleDuotone, PiClipboardTextDuotone, PiFactoryDuotone, PiHouseLineDuotone, PiRulerDuotone } from 'react-icons/pi'
 
 const steps = [
   {
     number: '01',
     title: 'Cuéntanos tu idea',
     text: 'Nos compartes el espacio, medidas, necesidad y estilo que tienes en mente.',
-    icon: MessageCircle,
+    icon: PiChatsCircleDuotone,
   },
   {
     number: '02',
     title: 'Diseñamos tu espacio',
     text: 'Creamos una propuesta funcional y visual para validar el proyecto.',
-    icon: PencilRuler,
+    icon: PiRulerDuotone,
   },
   {
     number: '03',
     title: 'Fabricamos',
     text: 'Producimos cada pieza con materiales y acabados definidos.',
-    icon: Factory,
+    icon: PiFactoryDuotone,
   },
   {
     number: '04',
     title: 'Instalamos',
     text: 'Llevamos el mobiliario e instalamos con cuidado profesional.',
-    icon: ClipboardList,
+    icon: PiClipboardTextDuotone,
   },
   {
     number: '05',
     title: 'Disfrutas tu hogar',
     text: 'Recibes un espacio transformado, funcional y listo para usar.',
-    icon: Home,
+    icon: PiHouseLineDuotone,
   },
 ]
 
@@ -53,7 +53,7 @@ function PurchaseProcess() {
             <article className="process-step" key={step.number}>
               <span className="process-step__number">{step.number}</span>
               <div className="process-step__icon">
-                <Icon size={28} strokeWidth={1.7} />
+                <Icon size={28} />
               </div>
               <h3>{step.title}</h3>
               <p>{step.text}</p>

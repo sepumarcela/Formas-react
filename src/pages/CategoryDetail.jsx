@@ -1,13 +1,13 @@
 import { Link, useParams } from 'react-router-dom'
-import { BadgeCheck, Headphones, PencilRuler, Truck } from 'lucide-react'
+import { PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone, PiToolboxDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { getActiveDiscount } from '../utils/discounts'
 
 const badges = [
-  { icon: PencilRuler, label: 'Diseños personalizados' },
-  { icon: BadgeCheck, label: 'Materiales de calidad' },
-  { icon: Truck, label: 'Instalación profesional' },
-  { icon: Headphones, label: 'Acompañamiento total' },
+  { icon: PiRulerDuotone, label: 'Diseños personalizados' },
+  { icon: PiDiamondDuotone, label: 'Materiales de calidad' },
+  { icon: PiToolboxDuotone, label: 'Instalación profesional' },
+  { icon: PiHandshakeDuotone, label: 'Acompañamiento total' },
 ]
 
 function CategoryDetail() {
@@ -48,7 +48,7 @@ function CategoryDetail() {
               const Icon = badge.icon
               return (
                 <div className="cat-badge" key={badge.label}>
-                  <Icon size={16} strokeWidth={1.6} />
+                  <Icon size={16} />
                   {badge.label}
                 </div>
               )
@@ -106,7 +106,7 @@ function CategoryDetail() {
             const Icon = badge.icon
             return (
               <div className="cat-bottom-item" key={badge.label}>
-                <Icon size={30} strokeWidth={1.5} />
+                <Icon size={30} />
                 <div>
                   <h5>{badge.label}</h5>
                   <p>Calidad y compromiso en cada proyecto.</p>

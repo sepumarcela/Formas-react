@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, ClipboardList, PackageCheck, Ruler, ShoppingCart, Sparkles } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
+import { PiCheckCircleDuotone, PiClipboardTextDuotone, PiLightbulbFilamentDuotone, PiRulerDuotone, PiShoppingCartSimpleDuotone } from 'react-icons/pi'
 
 function Carrito() {
   const items = []
@@ -16,7 +17,7 @@ function Carrito() {
             </p>
           </div>
           <div className="carrito-hero__badge">
-            <ShoppingCart size={22} />
+            <PiShoppingCartSimpleDuotone size={22} />
             <span>{items.length} productos</span>
           </div>
         </div>
@@ -25,7 +26,7 @@ function Carrito() {
           <div className="carrito-empty-layout">
             <div className="carrito-vacio">
               <div className="carrito-vacio__icon">
-                <ShoppingCart size={42} strokeWidth={1.4} />
+                <PiShoppingCartSimpleDuotone size={42} />
               </div>
               <p className="carrito-vacio__kicker">Aún no has agregado productos</p>
               <h2>Empieza explorando una categoría.</h2>
@@ -53,7 +54,7 @@ function Carrito() {
                 <strong>$0</strong>
               </div>
               <div className="carrito-summary__note">
-                <Sparkles size={18} />
+                <PiLightbulbFilamentDuotone size={18} />
                 El valor final depende de medidas, acabados e instalación.
               </div>
             </aside>
@@ -66,17 +67,17 @@ function Carrito() {
 
         <div className="carrito-steps">
           <article>
-            <ClipboardList size={22} />
+            <PiClipboardTextDuotone size={22} />
             <h3>Elige</h3>
             <p>Selecciona los muebles que quieres cotizar.</p>
           </article>
           <article>
-            <Ruler size={22} />
+            <PiRulerDuotone size={22} />
             <h3>Personaliza</h3>
             <p>Compartes medidas, materiales y necesidades.</p>
           </article>
           <article>
-            <PackageCheck size={22} />
+            <PiCheckCircleDuotone size={22} />
             <h3>Recibe propuesta</h3>
             <p>Te enviamos una cotización clara para avanzar.</p>
           </article>

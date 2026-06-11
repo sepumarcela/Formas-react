@@ -1,29 +1,38 @@
-import { BadgeCheck, Headphones, PencilRuler, Truck } from 'lucide-react'
+import { PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone, PiToolboxDuotone } from 'react-icons/pi'
+import { useSiteContent } from '../../hooks/useSiteContent'
 
 const benefits = [
   {
+    id: 'diseno-personalizado',
     title: 'Diseño personalizado',
     text: 'Adaptamos cada proyecto a tu espacio, necesidades y estilo de vida.',
-    icon: PencilRuler,
+    icon: PiRulerDuotone,
   },
   {
+    id: 'fabricacion-calidad',
     title: 'Fabricación de calidad',
     text: 'Trabajamos con materiales resistentes y acabados cuidadosamente revisados.',
-    icon: BadgeCheck,
+    icon: PiDiamondDuotone,
   },
   {
+    id: 'instalacion-profesional',
     title: 'Instalación profesional',
     text: 'Entregamos e instalamos para que recibas tu espacio listo para usar.',
-    icon: Truck,
+    icon: PiToolboxDuotone,
   },
   {
+    id: 'acompanamiento-completo',
     title: 'Acompañamiento completo',
     text: 'Te acompañamos desde la idea inicial hasta la entrega del proyecto.',
-    icon: Headphones,
+    icon: PiHandshakeDuotone,
   },
 ]
 
 function WhyFormas() {
+  const [{ pageContent }] = useSiteContent()
+  const adminBenefits = pageContent.homeProducts?.whyBenefits || []
+  const benefitImages = new Map(adminBenefits.map((benefit) => [benefit.id, benefit.image]))
+
   return (
     <section className="why-formas">
       <div className="section-heading">
@@ -38,14 +47,20 @@ function WhyFormas() {
       <div className="benefit-grid">
         {benefits.map((benefit) => {
           const Icon = benefit.icon
+          const image = benefitImages.get(benefit.id)
 
           return (
             <article className="benefit-card" key={benefit.title}>
-              <div className="benefit-card__icon">
-                <Icon size={30} strokeWidth={1.7} />
+              <div className="benefit-card__content">
+                <div className="benefit-card__icon">
+                  <Icon aria-hidden="true" />
+                </div>
+                <h3>{benefit.title}</h3>
+                <p>{benefit.text}</p>
               </div>
-              <h3>{benefit.title}</h3>
-              <p>{benefit.text}</p>
+              <div className={`benefit-card__image${image ? '' : ' benefit-card__image--empty'}`}>
+                {image ? <img src={image} alt={benefit.title} /> : <span>Foto pendiente</span>}
+              </div>
             </article>
           )
         })}

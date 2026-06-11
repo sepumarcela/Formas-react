@@ -23,6 +23,12 @@ function backendAssetPath(value) {
 function mapPageAssets(extra, mapper) {
   return {
     ...extra,
+    ...(Array.isArray(extra.whyBenefits) ? {
+      whyBenefits: extra.whyBenefits.map((benefit) => ({
+        ...benefit,
+        image: mapper(benefit.image || ''),
+      })),
+    } : {}),
     ...(extra.historyImage ? { historyImage: mapper(extra.historyImage) } : {}),
     ...(extra.locationImage ? { locationImage: mapper(extra.locationImage) } : {}),
     ...(extra.finalImage ? { finalImage: mapper(extra.finalImage) } : {}),

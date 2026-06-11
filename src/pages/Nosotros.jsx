@@ -1,20 +1,20 @@
 import { Link } from 'react-router-dom'
-import { Award, Clock, Heart, Leaf, MapPin, ShieldCheck, Sparkles, Users } from 'lucide-react'
+import { PiClockDuotone, PiHandshakeDuotone, PiHeartDuotone, PiMapPinDuotone, PiPaletteDuotone, PiPlantDuotone, PiSealCheckDuotone, PiShieldCheckDuotone, PiSparkleDuotone } from 'react-icons/pi'
 import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
 
 const pilares = [
-  { icon: Heart, title: 'Pasión por el diseño', text: 'Nos inspira crear espacios únicos y funcionales.' },
-  { icon: ShieldCheck, title: 'Calidad que perdura', text: 'Usamos materiales premium y acabados de alta resistencia.' },
-  { icon: Users, title: 'Compromiso total', text: 'Acompañamos a nuestros clientes en cada etapa del proyecto.' },
+  { icon: PiHeartDuotone, title: 'Pasión por el diseño', text: 'Nos inspira crear espacios únicos y funcionales.' },
+  { icon: PiShieldCheckDuotone, title: 'Calidad que perdura', text: 'Usamos materiales premium y acabados de alta resistencia.' },
+  { icon: PiHandshakeDuotone, title: 'Compromiso total', text: 'Acompañamos a nuestros clientes en cada etapa del proyecto.' },
 ]
 
 const valores = [
-  { icon: Users, title: 'Personalización', text: 'Cada proyecto es diseñado a la medida de tus sueños.' },
-  { icon: Award, title: 'Excelencia', text: 'Buscamos la perfección en cada detalle, desde el diseño hasta la instalación.' },
-  { icon: Sparkles, title: 'Innovación', text: 'Nos mantenemos a la vanguardia en tendencias, materiales y tecnología.' },
-  { icon: ShieldCheck, title: 'Confianza', text: 'Construimos relaciones basadas en la transparencia y el cumplimiento.' },
-  { icon: Leaf, title: 'Sostenibilidad', text: 'Trabajamos con procesos responsables y materiales amigables con el ambiente.' },
+  { icon: PiPaletteDuotone, title: 'Personalización', text: 'Cada proyecto es diseñado a la medida de tus sueños.' },
+  { icon: PiSealCheckDuotone, title: 'Excelencia', text: 'Buscamos la perfección en cada detalle, desde el diseño hasta la instalación.' },
+  { icon: PiSparkleDuotone, title: 'Innovación', text: 'Nos mantenemos a la vanguardia en tendencias, materiales y tecnología.' },
+  { icon: PiHandshakeDuotone, title: 'Confianza', text: 'Construimos relaciones basadas en la transparencia y el cumplimiento.' },
+  { icon: PiPlantDuotone, title: 'Sostenibilidad', text: 'Trabajamos con procesos responsables y materiales amigables con el ambiente.' },
 ]
 
 function Nosotros() {
@@ -40,7 +40,7 @@ function Nosotros() {
               const Icon = item.icon
               return (
                 <div className="nosotros-pilar" key={item.title}>
-                  <Icon size={22} strokeWidth={1.6} />
+                  <Icon size={22} />
                   <div><h4>{item.title}</h4><p>{item.text}</p></div>
                 </div>
               )
@@ -59,7 +59,7 @@ function Nosotros() {
             const Icon = item.icon
             return (
               <div className="nosotros-valor" key={item.title}>
-                <div className="nosotros-valor__icon"><Icon size={24} strokeWidth={1.5} /></div>
+                <div className="nosotros-valor__icon"><Icon size={24} /></div>
                 <h4>{item.title}</h4>
                 <p>{item.text}</p>
               </div>
@@ -81,8 +81,8 @@ function Nosotros() {
           <div className="nosotros-ubicacion__info">
             <h3>Sala de diseño</h3>
             <p className="sub">Agenda tu visita y conoce nuestros espacios</p>
-            <div className="ubi-row"><MapPin size={20} /><p>Medellín, Colombia</p></div>
-            <div className="ubi-row"><Clock size={20} /><p>Lunes a Viernes: 8:00 a.m. - 6:00 p.m.<br />Sábados: 9:00 a.m. - 1:00 p.m.</p></div>
+            <div className="ubi-row"><PiMapPinDuotone size={20} /><p>Medellín, Colombia</p></div>
+            <div className="ubi-row"><PiClockDuotone size={20} /><p>Lunes a Viernes: 8:00 a.m. - 6:00 p.m.<br />Sábados: 9:00 a.m. - 1:00 p.m.</p></div>
             <Link to="/contacto" className="button button--primary" style={{ marginTop: 20, alignSelf: 'flex-start' }}>Contactarnos &rarr;</Link>
           </div>
         </div>

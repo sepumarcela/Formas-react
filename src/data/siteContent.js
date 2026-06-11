@@ -28,6 +28,12 @@ export const defaultSiteContent = {
       featuredEyebrow: 'Destacados de la semana',
       featuredTitle: 'Lo más elegido por nuestros clientes',
       featuredDescription: 'Diseños funcionales, modernos y listos para inspirar nuevos espacios.',
+      whyBenefits: [
+        { id: 'diseno-personalizado', image: '' },
+        { id: 'fabricacion-calidad', image: '' },
+        { id: 'instalacion-profesional', image: '' },
+        { id: 'acompanamiento-completo', image: '' },
+      ],
       finalEyebrow: 'Hablemos de tu proyecto',
       finalTitle: '¿Listo para transformar tu espacio?',
       finalText: 'Cuéntanos qué necesitas y te ayudamos a crear un mueble a medida para tu hogar.',

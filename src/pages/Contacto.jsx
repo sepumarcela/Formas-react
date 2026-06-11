@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Clock, Mail, MapPin, Phone } from 'lucide-react'
+import { PiClockDuotone, PiEnvelopeSimpleDuotone, PiMapPinDuotone, PiPhoneCallDuotone } from 'react-icons/pi'
 import PageHero from '../components/sections/PageHero'
 import { submitContactForm } from '../api/cmsApi'
 import { useSiteContent } from '../hooks/useSiteContent'
@@ -80,10 +80,10 @@ function Contacto() {
 
           <div className="contacto-info">
             <h3>Información de contacto</h3>
-            <div className="contacto-info-item"><div className="contacto-info-icon"><MapPin size={20} /></div><div><strong>{page.addressTitle}</strong><p>{page.address.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
-            <div className="contacto-info-item"><div className="contacto-info-icon"><Phone size={20} /></div><div><strong>{page.phoneTitle}</strong><p>{page.phone.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
-            <div className="contacto-info-item"><div className="contacto-info-icon"><Mail size={20} /></div><div><strong>{page.emailTitle}</strong><p>{page.email}</p></div></div>
-            <div className="contacto-info-item"><div className="contacto-info-icon"><Clock size={20} /></div><div><strong>{page.hoursTitle}</strong><p>{page.hours.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
+            <div className="contacto-info-item"><div className="contacto-info-icon"><PiMapPinDuotone size={20} /></div><div><strong>{page.addressTitle}</strong><p>{page.address.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
+            <div className="contacto-info-item"><div className="contacto-info-icon"><PiPhoneCallDuotone size={20} /></div><div><strong>{page.phoneTitle}</strong><p>{page.phone.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
+            <div className="contacto-info-item"><div className="contacto-info-icon"><PiEnvelopeSimpleDuotone size={20} /></div><div><strong>{page.emailTitle}</strong><p>{page.email}</p></div></div>
+            <div className="contacto-info-item"><div className="contacto-info-icon"><PiClockDuotone size={20} /></div><div><strong>{page.hoursTitle}</strong><p>{page.hours.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
           </div>
 
           <div className="contacto-mapa">

@@ -424,6 +424,25 @@ function Cuenta() {
     }))
   }
 
+  function updateWhyBenefitImage(benefitId, image) {
+    const currentBenefits = content.pageContent.homeProducts?.whyBenefits || []
+    const defaultBenefits = [
+      { id: 'diseno-personalizado', image: '' },
+      { id: 'fabricacion-calidad', image: '' },
+      { id: 'instalacion-profesional', image: '' },
+      { id: 'acompanamiento-completo', image: '' },
+    ]
+    const benefitsById = new Map([...defaultBenefits, ...currentBenefits].map((benefit) => [benefit.id, benefit]))
+    const whyBenefits = defaultBenefits.map((benefit) => ({
+      ...benefit,
+      ...benefitsById.get(benefit.id),
+      ...(benefit.id === benefitId ? { image } : {}),
+    }))
+
+    updatePageContent('homeProducts', { whyBenefits })
+    return whyBenefits
+  }
+
   function handleNewProductCategory(categoryId) {
     const category = content.categories.find((item) => item.id === categoryId)
     updateNewProduct({ categoryId, category: category?.name || '' })
@@ -785,6 +804,28 @@ function Cuenta() {
     }
   }
 
+  async function handleWhyBenefitImageUpload(benefitId, event) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    try {
+      const image = await uploadImage(imageFolders.pages, file)
+      const whyBenefits = updateWhyBenefitImage(benefitId, image)
+      const nextPage = { ...content.pageContent.homeProducts, whyBenefits }
+      const savedPage = await savePageContent('homeProducts', nextPage)
+      setContent((current) => ({
+        ...current,
+        pageContent: {
+          ...current.pageContent,
+          homeProducts: savedPage,
+        },
+      }))
+      flash('Foto de Por qué Formas subida y guardada.')
+    } catch (error) {
+      reportBackendError('No se pudo subir la foto de Por qué Formas al backend.', error)
+    }
+  }
+
   async function handleCsvFile(event) {
     const file = event.target.files?.[0]
     if (!file) return
@@ -987,6 +1028,34 @@ function Cuenta() {
               <label>Etiqueta destacados<input value={page.featuredEyebrow || ''} onChange={(event) => updatePageContent('homeProducts', { featuredEyebrow: event.target.value })} /></label>
               <label>Título destacados<input value={page.featuredTitle || ''} onChange={(event) => updatePageContent('homeProducts', { featuredTitle: event.target.value })} /></label>
               <label className="admin-colspan">Descripción destacados<textarea value={page.featuredDescription || ''} onChange={(event) => updatePageContent('homeProducts', { featuredDescription: event.target.value })} /></label>
+            </div>
+            <div className="admin-list-heading">
+              <h2>Fotos de Por qué Formas</h2>
+            </div>
+            <div className="admin-editor-list admin-editor-list--compact">
+              {[
+                { id: 'diseno-personalizado', label: 'Diseño personalizado' },
+                { id: 'fabricacion-calidad', label: 'Fabricación de calidad' },
+                { id: 'instalacion-profesional', label: 'Instalación profesional' },
+                { id: 'acompanamiento-completo', label: 'Acompañamiento completo' },
+              ].map((benefit) => {
+                const image = page.whyBenefits?.find((item) => item.id === benefit.id)?.image
+
+                return (
+                  <article className="admin-editor-card" key={benefit.id}>
+                    <div className="admin-image-box">
+                      {image ? <img src={image} alt={benefit.label} /> : <Images size={26} />}
+                      <label>
+                        Cargar foto
+                        <input type="file" accept="image/*" onChange={(event) => handleWhyBenefitImageUpload(benefit.id, event)} />
+                      </label>
+                    </div>
+                    <div className="admin-form-grid">
+                      <label>Tarjeta<input value={benefit.label} readOnly /></label>
+                    </div>
+                  </article>
+                )
+              })}
             </div>
             <div className="admin-list-heading">
               <h2>Bloque final de contacto</h2>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, BadgeCheck, ChevronLeft, ChevronRight, Clock, Headphones, Ruler, Sparkles } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
+import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { getActiveDiscount } from '../utils/discounts'
 
@@ -82,9 +83,9 @@ function ProductDetail() {
             </div>
 
             <div className="product-feature-row">
-              <span><Ruler size={16} /> {product.size || 'A medida'}</span>
-              <span><Sparkles size={16} /> Personalizable</span>
-              <span><BadgeCheck size={16} /> Fabricación local</span>
+              <span><PiRulerDuotone size={16} /> {product.size || 'A medida'}</span>
+              <span><PiSketchLogoDuotone size={16} /> Personalizable</span>
+              <span><PiFactoryDuotone size={16} /> Fabricación local</span>
             </div>
 
             <div className="product-actions">
@@ -115,9 +116,9 @@ function ProductDetail() {
             <p className="admin-kicker">Acompañamiento</p>
             <h2>Hecho para tu espacio</h2>
             <ul className="product-service-list">
-              <li><BadgeCheck size={18} /> Diseño personalizado</li>
-              <li><Clock size={18} /> Planeación por etapas</li>
-              <li><Headphones size={18} /> Asesoría durante el proceso</li>
+              <li><PiCheckCircleDuotone size={18} /> Diseño personalizado</li>
+              <li><PiClockDuotone size={18} /> Planeación por etapas</li>
+              <li><PiHandshakeDuotone size={18} /> Asesoría durante el proceso</li>
             </ul>
           </article>
         </div>

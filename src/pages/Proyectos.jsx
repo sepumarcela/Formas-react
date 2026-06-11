@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Camera, Home, ShieldCheck, Users } from 'lucide-react'
+import { PiCameraDuotone, PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone } from 'react-icons/pi'
 import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
 
@@ -15,10 +15,10 @@ const filtrosBase = [
 ]
 
 const ventajas = [
-  { icon: Home, title: 'Proyectos a la medida', text: 'Diseñamos cada espacio según tus necesidades.' },
-  { icon: ShieldCheck, title: 'Calidad garantizada', text: 'Materiales de primera y acabados que perduran.' },
-  { icon: Users, title: 'Asesoría personalizada', text: 'Te acompañamos en cada etapa de tu proyecto.' },
-  { icon: Camera, title: 'Inspiración real', text: 'Proyectos reales que reflejan nuestro compromiso.' },
+  { icon: PiRulerDuotone, title: 'Proyectos a la medida', text: 'Diseñamos cada espacio según tus necesidades.' },
+  { icon: PiDiamondDuotone, title: 'Calidad garantizada', text: 'Materiales de primera y acabados que perduran.' },
+  { icon: PiHandshakeDuotone, title: 'Asesoría personalizada', text: 'Te acompañamos en cada etapa de tu proyecto.' },
+  { icon: PiCameraDuotone, title: 'Inspiración real', text: 'Proyectos reales que reflejan nuestro compromiso.' },
 ]
 
 function Proyectos() {
@@ -79,7 +79,7 @@ function Proyectos() {
             const Icon = item.icon
             return (
               <div className="cat-bottom-item" key={item.title}>
-                <Icon size={30} strokeWidth={1.5} />
+                <Icon size={30} />
                 <div><h5>{item.title}</h5><p>{item.text}</p></div>
               </div>
             )

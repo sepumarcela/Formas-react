@@ -1,16 +1,16 @@
-import { Bath, Bed, BookOpen, CookingPot, Monitor, PanelsTopLeft, PencilRuler, Rows3 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+﻿import { Link } from 'react-router-dom'
+import { PiBathtubDuotone, PiBedDuotone, PiBookOpenTextDuotone, PiCookingPotDuotone, PiGridFourDuotone, PiRulerDuotone, PiSquaresFourDuotone, PiTelevisionDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../../hooks/useSiteContent'
 
 const categoryIcons = {
-  tv: Monitor,
-  desk: PencilRuler,
-  closet: PanelsTopLeft,
-  kitchen: CookingPot,
-  bath: Bath,
-  shelf: Rows3,
-  bed: Bed,
-  book: BookOpen,
+  tv: PiTelevisionDuotone,
+  desk: PiRulerDuotone,
+  closet: PiSquaresFourDuotone,
+  kitchen: PiCookingPotDuotone,
+  bath: PiBathtubDuotone,
+  shelf: PiGridFourDuotone,
+  bed: PiBedDuotone,
+  book: PiBookOpenTextDuotone,
 }
 
 function CategoryShowcase() {
@@ -28,16 +28,21 @@ function CategoryShowcase() {
 
       <div className="category-grid">
         {visibleCategories.map((category) => {
-          const Icon = categoryIcons[category.icon] || Rows3
+          const Icon = categoryIcons[category.icon] || PiGridFourDuotone
 
           return (
-            <article className="category-card" key={category.id}>
+            <Link
+              className="category-card"
+              key={category.id}
+              to={`/categorias/${category.id}`}
+              aria-label={`Ver categorÃ­a ${category.name}`}
+            >
               <div className="category-card__image">
                 {category.image ? (
                   <img src={category.image} alt={category.name} />
                 ) : (
                   <div className="photo-placeholder">
-                    <Icon size={34} strokeWidth={1.6} />
+                    <Icon size={34} />
                     <span>Foto pendiente</span>
                   </div>
                 )}
@@ -46,9 +51,9 @@ function CategoryShowcase() {
               <div className="category-card__body">
                 <h3>{category.name}</h3>
                 <p>{category.description}</p>
-                <Link to={`/categorias/${category.id}`}>Ver categoría</Link>
+                <span className="category-card__link">Ver categoría</span>
               </div>
-            </article>
+            </Link>
           )
         })}
       </div>

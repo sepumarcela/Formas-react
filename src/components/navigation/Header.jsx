@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import {
-  Bath, Bed, BookOpen, ChevronDown, CookingPot, Menu, Monitor,
-  PanelsTopLeft, PencilRuler, Rows3, Search, ShoppingCart, User, X,
+  ChevronDown, Menu, Search, ShoppingCart, User, X,
 } from 'lucide-react'
+import { PiBathtubDuotone, PiBedDuotone, PiBookOpenTextDuotone, PiCookingPotDuotone, PiGridFourDuotone, PiRulerDuotone, PiSquaresFourDuotone, PiTelevisionDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../../hooks/useSiteContent'
 
 function normalizeText(value) {
@@ -15,14 +15,14 @@ function normalizeText(value) {
 }
 
 const categoryIcons = {
-  tv: Monitor,
-  desk: PencilRuler,
-  closet: PanelsTopLeft,
-  kitchen: CookingPot,
-  bath: Bath,
-  shelf: Rows3,
-  bed: Bed,
-  book: BookOpen,
+  tv: PiTelevisionDuotone,
+  desk: PiRulerDuotone,
+  closet: PiSquaresFourDuotone,
+  kitchen: PiCookingPotDuotone,
+  bath: PiBathtubDuotone,
+  shelf: PiGridFourDuotone,
+  bed: PiBedDuotone,
+  book: PiBookOpenTextDuotone,
 }
 
 function Header({ transparent = false }) {
@@ -99,7 +99,7 @@ function Header({ transparent = false }) {
               <div className="nav-dropdown__col">
                 <div className="nav-dropdown__title">Categorías</div>
                 {visibleCategories.map((category) => {
-                  const Icon = categoryIcons[category.icon] || Rows3
+                  const Icon = categoryIcons[category.icon] || PiGridFourDuotone
 
                   return (
                     <Link
@@ -108,7 +108,7 @@ function Header({ transparent = false }) {
                       className="nav-dropdown__link"
                       onClick={() => { setDropOpen(false); setMenuOpen(false) }}
                     >
-                      <Icon size={18} strokeWidth={1.6} />
+                      <Icon size={18} />
                       {category.name}
                     </Link>
                   )
