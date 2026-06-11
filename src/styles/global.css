@@ -136,9 +136,9 @@ picture,
 .brand__logo-img {
   display: block;
   width: auto;
-  height: var(--logo-height, 120px);
-  max-height: 140px;
-  max-width: 340px;
+  height: var(--logo-height, 84px);
+  max-height: 96px;
+  max-width: 240px;
   object-fit: contain;
   object-position: left center;
 }
@@ -231,12 +231,12 @@ picture,
    ═══════════════════════════════ */
 .home-hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 500px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   overflow: hidden;
   margin-top: -92px;
-  padding-top: 220px;
+  padding-top: 250px;
   padding-left: 0;
   padding-right: 0;
   padding-bottom: 60px;
@@ -252,7 +252,7 @@ picture,
 .home-hero__bg-ph { position: absolute; inset: 0; background: linear-gradient(135deg, #3a322c 0%, #1a1714 100%); }
 .home-hero__overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(100deg, rgba(14,12,10,0.86) 0%, rgba(14,12,10,0.62) 30%, rgba(14,12,10,0.22) 58%, rgba(14,12,10,0.05) 100%);
+  background: linear-gradient(100deg, rgba(14,12,10,0.62) 0%, rgba(14,12,10,0.40) 30%, rgba(14,12,10,0.12) 58%, rgba(14,12,10,0) 100%);
 }
 .home-hero__content {
   position: relative; z-index: 2;
@@ -272,7 +272,7 @@ picture,
 }
 .home-hero h1 {
   font-family: 'DM Sans', sans-serif;
-  font-size: clamp(48px, 5vw, 72px);
+  font-size: clamp(42px, 4.3vw, 62px);
   font-weight: 800;
   line-height: 1.0;
   letter-spacing: -0.04em;
@@ -789,12 +789,12 @@ section { padding: 100px 60px; }
    ═══════════════════════════════ */
 .page-hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 680px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   overflow: hidden;
   margin-top: -88px;
-  padding-top: 220px;
+  padding-top: 150px;
   padding-left: 0 !important;
   padding-right: 0 !important;
   padding-bottom: 60px;
@@ -818,7 +818,7 @@ section { padding: 100px 60px; }
 .page-hero__bg { position: absolute; inset: 0; }
 .page-hero__bg img { width: 100%; height: 100%; object-fit: cover; }
 .page-hero__bg-ph { position: absolute; inset: 0; background: linear-gradient(135deg,#2c2520,#1a1714); }
-.page-hero__overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(26,23,20,0.82), rgba(26,23,20,0.3) 65%); }
+.page-hero__overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(26,23,20,0.60), rgba(26,23,20,0.15) 65%); }
 
 .page-hero__content {
   position: relative;
@@ -837,7 +837,7 @@ section { padding: 100px 60px; }
 .page-hero h1 { font-family: var(--serif); font-size: 56px; font-weight: 500; line-height: 1.02; margin: 0 0 16px; color: var(--color-brand-light); }
 .page-hero h1 em { font-style: italic; color: var(--color-brand-light); }
 .page-hero__line { width: 48px; height: 2px; background: var(--color-brand); margin: 0 0 20px; }
-.page-hero p { font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.7; max-width: 480px; font-weight: 300; margin: 0; }
+.page-hero p { font-size: 17px; color: rgba(255,255,255,0.75); line-height: 1.7; max-width: 480px; font-weight: 300; margin: 0; }
 
 /* ═══════════════════════════════
    PÁGINA CONTACTO
@@ -1890,7 +1890,7 @@ section { padding: 100px 60px; }
   margin-top: 28px;
   border-top: 1px solid rgba(255,255,255,0.08) !important;
   border-radius: 0 !important;
-  padding-top: 18px !important;
+  padding-top: 32px !important;
   color: rgba(255,255,255,0.62) !important;
 }
 .admin-logout:hover {
@@ -2156,18 +2156,7 @@ section { padding: 100px 60px; }
 }
 .admin-editor-card--hero {
   position: relative;
-  grid-template-columns: 260px minmax(220px, 0.8fr) minmax(320px, 1.2fr);
-  align-items: stretch;
-}
-.admin-editor-card--final-cta {
-  grid-template-columns: 260px minmax(0, 1fr);
-}
-.admin-editor-card--final-cta .admin-form-grid--wide {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  align-content: start;
-}
-.admin-editor-card--final-cta .admin-colspan {
-  grid-column: 1 / -1;
+  grid-template-columns: 260px minmax(0, 1fr) auto;
 }
 .admin-editor-card--story {
   grid-template-columns: 350px minmax(0, 1fr) auto;
@@ -2204,23 +2193,6 @@ section { padding: 100px 60px; }
 .admin-image-box--hero {
   min-height: 190px;
   height: 250px;
-}
-.admin-logo-copy {
-  align-self: center;
-  display: grid;
-  gap: 10px;
-  min-width: 0;
-}
-.admin-logo-copy h3 {
-  margin: 0;
-  font-size: 20px;
-}
-.admin-logo-copy p {
-  margin: 0;
-  max-width: 360px;
-  color: var(--color-muted);
-  font-size: 14px;
-  line-height: 1.55;
 }
 .admin-image-box label {
   width: calc(100% - 20px);
@@ -2454,9 +2426,6 @@ section { padding: 100px 60px; }
   .admin-editor-card--hero {
     grid-template-columns: 220px minmax(0, 1fr);
   }
-  .admin-editor-card--hero .admin-form-grid {
-    grid-column: 1 / -1;
-  }
   .admin-editor-card--story {
     grid-template-columns: 1fr;
   }
@@ -2488,9 +2457,6 @@ section { padding: 100px 60px; }
   .admin-form-grid,
   .admin-form-grid--wide {
     grid-template-columns: 1fr;
-  }
-  .admin-editor-card--hero .admin-form-grid {
-    grid-column: auto;
   }
   .admin-panel__header {
     flex-direction: column;
@@ -2825,4 +2791,39 @@ section { padding: 100px 60px; }
   top: 22px;
   padding: 10px 14px;
   font-size: 12px;
+}
+
+/* ═══════════════════════════════════════════
+   LEGIBILIDAD DE TEXTO SOBRE FOTOS
+   Sombra sutil para que el texto resalte
+   sobre imágenes claras sin oscurecer la foto.
+   ═══════════════════════════════════════════ */
+
+/* Menú superior cuando flota sobre la foto (Home y páginas internas con header transparente) */
+.site-header--transparent .main-nav a,
+.site-header--transparent .nav-dropdown__trigger,
+.site-header--transparent .brand__text,
+.site-header--transparent .brand__tagline,
+.site-header--transparent .header-icon {
+  text-shadow: 0 1px 10px rgba(0,0,0,0.65);
+}
+.site-header--transparent .main-nav a,
+.site-header--transparent .nav-dropdown__trigger {
+  font-weight: 700;
+  opacity: 1;
+}
+
+/* Títulos y textos del hero del Home */
+.home-hero h1,
+.home-hero p,
+.home-hero__eyebrow {
+  text-shadow: 0 2px 12px rgba(0,0,0,0.45);
+}
+
+/* Títulos y textos de las páginas internas */
+.page-hero h1,
+.page-hero p,
+.page-hero .eyebrow,
+.breadcrumb {
+  text-shadow: 0 2px 12px rgba(0,0,0,0.45);
 }
