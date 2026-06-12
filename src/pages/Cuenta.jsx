@@ -56,6 +56,7 @@ const sections = [
 
 const pageOptions = [
   { id: 'homeProducts', label: 'Productos en inicio' },
+  { id: 'productos', label: 'Productos' },
   { id: 'proyectos', label: 'Proyectos' },
   { id: 'nosotros', label: 'Nosotros' },
   { id: 'blog', label: 'Blog' },
@@ -983,6 +984,23 @@ function Cuenta() {
               <label>Texto pequeño<input value={page.eyebrow || ''} onChange={(event) => updatePageContent(pageKey, { eyebrow: event.target.value })} placeholder="Opcional" /></label>
               <label className="admin-colspan">Título<textarea value={page.title || ''} onChange={(event) => updatePageContent(pageKey, { title: event.target.value })} /></label>
               <label className="admin-colspan">Descripción<textarea value={page.description || ''} onChange={(event) => updatePageContent(pageKey, { description: event.target.value })} /></label>
+            </div>
+          </article>
+        )}
+
+        {pageKey === 'productos' && (
+          <article className="admin-editor-card admin-editor-card--hero">
+            <div className="admin-image-box admin-image-box--hero">
+              {page.menuImage ? <img src={page.menuImage} alt="Foto del menú Productos" /> : <Images size={30} />}
+              <label>
+                Foto del menú Productos
+                <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('productos', 'menuImage', event)} />
+              </label>
+              {renderCardSave('Guardar página', saveCurrentPageContent)}
+            </div>
+
+            <div className="admin-form-grid admin-form-grid--wide">
+              <label className="admin-colspan">Esta foto aparece en el desplegable superior de Productos<input value="Imagen editable desde este bloque" readOnly /></label>
             </div>
           </article>
         )}

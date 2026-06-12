@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8080'
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8080').replace(/\/$/, '')
 const AUTH_TOKEN_KEY = 'formas-admin-token'
 
 function text(value) {
@@ -33,6 +33,7 @@ function mapPageAssets(extra, mapper) {
     ...(extra.locationImage ? { locationImage: mapper(extra.locationImage) } : {}),
     ...(extra.finalImage ? { finalImage: mapper(extra.finalImage) } : {}),
     ...(extra.logoImage ? { logoImage: mapper(extra.logoImage) } : {}),
+    ...(extra.menuImage ? { menuImage: mapper(extra.menuImage) } : {}),
   }
 }
 

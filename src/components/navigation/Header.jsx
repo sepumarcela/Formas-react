@@ -35,6 +35,7 @@ function Header({ transparent = false }) {
   const [{ categories, pageContent }] = useSiteContent()
   const logoImage = pageContent.homeProducts?.logoImage
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
+  const productsMenuImage = pageContent.productos?.menuImage
   const visibleCategories = categories.filter((category) => category.active !== false)
   const dropRef = useRef(null)
   const navigate = useNavigate()
@@ -110,17 +111,39 @@ function Header({ transparent = false }) {
           <NavLink to="/" onClick={() => setMenuOpen(false)}>Inicio</NavLink>
 
           <div className="nav-dropdown" ref={dropRef}>
-            <button
-              className={`nav-dropdown__trigger ${dropOpen ? 'open' : ''}`}
-              onClick={() => setDropOpen((current) => !current)}
-            >
-              Productos
-              <span className="nav-dropdown__arrow"><ChevronDown size={14} /></span>
-            </button>
+            <div className="nav-dropdown__main">
+              <NavLink
+                to="/productos"
+                className={({ isActive }) => (
+                  isActive || location.pathname.startsWith('/categorias/') || location.pathname.startsWith('/productos/')
+                    ? 'nav-dropdown__toplink active'
+                    : 'nav-dropdown__toplink'
+                )}
+                onClick={() => setMenuOpen(false)}
+              >
+                Productos
+              </NavLink>
+              <button
+                className={`nav-dropdown__trigger ${dropOpen ? 'open' : ''}`}
+                onClick={() => setDropOpen((current) => !current)}
+                aria-label="Ver categorías de productos"
+                aria-expanded={dropOpen}
+              >
+                <span className="nav-dropdown__arrow"><ChevronDown size={14} /></span>
+              </button>
+            </div>
 
             <div className={`nav-dropdown__menu ${dropOpen ? 'open' : ''}`}>
               <div className="nav-dropdown__col">
                 <div className="nav-dropdown__title">Categorías</div>
+                <Link
+                  to="/productos"
+                  className="nav-dropdown__link"
+                  onClick={() => { setDropOpen(false); setMenuOpen(false) }}
+                >
+                  <PiGridFourDuotone size={18} />
+                  Ver todos los productos
+                </Link>
                 {visibleCategories.map((category) => {
                   const Icon = categoryIcons[category.icon] || PiGridFourDuotone
 
@@ -138,7 +161,9 @@ function Header({ transparent = false }) {
                 })}
               </div>
               <div className="nav-dropdown__promo">
-                <div className="nav-dropdown__promo-ph">Foto pendiente</div>
+                <div className="nav-dropdown__promo-ph">
+                  {productsMenuImage ? <img src={productsMenuImage} alt="Productos FORMAS" /> : 'Foto pendiente'}
+                </div>
                 <strong>Diseñamos muebles</strong>
                 <span>que se adaptan a tu <em>estilo de vida.</em></span>
                 <p>Funcionalidad, diseño y calidad en cada detalle.</p>

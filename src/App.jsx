@@ -6,6 +6,7 @@ import Nosotros from './pages/Nosotros'
 import Proyectos from './pages/Proyectos'
 import Blog from './pages/Blog'
 import Contacto from './pages/Contacto'
+import Productos from './pages/Productos'
 import CategoryDetail from './pages/CategoryDetail'
 import ProductDetail from './pages/ProductDetail'
 import Cuenta from './pages/Cuenta'
@@ -23,6 +24,7 @@ function App() {
           <Route path="/proyectos" element={<Proyectos />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contacto" element={<Contacto />} />
+          <Route path="/productos" element={<Productos />} />
           <Route path="/categorias/:categoryId" element={<CategoryDetail />} />
           <Route path="/productos/:productId" element={<ProductDetail />} />
           <Route path="/cuenta" element={<Cuenta />} />

@@ -52,6 +52,16 @@ export const defaultSiteContent = {
       ctaLabel: 'Ver más proyectos',
       ctaLink: '/contacto',
     },
+    productos: {
+      breadcrumb: 'Productos',
+      eyebrow: 'Productos',
+      title: 'Muebles para cada espacio',
+      description: 'Conoce nuestras líneas de producto y encuentra soluciones funcionales, cálidas y hechas para tu estilo de vida.',
+      image: '',
+      menuImage: '',
+      ctaLabel: 'Solicitar asesoría',
+      ctaLink: '/contacto',
+    },
     nosotros: {
       breadcrumb: 'Nosotros',
       eyebrow: 'Nosotros',
@@ -242,6 +252,10 @@ export function mergeSiteContent(content) {
       proyectos: {
         ...defaultSiteContent.pageContent.proyectos,
         ...(content?.pageContent?.proyectos || {}),
+      },
+      productos: {
+        ...defaultSiteContent.pageContent.productos,
+        ...(content?.pageContent?.productos || {}),
       },
       nosotros: {
         ...defaultSiteContent.pageContent.nosotros,
