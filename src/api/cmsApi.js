@@ -476,6 +476,12 @@ export async function saveHeroSlide(slide, displayOrder = 0) {
   const saved = await request(persisted ? `/api/hero-slides/${encodeURIComponent(slide.id)}` : '/api/hero-slides', {
     method: persisted ? 'PUT' : 'POST',
     body: JSON.stringify(toBackendHeroSlide(slide, displayOrder)),
+  }).catch(async (error) => {
+    if (error.status !== 404 && error.status !== 405) throw error
+    return request('/api/hero-slides', {
+      method: 'POST',
+      body: JSON.stringify(toBackendHeroSlide({ ...slide, persisted: false }, displayOrder)),
+    })
   })
   return toFrontendHeroSlide(saved)
 }
