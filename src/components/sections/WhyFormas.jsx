@@ -1,5 +1,6 @@
 import { PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone, PiToolboxDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../../hooks/useSiteContent'
+import { optimizeImage } from '../../utils/images'
 
 const benefits = [
   {
@@ -59,7 +60,7 @@ function WhyFormas() {
                 <p>{benefit.text}</p>
               </div>
               <div className={`benefit-card__image${image ? '' : ' benefit-card__image--empty'}`}>
-                {image ? <img src={image} alt={benefit.title} /> : <span>Foto pendiente</span>}
+                {image ? <img src={optimizeImage(image, { width: 700 })} alt={benefit.title} loading="lazy" /> : <span>Foto pendiente</span>}
               </div>
             </article>
           )

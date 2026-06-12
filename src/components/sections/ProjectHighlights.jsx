@@ -1,4 +1,5 @@
 import { useSiteContent } from '../../hooks/useSiteContent'
+import { optimizeImage } from '../../utils/images'
 
 function ProjectHighlights() {
   const [{ projectHighlights }] = useSiteContent()
@@ -10,8 +11,8 @@ function ProjectHighlights() {
         <p className="eyebrow">Proyectos realizados</p>
         <h2>Transformamos espacios, creamos experiencias</h2>
         <p>
-          Cada proyecto tiene una historia. Aquí dejamos registro visual del
-          antes y después de los espacios intervenidos.
+          Cada proyecto tiene una historia. Aqui dejamos registro visual del
+          antes y despues de los espacios intervenidos.
         </p>
       </div>
 
@@ -21,16 +22,16 @@ function ProjectHighlights() {
             <div className="project-highlight-card__media">
               <div data-label="Antes">
                 {project.before ? (
-                  <img src={project.before} alt={`${project.title} antes`} />
+                  <img src={optimizeImage(project.before, { width: 700 })} alt={`${project.title} antes`} loading="lazy" />
                 ) : (
                   <span>Antes</span>
                 )}
               </div>
-              <div data-label="Después">
+              <div data-label="Despues">
                 {project.after ? (
-                  <img src={project.after} alt={`${project.title} después`} />
+                  <img src={optimizeImage(project.after, { width: 700 })} alt={`${project.title} despues`} loading="lazy" />
                 ) : (
-                  <span>Después</span>
+                  <span>Despues</span>
                 )}
               </div>
             </div>

@@ -6,6 +6,7 @@ import {
 import { PiBathtubDuotone, PiBedDuotone, PiBookOpenTextDuotone, PiCookingPotDuotone, PiGridFourDuotone, PiRulerDuotone, PiSquaresFourDuotone, PiTelevisionDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { CART_UPDATED_EVENT, loadCartItems } from '../../utils/cart'
+import { optimizeImage } from '../../utils/images'
 
 function normalizeText(value) {
   return value
@@ -90,7 +91,7 @@ function Header({ transparent = false }) {
       <div className="site-header__inner">
         <Link to="/" className="brand">
           {logoImage ? (
-            <img className="brand__logo-img" src={logoImage} alt="FORMAS" style={{ '--logo-height': `${logoHeight}px` }} />
+            <img className="brand__logo-img" src={optimizeImage(logoImage, { width: 320 })} alt="FORMAS" style={{ '--logo-height': `${logoHeight}px` }} />
           ) : (
             <>
               <svg className="brand__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -162,7 +163,7 @@ function Header({ transparent = false }) {
               </div>
               <div className="nav-dropdown__promo">
                 <div className="nav-dropdown__promo-ph">
-                  {productsMenuImage ? <img src={productsMenuImage} alt="Productos FORMAS" /> : 'Foto pendiente'}
+                  {productsMenuImage ? <img src={optimizeImage(productsMenuImage, { width: 500 })} alt="Productos FORMAS" /> : 'Foto pendiente'}
                 </div>
                 <strong>Diseñamos muebles</strong>
                 <span>que se adaptan a tu <em>estilo de vida.</em></span>

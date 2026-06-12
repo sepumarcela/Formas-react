@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PageHero from '../components/sections/PageHero'
 import { subscribeNewsletter } from '../api/cmsApi'
 import { useSiteContent } from '../hooks/useSiteContent'
+import { optimizeImage } from '../utils/images'
 
 function Blog() {
   const [{ blogPosts, pageContent }] = useSiteContent()
@@ -47,7 +48,7 @@ function Blog() {
               <article className="blog-card" key={post.id}>
                 <div className="blog-card__img">
                   <span className="blog-card__tag">{post.tag}</span>
-                  {post.image ? <img src={post.image} alt={post.title} /> : <div className="blog-ph">Foto pendiente</div>}
+                  {post.image ? <img src={optimizeImage(post.image, { width: 900 })} alt={post.title} loading="lazy" /> : <div className="blog-ph">Foto pendiente</div>}
                 </div>
                 <div className="blog-card__body">
                   <span className="blog-card__date">{post.date}</span>
@@ -64,7 +65,7 @@ function Blog() {
               <h4>{page.sidebarTitle}</h4>
               {activePosts.slice(0, 3).map((post) => (
                 <div className="blog-sidebar__art" key={post.id}>
-                  {post.image ? <img className="blog-sidebar__ph" src={post.image} alt="" /> : <div className="blog-sidebar__ph" />}
+                  {post.image ? <img className="blog-sidebar__ph" src={optimizeImage(post.image, { width: 360 })} alt="" loading="lazy" /> : <div className="blog-sidebar__ph" />}
                   <div>
                     <div className="blog-sidebar__title">{post.title}</div>
                     <div className="blog-sidebar__date">{post.date}</div>

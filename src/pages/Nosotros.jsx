@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { PiClockDuotone, PiHandshakeDuotone, PiHeartDuotone, PiMapPinDuotone, PiPaletteDuotone, PiPlantDuotone, PiSealCheckDuotone, PiShieldCheckDuotone, PiSparkleDuotone } from 'react-icons/pi'
 import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
+import { optimizeImage } from '../utils/images'
 
 const pilares = [
   { icon: PiHeartDuotone, title: 'Pasión por el diseño', text: 'Nos inspira crear espacios únicos y funcionales.' },
@@ -29,7 +30,7 @@ function Nosotros() {
       <section style={{ background: 'var(--color-surface)' }}>
         <div className="nosotros-historia">
           <div className="nosotros-historia__img">
-            {page.historyImage ? <img src={page.historyImage} alt={page.historyTitle} /> : <div className="nosotros-ph">Foto pendiente</div>}
+            {page.historyImage ? <img src={optimizeImage(page.historyImage, { width: 1000 })} alt={page.historyTitle} loading="lazy" /> : <div className="nosotros-ph">Foto pendiente</div>}
           </div>
           <div className="nosotros-historia__text">
             <h2>{page.historyTitle}</h2>
@@ -76,7 +77,7 @@ function Nosotros() {
         </div>
         <div className="nosotros-ubicacion">
           <div className="nosotros-ubicacion__img">
-            {page.locationImage ? <img src={page.locationImage} alt="Sala de diseño" /> : <div className="nosotros-ph">Foto sede pendiente</div>}
+            {page.locationImage ? <img src={optimizeImage(page.locationImage, { width: 1000 })} alt="Sala de diseño" loading="lazy" /> : <div className="nosotros-ph">Foto sede pendiente</div>}
           </div>
           <div className="nosotros-ubicacion__info">
             <h3>Sala de diseño</h3>

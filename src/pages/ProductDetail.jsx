@@ -5,6 +5,7 @@ import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuot
 import { useSiteContent } from '../hooks/useSiteContent'
 import { addCartItem } from '../utils/cart'
 import { getActiveDiscount } from '../utils/discounts'
+import { optimizeImage } from '../utils/images'
 
 const relatedWindowSize = 3
 
@@ -62,7 +63,7 @@ function ProductDetail() {
           <div className="product-gallery">
             {discount && <span className="discount-badge discount-badge--detail">{discount.label}</span>}
             {product.image ? (
-              <img src={product.image} alt={product.name} />
+              <img src={optimizeImage(product.image, { width: 1400 })} alt={product.name} />
             ) : (
               <div className="product-gallery__placeholder">Foto pendiente</div>
             )}
@@ -164,7 +165,7 @@ function ProductDetail() {
                 >
                   <div className="cat-product-card__image">
                     {relatedDiscount && <span className="discount-badge">{relatedDiscount.label}</span>}
-                    {item.image ? <img src={item.image} alt={item.name} /> : <span>Foto pendiente</span>}
+                    {item.image ? <img src={optimizeImage(item.image, { width: 700 })} alt={item.name} loading="lazy" /> : <span>Foto pendiente</span>}
                   </div>
                   <div className="cat-product-card__body">
                     <h3>{item.name}</h3>

@@ -8,6 +8,7 @@ import ProjectHighlights from '../components/sections/ProjectHighlights'
 import TestimonialSection from '../components/sections/TestimonialSection'
 import FinalCta from '../components/sections/FinalCta'
 import { useSiteContent } from '../hooks/useSiteContent'
+import { optimizeImage } from '../utils/images'
 import heroImage from '../assets/hero.png'
 
 function Home() {
@@ -39,7 +40,7 @@ function Home() {
     <main className="page">
       <section className="home-hero">
         <div className="home-hero__bg">
-          <img src={heroSrc} className={`home-hero__bg-img home-hero__bg-img--${heroImageFit}`} alt="" />
+          <img src={optimizeImage(heroSrc, { width: 1800 })} className={`home-hero__bg-img home-hero__bg-img--${heroImageFit}`} alt="" />
           <div className="home-hero__overlay" />
         </div>
 

@@ -1,4 +1,5 @@
 import { useSiteContent } from '../../hooks/useSiteContent'
+import { optimizeImage } from '../../utils/images'
 
 function TestimonialSection() {
   const [{ testimonials }] = useSiteContent()
@@ -16,7 +17,7 @@ function TestimonialSection() {
         {visibleTestimonials.map((testimonial) => (
           <article className="testimonial-card" key={testimonial.id}>
             <div className="testimonial-card__image">
-              {testimonial.image ? <img src={testimonial.image} alt={testimonial.name} /> : <span>Foto pendiente</span>}
+              {testimonial.image ? <img src={optimizeImage(testimonial.image, { width: 500 })} alt={testimonial.name} loading="lazy" /> : <span>Foto pendiente</span>}
             </div>
 
             <div className="testimonial-card__body">

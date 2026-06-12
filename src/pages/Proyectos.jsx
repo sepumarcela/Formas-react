@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { PiCameraDuotone, PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone } from 'react-icons/pi'
 import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
+import { optimizeImage } from '../utils/images'
 
 const filtrosBase = [
   { id: 'all', label: 'Todos' },
@@ -58,7 +59,7 @@ function Proyectos() {
             <article className="proyecto-item" key={project.id}>
               <div className="proyecto-item__img">
                 <span className="proyecto-item__tag">{project.label}</span>
-                {project.image ? <img src={project.image} alt={project.title} /> : <div className="proyecto-ph">Foto pendiente</div>}
+                {project.image ? <img src={optimizeImage(project.image, { width: 900 })} alt={project.title} loading="lazy" /> : <div className="proyecto-ph">Foto pendiente</div>}
               </div>
               <div className="proyecto-item__body">
                 <h3>{project.title}</h3>

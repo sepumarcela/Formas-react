@@ -1,6 +1,7 @@
 ﻿import { Link } from 'react-router-dom'
 import { PiBathtubDuotone, PiBedDuotone, PiBookOpenTextDuotone, PiCookingPotDuotone, PiGridFourDuotone, PiRulerDuotone, PiSquaresFourDuotone, PiTelevisionDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../../hooks/useSiteContent'
+import { optimizeImage } from '../../utils/images'
 
 const categoryIcons = {
   tv: PiTelevisionDuotone,
@@ -39,7 +40,7 @@ function CategoryShowcase() {
             >
               <div className="category-card__image">
                 {category.image ? (
-                  <img src={category.image} alt={category.name} />
+                  <img src={optimizeImage(category.image, { width: 700 })} alt={category.name} loading="lazy" />
                 ) : (
                   <div className="photo-placeholder">
                     <Icon size={34} />

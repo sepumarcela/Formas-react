@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { optimizeImage } from '../../utils/images'
 
 function renderTitle(title) {
   return String(title || '').split('\n').map((line, index) => (
@@ -15,7 +16,7 @@ function PageHero({ content, fallbackTitle }) {
   return (
     <section className="page-hero">
       {content.image ? (
-        <div className="page-hero__bg"><img src={content.image} alt={title} /></div>
+        <div className="page-hero__bg"><img src={optimizeImage(content.image, { width: 1800 })} alt={title} /></div>
       ) : (
         <div className="page-hero__bg-ph" />
       )}

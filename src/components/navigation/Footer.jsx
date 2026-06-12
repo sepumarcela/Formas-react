@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useSiteContent } from '../../hooks/useSiteContent'
+import { optimizeImage } from '../../utils/images'
 
 function Footer() {
   const [{ categories, pageContent }] = useSiteContent()
@@ -11,7 +12,7 @@ function Footer() {
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
-          {logoImage ? <img src={logoImage} className="site-footer__brand-logo" alt="FORMAS" style={{ '--logo-height': `${Math.min(Number(logoHeight), 90)}px` }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>FORMAS</div>}
+          {logoImage ? <img src={optimizeImage(logoImage, { width: 260 })} className="site-footer__brand-logo" alt="FORMAS" style={{ '--logo-height': `${Math.min(Number(logoHeight), 90)}px` }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>FORMAS</div>}
           <p>Diseñamos y fabricamos muebles premium para transformar tu hogar con estilo y funcionalidad.</p>
           <div className="site-footer__social">
             <a href="#">Instagram</a>

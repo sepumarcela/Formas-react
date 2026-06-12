@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { getActiveDiscount } from '../../utils/discounts'
+import { optimizeImage } from '../../utils/images'
 
 function FeaturedProducts() {
   const [{ products, pageContent }] = useSiteContent()
@@ -29,7 +30,7 @@ function FeaturedProducts() {
               <div className="product-card__image">
                 {discount && <span className="discount-badge">{discount.label}</span>}
                 {product.image ? (
-                  <img src={product.image} alt={product.name} />
+                  <img src={optimizeImage(product.image, { width: 700 })} alt={product.name} loading="lazy" />
                 ) : (
                   <span>Foto pendiente</span>
                 )}

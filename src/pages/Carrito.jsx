@@ -25,6 +25,7 @@ import {
   removeCartItem,
   updateCartItemQuantity,
 } from '../utils/cart'
+import { optimizeImage } from '../utils/images'
 
 const IVA_RATE = 0.19
 
@@ -223,7 +224,7 @@ function Carrito() {
                   {items.map((item) => (
                     <article className="cart-line" key={item.id}>
                       <Link to={`/productos/${item.id}`} className="cart-line__image">
-                        {item.image ? <img src={item.image} alt={item.name} /> : <span>Foto pendiente</span>}
+                        {item.image ? <img src={optimizeImage(item.image, { width: 360 })} alt={item.name} /> : <span>Foto pendiente</span>}
                       </Link>
                       <div className="cart-line__body">
                         <p>{item.category || 'Producto FORMAS'}</p>

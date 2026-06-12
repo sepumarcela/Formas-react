@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone, PiToolboxDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { getActiveDiscount } from '../utils/discounts'
+import { optimizeImage } from '../utils/images'
 
 const badges = [
   { icon: PiRulerDuotone, label: 'Diseños personalizados' },
@@ -33,7 +34,7 @@ function CategoryDetail() {
     <main className="page">
       <section className="page-hero">
         {category.image ? (
-          <div className="page-hero__bg"><img src={category.image} alt={category.name} /></div>
+          <div className="page-hero__bg"><img src={optimizeImage(category.image, { width: 1800 })} alt={category.name} /></div>
         ) : (
           <div className="page-hero__bg-ph" />
         )}
@@ -84,7 +85,7 @@ function CategoryDetail() {
               >
                 <div className="cat-product-card__image">
                   {discount && <span className="discount-badge">{discount.label}</span>}
-                  {product.image ? <img src={product.image} alt={product.name} /> : <span>Foto pendiente</span>}
+                  {product.image ? <img src={optimizeImage(product.image, { width: 700 })} alt={product.name} loading="lazy" /> : <span>Foto pendiente</span>}
                 </div>
                 <div className="cat-product-card__body">
                   <h3>{product.name}</h3>

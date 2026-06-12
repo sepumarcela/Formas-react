@@ -12,6 +12,7 @@ import {
 } from 'react-icons/pi'
 import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
+import { optimizeImage } from '../utils/images'
 
 const categoryIcons = {
   tv: PiTelevisionDuotone,
@@ -54,7 +55,7 @@ function Productos() {
                 aria-label={`Ver categoría ${category.name}`}
               >
                 <div className="products-category-card__media">
-                  {category.image ? <img src={category.image} alt={category.name} /> : <Icon size={48} />}
+                  {category.image ? <img src={optimizeImage(category.image, { width: 800 })} alt={category.name} loading="lazy" /> : <Icon size={48} />}
                 </div>
                 <div className="products-category-card__body">
                   <span>{categoryProducts.length} producto{categoryProducts.length === 1 ? '' : 's'}</span>
@@ -79,7 +80,7 @@ function Productos() {
           {featuredProducts.map((product) => (
             <Link className="products-featured-mini__item" to={`/productos/${product.id}`} key={product.id}>
               <div>
-                {product.image ? <img src={product.image} alt={product.name} /> : <PiSparkleDuotone size={28} />}
+                {product.image ? <img src={optimizeImage(product.image, { width: 500 })} alt={product.name} loading="lazy" /> : <PiSparkleDuotone size={28} />}
               </div>
               <span>{product.category}</span>
               <strong>{product.name}</strong>
