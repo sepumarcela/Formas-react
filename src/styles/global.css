@@ -1020,6 +1020,9 @@ section {
   border: 1px solid var(--color-border);
   border-radius: 16px;
   overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   transition: transform 0.35s, box-shadow 0.35s;
 }
 
@@ -1048,6 +1051,9 @@ section {
 
 .product-card__body {
   padding: 20px 22px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-card__body>p {
@@ -1063,6 +1069,7 @@ section {
   font-family: var(--serif);
   font-size: 23px;
   font-weight: 500;
+  min-height: 58px;
   margin: 0 0 8px;
 }
 
@@ -1075,6 +1082,7 @@ section {
 
 .product-card__cta {
   display: block;
+  margin-top: auto;
   text-align: center;
   background: var(--color-dark);
   color: #fff;
