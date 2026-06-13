@@ -973,11 +973,11 @@ section {
 }
 
 .category-card__body p {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--color-muted);
-  line-height: 1.6;
+  line-height: 1.65;
   margin: 0 0 16px;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .category-card__link {
@@ -1715,11 +1715,11 @@ section {
 }
 
 .page-hero p {
-  font-size: 17px;
-  color: rgba(255, 255, 255, 0.75);
+  font-size: 19px;
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.7;
-  max-width: 480px;
-  font-weight: 300;
+  max-width: 560px;
+  font-weight: 500;
   margin: 0;
 }
 
@@ -2007,9 +2007,11 @@ section {
 }
 
 .products-category-card__body p {
+  font-size: 15px;
   color: var(--color-muted);
   line-height: 1.7;
   margin: 0 0 22px;
+  font-weight: 400;
 }
 
 .products-category-card__body strong {
@@ -5275,7 +5277,7 @@ section {
 .page-hero p,
 .page-hero .eyebrow,
 .breadcrumb {
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.58);
 }
 
 @media (min-width: 1800px) {
