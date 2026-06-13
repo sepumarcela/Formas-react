@@ -177,19 +177,37 @@ picture,
 /* HEADER ADMIN — café oscuro de la marca, igual que el panel del login */
 .site-header--admin {
   background: var(--color-dark) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   padding-top: 14px !important;
   padding-bottom: 14px !important;
 }
-.site-header--admin .site-header__inner { align-items: center !important; }
-.site-header--admin .main-nav { align-items: center !important; }
-.site-header--admin .brand__text { color: #fff !important; }
-.site-header--admin .brand__tagline { color: rgba(255,255,255,0.7) !important; }
+
+.site-header--admin .site-header__inner {
+  align-items: center !important;
+}
+
+.site-header--admin .main-nav {
+  align-items: center !important;
+}
+
+.site-header--admin .brand__text {
+  color: #fff !important;
+}
+
+.site-header--admin .brand__tagline {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
 .site-header--admin .main-nav a,
 .site-header--admin .nav-dropdown__trigger,
-.site-header--admin .header-icon { color: #fff !important; }
+.site-header--admin .header-icon {
+  color: #fff !important;
+}
+
 .site-header--admin .main-nav a:hover,
-.site-header--admin .nav-dropdown__trigger:hover { color: var(--color-brand-light) !important; }
+.site-header--admin .nav-dropdown__trigger:hover {
+  color: var(--color-brand-light) !important;
+}
 
 /* Logo */
 .brand {
@@ -622,9 +640,13 @@ picture,
 }
 
 @media (max-width: 720px) {
-  :root { --page-inline: 20px; }
+  :root {
+    --page-inline: 20px;
+  }
 
-  .site-header { min-height: 72px; }
+  .site-header {
+    min-height: 72px;
+  }
 
   .site-header__inner {
     gap: 12px;
@@ -637,7 +659,9 @@ picture,
     padding-bottom: 42px;
   }
 
-  .main-nav { display: none; }
+  .main-nav {
+    display: none;
+  }
 
   .main-nav.open {
     display: flex;
@@ -660,7 +684,9 @@ picture,
     color: #fff;
   }
 
-  .menu-toggle { display: block; }
+  .menu-toggle {
+    display: block;
+  }
 
   .header-actions {
     gap: 6px;
@@ -693,15 +719,27 @@ picture,
     grid-template-columns: 1fr;
   }
 
-  .nav-dropdown__promo { display: none; }
+  .nav-dropdown__promo {
+    display: none;
+  }
 
-  .brand__text { font-size: 22px; }
-  .brand__icon { width: 32px; height: 32px; }
+  .brand__text {
+    font-size: 22px;
+  }
+
+  .brand__icon {
+    width: 32px;
+    height: 32px;
+  }
+
   .brand__logo-img {
     height: min(var(--logo-height, 78px), 78px);
     max-width: 220px;
   }
-  .brand__tagline { font-size: 8px; }
+
+  .brand__tagline {
+    font-size: 8px;
+  }
 
   .search-bar {
     left: var(--page-inline);
@@ -2062,6 +2100,7 @@ section {
 }
 
 @media (max-width: 1100px) {
+
   .products-category-list,
   .products-featured-band {
     grid-template-columns: 1fr;
@@ -2998,6 +3037,7 @@ section {
   justify-content: center;
   transition: background 0.2s, color 0.2s, opacity 0.2s, transform 0.2s;
 }
+
 .header-icon svg {
   width: 26px;
   height: 26px;
@@ -3729,6 +3769,27 @@ section {
   background: #fff;
   color: var(--color-text);
   font: inherit;
+}
+
+.cart-quantity-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cart-quantity-control button {
+  width: 34px;
+  height: 38px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--color-text);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cart-quantity-control input {
+  text-align: center;
 }
 
 .cart-line__price {
@@ -5240,6 +5301,7 @@ section {
     padding-top: 210px;
   }
 }
+
 @media (max-width: 1180px) {
   .main-nav {
     display: none;
@@ -5288,6 +5350,7 @@ section {
     max-width: 100%;
   }
 }
+
 .category-card__image,
 .product-card__image,
 .cat-product-card__image,
@@ -5353,6 +5416,7 @@ section {
 .nav-dropdown__promo:hover .nav-dropdown__promo-ph img {
   transform: none !important;
 }
+
 .product-card__image,
 .cat-product-card__image {
   aspect-ratio: 4 / 3;

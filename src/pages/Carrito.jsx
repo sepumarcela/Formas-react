@@ -70,8 +70,7 @@ function splitIncludedIva(total) {
 }
 
 function Carrito() {
-  const [items, setItems] = useState(() => loadCartItems())
-  const [paymentMethod, setPaymentMethod] = useState(paymentOptions[0].id)
+  const [quantityInputs, setQuantityInputs] = useState(() => Object.fromEntries(loadCartItems().map((item) => [item.id, String(item.quantity)])))  const [paymentMethod, setPaymentMethod] = useState(paymentOptions[0].id)
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
@@ -81,7 +80,9 @@ function Carrito() {
   const hasPricedItems = totalWithIva > 0
   const productCount = items.reduce((sum, item) => sum + item.quantity, 0)
   const selectedPayment = paymentOptions.find((option) => option.id === paymentMethod) || paymentOptions[0]
-
+  useEffect(() => {
+    setQuantityInputs(Object.fromEntries(items.map((item) => [item.id, String(item.quantity)])))
+  }, [items])
   useEffect(() => {
     function syncCart(event) {
       setItems(event.detail || loadCartItems())
@@ -103,7 +104,19 @@ function Carrito() {
   }, [])
 
   function handleQuantity(id, quantity) {
-    setItems(updateCartItemQuantity(id, quantity))
+    setQuantityInputs((current) => ({ ...current, [id]: quantity }))
+  }
+
+  function commitQuantity(id, quantity) {
+    const cleanQuantity = Math.max(Number(quantity) || 1, 1)
+    setItems(updateCartItemQuantity(id, cleanQuantity))
+    setQuantityInputs((current) => ({ ...current, [id]: String(cleanQuantity) }))
+  }
+
+  function stepQuantity(item, direction) {
+    const nextQuantity = Math.max((Number(item.quantity) || 1) + direction, 1)
+    setItems(updateCartItemQuantity(item.id, nextQuantity))
+    setQuantityInputs((current) => ({ ...current, [item.id]: String(nextQuantity) }))
   }
 
   function handleRemove(id) {
@@ -233,17 +246,27 @@ function Carrito() {
                         <Link to={`/productos/${item.id}`}>{item.name}</Link>
                         <span>{item.size}</span>
                       </div>
-                      <div className="cart-line__qty">
-                        <label>
-                          Cantidad
-                          <input
-                            type="number"
-                            min="1"
-                            value={item.quantity}
-                            onChange={(event) => handleQuantity(item.id, event.target.value)}
-                          />
-                        </label>
-                      </div>
+                      <span className="cart-quantity-control">
+                        <button type="button" onClick={() => stepQuantity(item, -1)} aria-label={`Reducir cantidad de ${item.name}`}>
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          min="1"
+                          value={quantityInputs[item.id] ?? String(item.quantity)}
+                          onChange={(event) => handleQuantity(item.id, event.target.value)}
+                          onBlur={(event) => commitQuantity(item.id, event.target.value)}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                              event.currentTarget.blur()
+                            }
+                          }}
+                        />
+                        <button type="button" onClick={() => stepQuantity(item, 1)} aria-label={`Aumentar cantidad de ${item.name}`}>
+                          +
+                        </button>
+                      </span>
                       <div className="cart-line__price">
                         <strong>{parseMoney(item.price) ? formatMoney(getItemTotal(item)) : 'Cotizar'}</strong>
                         <button type="button" onClick={() => handleRemove(item.id)} aria-label={`Quitar ${item.name}`}>
