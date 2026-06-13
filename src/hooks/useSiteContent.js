@@ -23,7 +23,7 @@ export function useSiteContent() {
         setContent((current) => saveSiteContent({
           ...current,
           categories: catalog.categories.length ? mergeById(defaultSiteContent.categories, catalog.categories) : current.categories,
-          products: catalog.products.length ? mergeById(defaultSiteContent.products, catalog.products) : current.products,
+          products: catalog.products.length ? catalog.products : current.products,
           heroSlides: catalog.heroSlides.length ? catalog.heroSlides : current.heroSlides,
           projects: catalog.projects.length ? catalog.projects : current.projects,
           projectHighlights: catalog.projectHighlights.length ? catalog.projectHighlights : current.projectHighlights,
