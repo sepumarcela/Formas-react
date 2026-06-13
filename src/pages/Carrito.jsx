@@ -70,7 +70,9 @@ function splitIncludedIva(total) {
 }
 
 function Carrito() {
-  const [quantityInputs, setQuantityInputs] = useState(() => Object.fromEntries(loadCartItems().map((item) => [item.id, String(item.quantity)])))  const [paymentMethod, setPaymentMethod] = useState(paymentOptions[0].id)
+  const [items, setItems] = useState(loadCartItems)
+  const [quantityInputs, setQuantityInputs] = useState(() => Object.fromEntries(loadCartItems().map((item) => [item.id, String(item.quantity)])))
+  const [paymentMethod, setPaymentMethod] = useState(paymentOptions[0].id)
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')

@@ -1945,14 +1945,13 @@ section {
   max-width: var(--page-max);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
 }
 
 .products-category-card {
-  display: grid;
-  grid-template-columns: minmax(220px, 42%) 1fr;
-  min-height: 300px;
+  display: flex;
+  flex-direction: column;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 16px;
@@ -1963,12 +1962,12 @@ section {
 }
 
 .products-category-card:hover {
-  transform: none;
+  transform: translateY(-5px);
   box-shadow: 0 18px 42px rgba(26, 23, 20, 0.1);
 }
 
 .products-category-card__media {
-  min-height: 100%;
+  aspect-ratio: 4 / 3;
   background: var(--color-surface-warm);
   display: flex;
   align-items: center;
@@ -1985,10 +1984,10 @@ section {
 }
 
 .products-category-card__body {
-  padding: 34px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  flex: 1;
 }
 
 .products-category-card__body span {
@@ -2002,7 +2001,7 @@ section {
 
 .products-category-card__body h3 {
   font-family: var(--serif);
-  font-size: 34px;
+  font-size: 28px;
   font-weight: 500;
   margin: 0 0 10px;
 }
@@ -2017,6 +2016,7 @@ section {
   color: var(--color-brand);
   font-size: 12px;
   letter-spacing: 0.08em;
+  margin-top: auto;
   text-transform: uppercase;
 }
 
@@ -2100,8 +2100,10 @@ section {
 }
 
 @media (max-width: 1100px) {
+  .products-category-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
-  .products-category-list,
   .products-featured-band {
     grid-template-columns: 1fr;
   }
@@ -2117,24 +2119,17 @@ section {
     justify-content: center;
   }
 
-  .products-category-card {
-    grid-template-columns: 1fr;
-  }
-
-  .products-category-card__media {
-    min-height: 220px;
-  }
-
-  .products-category-card__body {
-    padding: 26px;
-  }
-
-  .products-category-card__body h3,
   .products-featured-band__text h2 {
     font-size: 32px;
   }
 
   .products-featured-mini {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .products-category-list {
     grid-template-columns: 1fr;
   }
 }
@@ -5442,7 +5437,6 @@ section {
 .product-card:hover,
 .benefit-card:hover,
 .project-highlight-card:hover,
-.products-category-card:hover,
 .products-featured-mini__item:hover,
 .cat-product-card:hover,
 .proyecto-item:hover,
