@@ -59,7 +59,9 @@ function Header({ transparent = false }) {
     }
 
     function syncStorage(event) {
-      if (!event.key || event.key === 'formas-cart-v1') syncCart({})
+      if (event.storageArea === window.sessionStorage && (!event.key || event.key === 'formas-cart-v1')) {
+        syncCart({})
+      }
     }
 
     window.addEventListener(CART_UPDATED_EVENT, syncCart)

@@ -88,7 +88,9 @@ function Carrito() {
     }
 
     function syncStorage(event) {
-      if (!event.key || event.key === 'formas-cart-v1') setItems(loadCartItems())
+      if (event.storageArea === window.sessionStorage && (!event.key || event.key === 'formas-cart-v1')) {
+        setItems(loadCartItems())
+      }
     }
 
     window.addEventListener(CART_UPDATED_EVENT, syncCart)

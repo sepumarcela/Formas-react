@@ -1,9 +1,15 @@
 export const CART_STORAGE_KEY = 'formas-cart-v1'
 export const CART_UPDATED_EVENT = 'formas-cart-updated'
 
+function getCartStorage() {
+  if (typeof window === 'undefined') return null
+  return window.sessionStorage
+}
+
 function safeReadCart() {
   try {
-    const stored = window.localStorage.getItem(CART_STORAGE_KEY)
+    const storage = getCartStorage()
+    const stored = storage?.getItem(CART_STORAGE_KEY)
     const items = stored ? JSON.parse(stored) : []
     return Array.isArray(items) ? items : []
   } catch {
@@ -12,7 +18,7 @@ function safeReadCart() {
 }
 
 function saveCart(items) {
-  window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items))
+  getCartStorage()?.setItem(CART_STORAGE_KEY, JSON.stringify(items))
   window.dispatchEvent(new CustomEvent(CART_UPDATED_EVENT, { detail: items }))
   return items
 }
