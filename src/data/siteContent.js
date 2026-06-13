@@ -1,6 +1,19 @@
 export const SITE_CONTENT_KEY = 'formas-site-content-v1'
 export const SITE_CONTENT_EVENT = 'formas-site-content-updated'
 
+const legacyDemoProductIds = new Set([
+  'forma-tv-180',
+  'forma-work',
+  'forma-modular',
+  'forma-nordic',
+  'centro-minimalista',
+  'centro-moderno',
+  'closet-vidrio',
+  'cocina-isla',
+  'bano-minimalista',
+  'alcoba-sueno',
+])
+
 export const defaultSiteContent = {
   heroSlides: [
     {
@@ -236,7 +249,7 @@ export function mergeSiteContent(content) {
     ...defaultSiteContent,
     ...content,
     categories: Array.isArray(content?.categories) ? content.categories : defaultSiteContent.categories,
-    products: Array.isArray(content?.products) ? content.products : defaultSiteContent.products,
+    products: removeLegacyDemoProducts(Array.isArray(content?.products) ? content.products : defaultSiteContent.products),
     blogPosts: Array.isArray(content?.blogPosts) ? content.blogPosts : defaultSiteContent.blogPosts,
     heroSlides: Array.isArray(content?.heroSlides) ? content.heroSlides : defaultSiteContent.heroSlides,
     projects: Array.isArray(content?.projects) ? content.projects : defaultSiteContent.projects,
@@ -273,14 +286,18 @@ export function mergeSiteContent(content) {
   }
 }
 
+function removeLegacyDemoProducts(products) {
+  return products.filter((product) => !legacyDemoProductIds.has(product.id))
+}
+
 export function loadSiteContent() {
-  if (typeof window === 'undefined') return defaultSiteContent
+  if (typeof window === 'undefined') return mergeSiteContent(defaultSiteContent)
 
   try {
     const stored = window.localStorage.getItem(SITE_CONTENT_KEY)
-    return stored ? mergeSiteContent(JSON.parse(stored)) : defaultSiteContent
+    return mergeSiteContent(stored ? JSON.parse(stored) : defaultSiteContent)
   } catch {
-    return defaultSiteContent
+    return mergeSiteContent(defaultSiteContent)
   }
 }
 
