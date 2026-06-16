@@ -20,18 +20,17 @@ function escapeHtml(value = '') {
     .replace(/'/g, '&#039;')
 }
 
-function productPrice(product) {
-  return product.price && product.price !== '0' ? product.price : 'Cotizar'
-}
-
 function cleanText(value = '') {
   return String(value).replace(/\s+/g, ' ').trim()
 }
 
-function shortConcept(product, category) {
-  const source = cleanText(product.description || categoryCopy[category.id] || category.description || '')
-  if (!source) return 'Diseno a medida para elevar la funcionalidad y la atmosfera del espacio.'
-  return source.length > 145 ? `${source.slice(0, 142).trim()}...` : source
+function productSubtitle(product, category) {
+  const parts = [product.color, product.material].map(cleanText).filter(Boolean)
+  if (parts.length) return parts.slice(0, 2).join(' + ')
+
+  const fallback = cleanText(product.description || categoryCopy[category.id] || category.description || '')
+  if (!fallback) return 'Diseno a medida para espacios con caracter'
+  return fallback.length > 70 ? `${fallback.slice(0, 67).trim()}...` : fallback
 }
 
 function categoryProducts(category, products) {
@@ -195,24 +194,17 @@ function categoryCoverMarkup(category, products, index) {
 }
 
 function productCardMarkup(product, category, index) {
-  const concept = shortConcept(product, category)
+  const subtitle = productSubtitle(product, category)
 
   return `
     <article class="catalog-product-card">
       <div class="catalog-product-card__image">
-        ${imageMarkup(product.image, product.name, 900)}
+        ${imageMarkup(product.image, product.name, 1100)}
       </div>
       <div class="catalog-product-card__body">
         <p>${escapeHtml(product.category || category.name)} / ${String(index + 1).padStart(2, '0')}</p>
         <h3>${escapeHtml(product.name)}</h3>
-        <strong>${escapeHtml(productPrice(product))}</strong>
-        <em>${escapeHtml(concept)}</em>
-        <dl>
-          ${product.size ? `<div><dt>Dimensiones</dt><dd>${escapeHtml(product.size)}</dd></div>` : ''}
-          ${product.material ? `<div><dt>Materiales</dt><dd>${escapeHtml(product.material)}</dd></div>` : ''}
-          ${product.color ? `<div><dt>Acabados</dt><dd>${escapeHtml(product.color)}</dd></div>` : ''}
-          ${product.leadTime ? `<div><dt>Fabricacion</dt><dd>${escapeHtml(product.leadTime)}</dd></div>` : ''}
-        </dl>
+        <em>${escapeHtml(subtitle)}</em>
       </div>
     </article>
   `
@@ -220,7 +212,7 @@ function productCardMarkup(product, category, index) {
 
 function categoryProductsMarkup(category, products) {
   const items = categoryProducts(category, products)
-  const pages = chunkItems(items, 6)
+  const pages = chunkItems(items, 4)
 
   if (!items.length) {
     return `
@@ -242,7 +234,7 @@ function categoryProductsMarkup(category, products) {
         <span>${items.length} producto${items.length === 1 ? '' : 's'}</span>
       </div>
       <div class="catalog-product-grid">
-        ${pageItems.map((product, index) => productCardMarkup(product, category, pageIndex * 6 + index)).join('')}
+        ${pageItems.map((product, index) => productCardMarkup(product, category, pageIndex * 4 + index)).join('')}
       </div>
     </section>
   `).join('')
@@ -594,17 +586,18 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
           .catalog-product-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            grid-template-rows: repeat(3, 1fr);
-            gap: 18px;
+            grid-template-rows: repeat(2, minmax(0, 1fr));
+            gap: 30px;
           }
           .catalog-product-card {
             min-height: 0;
-            height: 246px;
+            height: 365px;
             display: grid;
-            grid-template-rows: 58% 42%;
+            grid-template-rows: 76% 24%;
             overflow: hidden;
             border: 1px solid #D8CEC1;
             background: rgba(255, 255, 255, 0.64);
+            box-shadow: 0 22px 48px rgba(58, 51, 45, 0.08);
           }
           .catalog-product-card__image {
             min-width: 0;
@@ -626,77 +619,37 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
           .catalog-product-card__body {
             min-width: 0;
             min-height: 0;
-            padding: 12px 14px 14px;
+            padding: 18px 22px 20px;
             color: #3A332D;
           }
           .catalog-product-card__body p {
-            margin: 0 0 5px;
+            margin: 0 0 8px;
             color: #A88F74;
-            font-size: 8px;
+            font-size: 9px;
             font-weight: 900;
-            letter-spacing: 0.16em;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
           }
           .catalog-product-card__body h3 {
-            min-height: 38px;
-            margin: 0 0 5px;
+            min-height: 46px;
+            margin: 0 0 9px;
             color: #3A332D;
-            font-size: 22px;
-            line-height: 0.95;
+            font-size: 29px;
+            line-height: 0.98;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
           }
-          .catalog-product-card__body strong {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            line-height: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
           .catalog-product-card__body em {
             display: block;
-            margin-bottom: 7px;
             color: rgba(58, 51, 45, 0.62);
-            font-size: 10px;
-            line-height: 1.2;
+            font-size: 13px;
+            line-height: 1.25;
             font-style: normal;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-          .catalog-product-card__body dl {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 4px 10px;
-            margin: 0;
-          }
-          .catalog-product-card__body dl div {
-            min-width: 0;
-            display: grid;
-            gap: 1px;
-          }
-          .catalog-product-card__body dt {
-            color: #A88F74;
-            font-size: 7px;
-            font-weight: 900;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-          .catalog-product-card__body dd {
-            margin: 0;
-            color: rgba(58, 51, 45, 0.78);
-            font-size: 9px;
-            line-height: 1.15;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -788,7 +741,7 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
               grid-template-columns: 1fr;
             }
             .catalog-product-card {
-              grid-template-rows: 56% 44%;
+              grid-template-rows: 72% 28%;
             }
           }
           @media print {
@@ -818,15 +771,16 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             .catalog-product-grid {
               height: 245mm;
               grid-template-columns: repeat(2, minmax(0, 1fr));
-              grid-template-rows: repeat(3, 1fr);
-              gap: 5mm;
+              grid-template-rows: repeat(2, minmax(0, 1fr));
+              gap: 8mm;
             }
             .catalog-product-card {
               height: auto;
               min-height: 0;
+              grid-template-rows: 74% 26%;
             }
             .catalog-product-card__body h3 {
-              font-size: 20px;
+              font-size: 25px;
             }
           }
         </style>
