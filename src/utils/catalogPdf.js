@@ -97,15 +97,11 @@ function indexMarkup(categories, products) {
       <div class="catalog-index__grid">
         ${categories.map((category, index) => {
           const items = categoryProducts(category, products)
-          const image = category.image || firstImage(items)
           return `
             <article class="catalog-index__item">
-              <div class="catalog-index__thumb">${imageMarkup(image, category.name, 560)}</div>
-              <div>
-                <span>${String(index + 1).padStart(2, '0')}</span>
-                <strong>${escapeHtml(category.name)}</strong>
-                <small>${items.length} producto${items.length === 1 ? '' : 's'}</small>
-              </div>
+              <span>${String(index + 1).padStart(2, '0')}</span>
+              <strong>${escapeHtml(category.name)}</strong>
+              <small>${items.length} producto${items.length === 1 ? '' : 's'}</small>
             </article>
           `
         }).join('')}
@@ -465,46 +461,28 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
             gap: 42px;
             align-items: end;
-            margin-bottom: 50px;
+            margin-bottom: 62px;
           }
           .catalog-index__grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 22px;
+            gap: 18px 28px;
+            border-top: 1px solid #D8CEC1;
           }
           .catalog-index__item {
             min-width: 0;
             display: grid;
-            grid-template-columns: 128px minmax(0, 1fr);
+            grid-template-columns: 56px minmax(0, 1fr) auto;
             gap: 18px;
             align-items: center;
-            min-height: 126px;
-            padding: 14px;
-            border: 1px solid #D8CEC1;
-            background: rgba(255, 255, 255, 0.48);
+            min-height: 72px;
+            padding: 18px 0;
+            border-bottom: 1px solid #D8CEC1;
+            background: transparent;
             overflow: hidden;
-          }
-          .catalog-index__thumb {
-            width: 128px;
-            height: 98px;
-            overflow: hidden;
-            background: #EAE4DA;
-            display: grid;
-            place-items: center;
-          }
-          .catalog-index__thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-          }
-          .catalog-index__thumb span {
-            color: rgba(58, 51, 45, 0.52);
-            font-size: 10px;
           }
           .catalog-index__item span {
             display: block;
-            margin-bottom: 8px;
             color: #A88F74;
             font-size: 12px;
             font-weight: 900;
@@ -525,7 +503,6 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
           }
           .catalog-index__item small {
             display: block;
-            margin-top: 10px;
             color: rgba(58, 51, 45, 0.62);
             font-size: 11px;
             font-weight: 800;
@@ -911,10 +888,6 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             .catalog-contact {
               grid-template-columns: 1fr;
             }
-            .catalog-index__thumb {
-              width: 100%;
-              height: 180px;
-            }
             .catalog-philosophy__grid,
             .catalog-process__steps {
               grid-template-columns: 1fr;
@@ -972,14 +945,10 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
               gap: 5mm;
             }
             .catalog-index__item {
-              min-height: 31mm;
-              padding: 3.5mm;
-              grid-template-columns: 34mm minmax(0, 1fr);
+              min-height: 17mm;
+              padding: 4mm 0;
+              grid-template-columns: 12mm minmax(0, 1fr) auto;
               gap: 5mm;
-            }
-            .catalog-index__thumb {
-              width: 34mm;
-              height: 25mm;
             }
             .catalog-index__item strong {
               font-size: 24px;
