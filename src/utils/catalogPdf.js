@@ -76,26 +76,32 @@ function logoMarkup(logoImage, variant = 'light') {
 }
 
 function indexMarkup(categories, products) {
+  const heroCategory = categories[0]
+  const heroImage = heroCategory ? heroCategory.image || firstImage(categoryProducts(heroCategory, products)) : ''
+
   return `
     <section class="catalog-page catalog-page--light catalog-index">
-      <div class="catalog-kicker">Indice</div>
-      <h2>Una coleccion organizada por espacios</h2>
-      <p class="catalog-lead">Cada linea reune productos y soluciones para imaginar un proyecto completo, funcional y con caracter propio.</p>
-      <div class="catalog-index__grid">
-        ${categories.map((category, index) => {
-          const items = categoryProducts(category, products)
-          const image = category.image || firstImage(items)
-          return `
-            <article class="catalog-index__item">
-              <div class="catalog-index__image">${imageMarkup(image, category.name, 640)}</div>
-              <div class="catalog-index__copy">
+      <div class="catalog-index__intro">
+        <div>
+          <div class="catalog-kicker">Indice</div>
+          <h2>Espacios para recorrer con calma</h2>
+        </div>
+        <p class="catalog-lead">Una guia visual para moverte por las lineas de FORMAS sin perder la sensacion de proyecto integral.</p>
+      </div>
+      <div class="catalog-index__layout">
+        <div class="catalog-index__hero">${imageMarkup(heroImage, heroCategory?.name || 'FORMAS', 1200)}</div>
+        <div class="catalog-index__list">
+          ${categories.map((category, index) => {
+            const items = categoryProducts(category, products)
+            return `
+              <article class="catalog-index__item">
                 <span>${String(index + 1).padStart(2, '0')}</span>
                 <strong>${escapeHtml(category.name)}</strong>
                 <small>${items.length} producto${items.length === 1 ? '' : 's'}</small>
-              </div>
-            </article>
-          `
-        }).join('')}
+              </article>
+            `
+          }).join('')}
+        </div>
       </div>
     </section>
   `
@@ -110,8 +116,10 @@ function philosophyMarkup() {
 
   return `
     <section class="catalog-page catalog-page--light catalog-philosophy">
-      <div class="catalog-kicker">Nuestra filosofia</div>
-      <h2>No fabricamos muebles aislados. Disenamos espacios para vivir mejor.</h2>
+      <div class="catalog-philosophy__intro">
+        <div class="catalog-kicker">Nuestra filosofia</div>
+        <h2>No fabricamos muebles aislados. Disenamos espacios para vivir mejor.</h2>
+      </div>
       <div class="catalog-philosophy__grid">
         ${values.map(([title, text]) => `
           <article>
@@ -409,60 +417,90 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             font-size: 58px;
             line-height: 0.98;
           }
-          .catalog-index__grid {
+          .catalog-index__intro {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 24px;
-            margin-top: 44px;
+            grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
+            gap: 42px;
+            align-items: end;
+            margin-bottom: 42px;
           }
-          .catalog-index__item {
-            min-height: 220px;
+          .catalog-index__layout {
             display: grid;
-            grid-template-columns: 190px minmax(0, 1fr);
-            gap: 22px;
-            align-items: center;
-            padding: 18px;
-            border: 1px solid #D8CEC1;
-            background: rgba(255, 255, 255, 0.56);
+            grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
+            gap: 34px;
+            align-items: stretch;
           }
-          .catalog-index__image {
-            height: 184px;
+          .catalog-index__hero {
+            min-height: 620px;
             overflow: hidden;
             background: #EAE4DA;
           }
-          .catalog-index__image img {
+          .catalog-index__hero img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
           }
-          .catalog-index__copy span {
-            display: block;
-            margin-bottom: 12px;
+          .catalog-index__hero span {
+            height: 100%;
+            display: grid;
+            place-items: center;
+            color: rgba(58, 51, 45, 0.52);
+          }
+          .catalog-index__list {
+            display: grid;
+            align-content: stretch;
+            border-top: 1px solid #D8CEC1;
+          }
+          .catalog-index__item {
+            min-width: 0;
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr) auto;
+            gap: 16px;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid #D8CEC1;
+          }
+          .catalog-index__item span {
             color: #A88F74;
             font-size: 12px;
             font-weight: 900;
-            letter-spacing: 0.22em;
+            letter-spacing: 0.18em;
           }
-          .catalog-index__copy strong {
-            display: block;
+          .catalog-index__item strong {
+            min-width: 0;
             color: #3A332D;
             font-family: "Cormorant Garamond", Georgia, serif;
-            font-size: 32px;
-            line-height: 1;
+            font-size: clamp(23px, 2.25vw, 31px);
+            line-height: 0.96;
             font-weight: 400;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
           }
-          .catalog-index__copy small {
-            display: block;
-            margin-top: 14px;
+          .catalog-index__item small {
             color: rgba(58, 51, 45, 0.62);
+            font-size: 11px;
             font-weight: 800;
+            white-space: nowrap;
           }
-          .catalog-philosophy__grid,
+          .catalog-philosophy__intro {
+            max-width: 820px;
+          }
+          .catalog-philosophy__grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 30px;
+            margin-top: 58px;
+          }
+          .catalog-philosophy__grid article:first-child {
+            grid-row: span 2;
+            padding-right: 46px;
+          }
+          .catalog-philosophy__grid article:first-child h3 {
+            font-size: 42px;
+          }
           .catalog-process__steps {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -471,8 +509,9 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
           }
           .catalog-philosophy article,
           .catalog-process article {
-            padding: 28px;
+            padding: 28px 0;
             border-top: 1px solid #A88F74;
+            min-width: 0;
           }
           .catalog-philosophy article span {
             display: block;
@@ -710,7 +749,8 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
               min-height: auto;
               padding: 32px;
             }
-            .catalog-index__grid,
+            .catalog-index__intro,
+            .catalog-index__layout,
             .catalog-product-grid {
               grid-template-columns: 1fr;
               grid-template-rows: none;
@@ -733,12 +773,16 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             .catalog-contact {
               grid-template-columns: 1fr;
             }
-            .catalog-index__image {
-              height: 220px;
+            .catalog-index__hero {
+              min-height: 260px;
             }
             .catalog-philosophy__grid,
             .catalog-process__steps {
               grid-template-columns: 1fr;
+            }
+            .catalog-philosophy__grid article:first-child {
+              grid-row: auto;
+              padding-right: 0;
             }
             .catalog-product-card {
               grid-template-rows: 72% 28%;
