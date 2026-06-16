@@ -3712,7 +3712,7 @@ section {
 .cart-line {
   padding: 14px;
   display: grid;
-  grid-template-columns: 112px minmax(0, 1fr) 110px 130px;
+  grid-template-columns: 112px minmax(0, 1fr) 150px minmax(120px, auto);
   gap: 16px;
   align-items: center;
   border: 1px solid rgba(228, 216, 204, 0.8);
@@ -3800,6 +3800,9 @@ section {
 }
 
 .cart-quantity-control input {
+  width: 72px;
+  min-width: 72px;
+  box-sizing: border-box;
   text-align: center;
 }
 
@@ -3808,11 +3811,16 @@ section {
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
+  min-width: 0;
 }
 
 .cart-line__price strong {
   font-size: 15px;
   white-space: nowrap;
+}
+
+.cart-line__price button {
+  flex: 0 0 auto;
 }
 
 .checkout-form-grid {
