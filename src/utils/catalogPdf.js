@@ -488,7 +488,7 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             color: #75695f;
             background: rgba(255, 255, 255, 0.7);
           }
-          @page { margin: 10mm; }
+          @page { size: A4 portrait; margin: 6mm; }
           @media print {
             body { background: #f3ece3; }
             .catalog {
@@ -496,15 +496,64 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
               padding: 0;
             }
             .catalog-page {
-              min-height: 100vh;
+              min-height: 0;
+              height: 285mm;
+              padding: 28px 34px;
               margin: 0;
               border: 0;
               border-radius: 0;
               box-shadow: none;
             }
             .catalog-product-page {
-              padding-top: 34px;
-              padding-bottom: 30px;
+              padding-top: 26px;
+              padding-bottom: 24px;
+            }
+            .catalog-product-page__header {
+              margin-bottom: 12px;
+            }
+            .catalog-product-page h2 {
+              font-size: 36px;
+              margin-bottom: 0;
+            }
+            .catalog-products {
+              gap: 10px;
+            }
+            .catalog-product {
+              grid-template-columns: 170px minmax(0, 1fr);
+              min-height: 170px;
+              border-radius: 18px;
+              box-shadow: 0 12px 26px rgba(62, 44, 30, 0.08);
+            }
+            .catalog-product__image {
+              min-height: 170px;
+            }
+            .catalog-product__body {
+              padding: 14px 18px;
+            }
+            .catalog-product__body p {
+              margin-bottom: 5px;
+              font-size: 9px;
+              letter-spacing: 0.16em;
+            }
+            .catalog-product__body h3 {
+              margin-bottom: 5px;
+              font-size: 23px;
+              line-height: 0.98;
+            }
+            .catalog-product__body strong {
+              margin-bottom: 6px;
+              font-size: 17px;
+            }
+            .catalog-product__meta {
+              gap: 2px;
+            }
+            .catalog-product__meta span,
+            .catalog-product__body em {
+              font-size: 10px;
+              line-height: 1.24;
+            }
+            .catalog-product__body em {
+              margin-top: 5px;
             }
           }
         </style>
