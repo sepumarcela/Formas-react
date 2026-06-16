@@ -1,5 +1,16 @@
 import { optimizeImage } from './images'
 
+const categoryCopy = {
+  'centros-entretenimiento': 'Piezas pensadas para integrar tecnologia, almacenamiento y atmosfera en el centro social de la casa.',
+  'centros-estudio': 'Ambientes de trabajo que equilibran concentracion, orden y calidez para crear todos los dias.',
+  closets: 'Soluciones a medida para guardar mejor, ver mejor y disfrutar rutinas mas simples.',
+  cocinas: 'Cocinas disenadas para transformar la rutina diaria en una experiencia de diseno.',
+  'muebles-bano': 'Mobiliario resistente y refinado para convertir el bano en un espacio de calma.',
+  repisas: 'Elementos ligeros que organizan, exhiben y completan la personalidad de cada ambiente.',
+  'alcobas-infantiles': 'Muebles seguros, flexibles y cercanos para acompanar cada etapa de crecimiento.',
+  bibliotecas: 'Sistemas para ordenar, exhibir y dar caracter arquitectonico a tus espacios.',
+}
+
 function escapeHtml(value = '') {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -13,57 +24,69 @@ function productPrice(product) {
   return product.price && product.price !== '0' ? product.price : 'Cotizar'
 }
 
-function logoMarkup(logoImage) {
-  if (logoImage) {
-    return `<img class="catalog-logo__image" src="${escapeHtml(optimizeImage(logoImage, { width: 420 }))}" alt="FORMAS">`
-  }
+function cleanText(value = '') {
+  return String(value).replace(/\s+/g, ' ').trim()
+}
 
-  return `
-    <div class="catalog-logo__fallback">
-      <div class="catalog-logo__mark">
-        <span></span><span></span><span></span><span></span>
-      </div>
-      <strong>FORMAS</strong>
-      <small>DISENA TU ESTILO</small>
-    </div>
-  `
+function shortConcept(product, category) {
+  const source = cleanText(product.description || categoryCopy[category.id] || category.description || '')
+  if (!source) return 'Diseno a medida para elevar la funcionalidad y la atmosfera del espacio.'
+  return source.length > 145 ? `${source.slice(0, 142).trim()}...` : source
 }
 
 function categoryProducts(category, products) {
   return products.filter((product) => product.categoryId === category.id && product.active !== false)
 }
 
-function chunkItems(items, size) {
-  const chunks = []
-  for (let index = 0; index < items.length; index += size) {
-    chunks.push(items.slice(index, index + size))
-  }
-  return chunks
+function firstImage(items = []) {
+  return items.find((item) => item?.image)?.image || ''
 }
 
-function imageMarkup(image, alt, width = 900) {
+function imageUrl(image, width = 1200) {
+  return image ? optimizeImage(image, { width }) : ''
+}
+
+function imageMarkup(image, alt, width = 1200, className = '') {
   if (!image) return '<span>Foto pendiente</span>'
-  return `<img src="${escapeHtml(optimizeImage(image, { width }))}" alt="${escapeHtml(alt)}">`
+  return `<img class="${className}" src="${escapeHtml(imageUrl(image, width))}" alt="${escapeHtml(alt)}">`
+}
+
+function backgroundStyle(image, width = 1600) {
+  return image ? `style="background-image: linear-gradient(90deg, rgba(20, 17, 14, 0.72), rgba(20, 17, 14, 0.18)), url('${escapeHtml(imageUrl(image, width))}')"` : ''
+}
+
+function logoMarkup(logoImage, variant = 'light') {
+  if (logoImage) {
+    return `<img class="catalog-logo catalog-logo--${variant}" src="${escapeHtml(imageUrl(logoImage, 420))}" alt="FORMAS">`
+  }
+
+  return `
+    <div class="catalog-logo-fallback catalog-logo-fallback--${variant}">
+      <strong>FORMAS</strong>
+      <small>DISENA TU ESTILO</small>
+    </div>
+  `
 }
 
 function indexMarkup(categories, products) {
   return `
-    <section class="catalog-page catalog-index">
-      <div class="catalog-page__eyebrow">Indice visual</div>
-      <h2>Elige el espacio que quieres transformar</h2>
-      <p class="catalog-lead">Cada linea agrupa ideas y productos para que encuentres rapido lo que mejor encaja con tu casa, tu ritmo y tu estilo.</p>
+    <section class="catalog-page catalog-page--light catalog-index">
+      <div class="catalog-kicker">Indice</div>
+      <h2>Una coleccion organizada por espacios</h2>
+      <p class="catalog-lead">Cada linea reune productos y soluciones para imaginar un proyecto completo, funcional y con caracter propio.</p>
       <div class="catalog-index__grid">
         ${categories.map((category, index) => {
-          const total = categoryProducts(category, products).length
+          const items = categoryProducts(category, products)
+          const image = category.image || firstImage(items)
           return `
-            <div class="catalog-index__item">
-              <div class="catalog-index__image">${imageMarkup(category.image, category.name, 500)}</div>
-              <div>
+            <article class="catalog-index__item">
+              <div class="catalog-index__image">${imageMarkup(image, category.name, 640)}</div>
+              <div class="catalog-index__copy">
                 <span>${String(index + 1).padStart(2, '0')}</span>
                 <strong>${escapeHtml(category.name)}</strong>
-                <small>${total} producto${total === 1 ? '' : 's'}</small>
+                <small>${items.length} producto${items.length === 1 ? '' : 's'}</small>
               </div>
-            </div>
+            </article>
           `
         }).join('')}
       </div>
@@ -71,79 +94,167 @@ function indexMarkup(categories, products) {
   `
 }
 
-function categoryCoverMarkup(category, products, index) {
-  const total = categoryProducts(category, products).length
+function philosophyMarkup() {
+  const values = [
+    ['Diseno a medida', 'Cada proyecto nace de una necesidad real y se adapta al espacio, al uso y al estilo de vida.'],
+    ['Fabricacion precisa', 'Cuidamos proporciones, acabados y detalles tecnicos para que el mueble se sienta integrado.'],
+    ['Acompanamiento', 'Guiamos decisiones de material, color y distribucion para construir confianza desde el primer contacto.'],
+  ]
 
   return `
-    <section class="catalog-page catalog-category-cover">
-      <div class="catalog-category-cover__image">
-        ${imageMarkup(category.image, category.name, 1200)}
-      </div>
-      <div class="catalog-category-cover__copy">
-        <p class="catalog-page__eyebrow">Linea ${String(index + 1).padStart(2, '0')}</p>
-        <h2>${escapeHtml(category.name)}</h2>
-        ${category.description ? `<p class="catalog-lead">${escapeHtml(category.description)}</p>` : ''}
-        <div class="catalog-pill">${total} producto${total === 1 ? '' : 's'} disponible${total === 1 ? '' : 's'}</div>
+    <section class="catalog-page catalog-page--light catalog-philosophy">
+      <div class="catalog-kicker">Nuestra filosofia</div>
+      <h2>No fabricamos muebles aislados. Disenamos espacios para vivir mejor.</h2>
+      <div class="catalog-philosophy__grid">
+        ${values.map(([title, text]) => `
+          <article>
+            <span></span>
+            <h3>${title}</h3>
+            <p>${text}</p>
+          </article>
+        `).join('')}
       </div>
     </section>
   `
 }
 
-function productMarkup(product, category) {
+function materialsMarkup() {
+  const items = [
+    ['Materiales y acabados', 'MDF RH, melaminicos, laminados, tonos madera y superficies faciles de mantener.'],
+    ['Herrajes premium', 'Sistemas funcionales para apertura, cierre, organizacion y uso diario con mayor comodidad.'],
+    ['Proyectos personalizados', 'Medidas, distribuciones y detalles pensados para cocinas, closets, estudios, banos y zonas sociales.'],
+  ]
+
   return `
-    <article class="catalog-product">
-      <div class="catalog-product__image">
-        ${imageMarkup(product.image, product.name, 900)}
+    <section class="catalog-page catalog-page--light catalog-materials">
+      <div class="catalog-kicker">Detalles que elevan el resultado</div>
+      <h2>Materialidad calida, funcionalidad precisa y acabados que se sienten bien.</h2>
+      <div class="catalog-materials__list">
+        ${items.map(([title, text], index) => `
+          <article>
+            <span>${String(index + 1).padStart(2, '0')}</span>
+            <div>
+              <h3>${title}</h3>
+              <p>${text}</p>
+            </div>
+          </article>
+        `).join('')}
       </div>
-      <div class="catalog-product__body">
-        <p>${escapeHtml(product.category || category.name)}</p>
-        <h3>${escapeHtml(product.name)}</h3>
-        <strong>${escapeHtml(productPrice(product))}</strong>
-        <div class="catalog-product__meta">
-          ${product.size ? `<span>${escapeHtml(product.size)}</span>` : ''}
-          ${product.material ? `<span>Material: ${escapeHtml(product.material)}</span>` : ''}
-          ${product.color ? `<span>Acabado: ${escapeHtml(product.color)}</span>` : ''}
-          ${product.leadTime ? `<span>Entrega: ${escapeHtml(product.leadTime)}</span>` : ''}
+    </section>
+  `
+}
+
+function processMarkup() {
+  const steps = [
+    ['Diagnostico', 'Entendemos el espacio, las medidas y la forma en que lo quieres usar.'],
+    ['Diseno', 'Definimos distribucion, materiales, acabados y detalles de fabricacion.'],
+    ['Produccion', 'Fabricamos con precision para lograr un resultado limpio y durable.'],
+    ['Instalacion', 'Cerramos el proyecto cuidando ajustes, remates y experiencia final.'],
+  ]
+
+  return `
+    <section class="catalog-page catalog-page--light catalog-process">
+      <div class="catalog-kicker">Proceso de fabricacion</div>
+      <h2>Un recorrido claro desde la idea hasta el espacio instalado.</h2>
+      <div class="catalog-process__steps">
+        ${steps.map(([title, text], index) => `
+          <article>
+            <span>${String(index + 1).padStart(2, '0')}</span>
+            <h3>${title}</h3>
+            <p>${text}</p>
+          </article>
+        `).join('')}
+      </div>
+    </section>
+  `
+}
+
+function categoryCoverMarkup(category, products, index) {
+  const items = categoryProducts(category, products)
+  const image = category.image || firstImage(items)
+  const text = categoryCopy[category.id] || category.description || 'Una linea disenada para resolver necesidades reales con calidez, orden y precision.'
+
+  return `
+    <section class="catalog-page catalog-category" ${backgroundStyle(image)}>
+      <div class="catalog-category__content">
+        <div class="catalog-kicker">Linea ${String(index + 1).padStart(2, '0')}</div>
+        <h2>${escapeHtml(category.name)}</h2>
+        <p>${escapeHtml(text)}</p>
+        <span>${items.length} producto${items.length === 1 ? '' : 's'} seleccionado${items.length === 1 ? '' : 's'}</span>
+      </div>
+    </section>
+  `
+}
+
+function productPageMarkup(product, category, index, total) {
+  const concept = shortConcept(product, category)
+
+  return `
+    <section class="catalog-page catalog-page--light catalog-product-page">
+      <div class="catalog-product-editorial">
+        <div class="catalog-product-editorial__image">
+          ${imageMarkup(product.image, product.name, 1400)}
         </div>
-        ${product.description ? `<em>${escapeHtml(product.description)}</em>` : ''}
+        <div class="catalog-product-editorial__info">
+          <p class="catalog-kicker">${escapeHtml(product.category || category.name)} / ${String(index + 1).padStart(2, '0')} de ${total}</p>
+          <h2>${escapeHtml(product.name)}</h2>
+          <strong>${escapeHtml(productPrice(product))}</strong>
+          <p class="catalog-product-editorial__concept">${escapeHtml(concept)}</p>
+          <dl>
+            ${product.size ? `<div><dt>Dimensiones</dt><dd>${escapeHtml(product.size)}</dd></div>` : ''}
+            ${product.material ? `<div><dt>Materiales</dt><dd>${escapeHtml(product.material)}</dd></div>` : ''}
+            ${product.color ? `<div><dt>Acabados</dt><dd>${escapeHtml(product.color)}</dd></div>` : ''}
+            ${product.leadTime ? `<div><dt>Fabricacion</dt><dd>${escapeHtml(product.leadTime)}</dd></div>` : ''}
+          </dl>
+        </div>
       </div>
-    </article>
+    </section>
   `
 }
 
 function categoryProductsMarkup(category, products) {
   const items = categoryProducts(category, products)
-  const pages = chunkItems(items, 3)
 
   if (!items.length) {
     return `
-    <section class="catalog-page catalog-product-page">
-      <div class="catalog-product-page__header">
-        <p class="catalog-page__eyebrow">Productos</p>
+      <section class="catalog-page catalog-page--light catalog-empty-page">
+        <div class="catalog-kicker">Productos</div>
         <h2>${escapeHtml(category.name)}</h2>
-      </div>
-      <div class="catalog-empty">No hay productos activos en esta categoria.</div>
-    </section>
-  `
+        <p>No hay productos activos en esta categoria.</p>
+      </section>
+    `
   }
 
-  return pages.map((pageItems, pageIndex) => `
-    <section class="catalog-page catalog-product-page">
-      <div class="catalog-product-page__header">
-        <p class="catalog-page__eyebrow">Productos ${pageIndex + 1} / ${pages.length}</p>
-        <h2>${escapeHtml(category.name)}</h2>
+  return items.map((product, index) => productPageMarkup(product, category, index, items.length)).join('')
+}
+
+function contactMarkup(pageContent) {
+  const contact = pageContent?.contacto || {}
+  const phone = contact.phone || contact.whatsapp || ''
+  const email = contact.email || ''
+  const city = contact.city || 'Medellin, Colombia'
+
+  return `
+    <section class="catalog-page catalog-contact">
+      <div>
+        <div class="catalog-kicker">Contacto y cotizacion</div>
+        <h2>Hablemos del espacio que quieres transformar.</h2>
+        <p>Cuentanos que necesitas, comparte medidas o referentes, y te acompanamos para convertir la idea en una solucion fabricable, funcional y coherente con tu estilo.</p>
       </div>
-      <div class="catalog-products">
-        ${pageItems.map((product) => productMarkup(product, category)).join('')}
+      <div class="catalog-contact__box">
+        ${phone ? `<span>Telefono / WhatsApp</span><strong>${escapeHtml(phone)}</strong>` : ''}
+        ${email ? `<span>Correo</span><strong>${escapeHtml(email)}</strong>` : ''}
+        <span>Ubicacion</span><strong>${escapeHtml(city)}</strong>
       </div>
     </section>
-  `).join('')
+  `
 }
 
 export function downloadCatalogPdf({ categories, products, pageContent }) {
   const visibleCategories = categories.filter((category) => category.active !== false)
   const visibleProducts = products.filter((product) => product.active !== false)
   const logoImage = pageContent?.homeProducts?.logoImage
+  const coverImage = pageContent?.productos?.image || firstImage(visibleCategories) || firstImage(visibleProducts)
   const generatedAt = new Date().toLocaleDateString('es-CO', {
     year: 'numeric',
     month: 'long',
@@ -164,421 +275,432 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
           html,
           body,
           .catalog-page,
-          .catalog-product,
           .catalog-index__item,
-          .catalog-pill {
+          .catalog-product-editorial,
+          .catalog-contact__box {
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
           }
           body {
             margin: 0;
-            color: #1a1714;
-            background: #f3ece3;
-            font-family: "DM Sans", Arial, sans-serif;
+            color: #3A332D;
+            background: #F7F4EF;
+            font-family: Inter, Manrope, "DM Sans", Arial, sans-serif;
           }
           .catalog {
             max-width: 1120px;
             margin: 0 auto;
-            padding: 34px;
+            padding: 32px;
           }
           .catalog-page {
-            min-height: 940px;
-            padding: 44px;
-            margin: 0 0 28px;
-            border: 0;
-            border-radius: 28px;
-            background: #f3ece3;
-            break-after: page;
+            min-height: 980px;
+            margin: 0 0 30px;
+            padding: 58px;
             overflow: hidden;
             position: relative;
+            break-after: page;
+            background: #F7F4EF;
           }
-          .catalog-page::after {
-            content: "";
-            position: absolute;
-            right: 34px;
-            bottom: 30px;
-            width: 70px;
-            height: 2px;
-            background: #c9956c;
-          }
-          .catalog-cover {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 300px;
-            gap: 34px;
-            align-items: center;
-            color: #fff8ef;
+          .catalog-page--light {
             background:
-              radial-gradient(circle at top right, rgba(201, 149, 108, 0.28), transparent 34%),
-              linear-gradient(135deg, #2d2620 0%, #17130f 100%);
+              linear-gradient(135deg, rgba(234, 228, 218, 0.92), rgba(247, 244, 239, 0.98)),
+              #F7F4EF;
           }
-          .catalog-logo__image {
-            width: 210px;
-            max-height: 150px;
-            object-fit: contain;
-            display: block;
-            margin-bottom: 42px;
-          }
-          .catalog-logo__fallback {
-            margin-bottom: 42px;
-          }
-          .catalog-logo__fallback strong {
-            display: block;
-            margin-top: 12px;
-            font-size: 42px;
-            font-weight: 400;
-            letter-spacing: 0.18em;
-          }
-          .catalog-logo__fallback small {
-            color: rgba(255, 248, 239, 0.68);
-            font-size: 10px;
-            letter-spacing: 0.24em;
-          }
-          .catalog-logo__mark {
-            width: 74px;
-            height: 74px;
-            position: relative;
-          }
-          .catalog-logo__mark span {
-            position: absolute;
-            width: 34px;
-            height: 34px;
-            border: 2px solid #c9956c;
-            transform: rotate(45deg);
-          }
-          .catalog-logo__mark span:nth-child(1) { left: 8px; top: 8px; }
-          .catalog-logo__mark span:nth-child(2) { right: 8px; top: 8px; }
-          .catalog-logo__mark span:nth-child(3) { left: 8px; bottom: 8px; }
-          .catalog-logo__mark span:nth-child(4) { right: 8px; bottom: 8px; }
-          .catalog-page__eyebrow {
-            margin: 0 0 14px;
-            color: #c9956c;
-            font-size: 13px;
+          .catalog-kicker {
+            margin: 0 0 16px;
+            color: #A88F74;
+            font-size: 11px;
             font-weight: 900;
-            letter-spacing: 0.28em;
+            letter-spacing: 0.32em;
             text-transform: uppercase;
           }
-          .catalog-cover h1 {
-            margin: 0 0 18px;
-            max-width: 620px;
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 68px;
-            line-height: 0.98;
+          h1,
+          h2,
+          h3 {
+            font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif;
             font-weight: 400;
+            letter-spacing: -0.01em;
           }
           .catalog-lead {
+            max-width: 720px;
             margin: 0;
-            color: #75695f;
-            font-size: 18px;
+            color: rgba(58, 51, 45, 0.72);
+            font-size: 19px;
             line-height: 1.65;
           }
-          .catalog-cover .catalog-lead {
-            color: rgba(255, 248, 239, 0.76);
-          }
-          .catalog-cover__stats {
-            display: grid;
-            gap: 14px;
-          }
-          .catalog-cover__stats div,
-          .catalog-pill,
-          .catalog-index__item {
-            border: 1px solid #dfcbbb;
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.72);
-            box-shadow: 0 22px 48px rgba(62, 44, 30, 0.08);
-          }
-          .catalog-cover__stats div {
-            border-color: rgba(255, 255, 255, 0.16);
-            background: rgba(255, 248, 239, 0.09);
-            box-shadow: 0 22px 48px rgba(0, 0, 0, 0.2);
-          }
-          .catalog-cover__stats div {
-            padding: 22px;
-          }
-          .catalog-cover__stats strong {
+          .catalog-logo {
+            width: 168px;
+            max-height: 120px;
+            object-fit: contain;
             display: block;
-            font-size: 42px;
-            line-height: 1;
           }
-          .catalog-cover__stats span {
-            color: rgba(255, 248, 239, 0.7);
-            font-size: 12px;
-            font-weight: 900;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
+          .catalog-logo-fallback strong {
+            display: block;
+            font-size: 28px;
+            letter-spacing: 0.22em;
+          }
+          .catalog-logo-fallback small {
+            font-size: 9px;
+            letter-spacing: 0.22em;
+          }
+          .catalog-logo-fallback--light,
+          .catalog-logo--light {
+            color: #F7F4EF;
+            filter: brightness(1.25);
+          }
+          .catalog-cover {
+            min-height: 980px;
+            padding: 62px;
+            color: #F7F4EF;
+            background-color: #3A332D;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+          }
+          .catalog-cover__top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 28px;
+          }
+          .catalog-cover__content {
+            max-width: 650px;
+            margin-top: auto;
+            padding-bottom: 34px;
+          }
+          .catalog-cover h1 {
+            margin: 0 0 22px;
+            font-size: 82px;
+            line-height: 0.92;
+          }
+          .catalog-cover p {
+            max-width: 540px;
+            margin: 0;
+            color: rgba(247, 244, 239, 0.82);
+            font-size: 19px;
+            line-height: 1.65;
           }
           .catalog-cover__date {
-            margin-top: 26px;
-            color: rgba(255, 248, 239, 0.62);
-            font-size: 14px;
+            color: rgba(247, 244, 239, 0.68);
+            font-size: 13px;
           }
           .catalog-index h2,
-          .catalog-category-cover h2,
-          .catalog-product-page h2 {
-            margin: 0 0 12px;
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 48px;
-            line-height: 1;
-            font-weight: 400;
+          .catalog-philosophy h2,
+          .catalog-materials h2,
+          .catalog-process h2,
+          .catalog-empty-page h2 {
+            max-width: 760px;
+            margin: 0 0 18px;
+            color: #3A332D;
+            font-size: 58px;
+            line-height: 0.98;
           }
           .catalog-index__grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 18px;
-            margin-top: 34px;
+            gap: 24px;
+            margin-top: 44px;
           }
           .catalog-index__item {
-            min-height: 148px;
-            padding: 14px;
+            min-height: 220px;
             display: grid;
-            grid-template-columns: 120px minmax(0, 1fr);
-            gap: 18px;
+            grid-template-columns: 190px minmax(0, 1fr);
+            gap: 22px;
             align-items: center;
+            padding: 18px;
+            border: 1px solid #D8CEC1;
+            background: rgba(255, 255, 255, 0.56);
           }
           .catalog-index__image {
-            aspect-ratio: 1 / 1;
-            border-radius: 16px;
+            height: 184px;
             overflow: hidden;
-            background: #eadfd4;
-            display: grid;
-            place-items: center;
-            color: #8a7564;
-            font-size: 11px;
-            font-weight: 800;
+            background: #EAE4DA;
           }
           .catalog-index__image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center;
             display: block;
           }
-          .catalog-index__item span {
+          .catalog-index__copy span {
             display: block;
-            margin-bottom: 8px;
-            color: #c9956c;
+            margin-bottom: 12px;
+            color: #A88F74;
             font-size: 12px;
             font-weight: 900;
-            letter-spacing: 0.18em;
+            letter-spacing: 0.22em;
           }
-          .catalog-index__item strong {
+          .catalog-index__copy strong {
             display: block;
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 26px;
-            line-height: 1.02;
+            color: #3A332D;
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: 32px;
+            line-height: 1;
             font-weight: 400;
           }
-          .catalog-index__item small {
+          .catalog-index__copy small {
             display: block;
-            margin-top: 12px;
-            color: #75695f;
+            margin-top: 14px;
+            color: rgba(58, 51, 45, 0.62);
             font-weight: 800;
           }
-          .catalog-category-cover {
+          .catalog-philosophy__grid,
+          .catalog-process__steps {
             display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: minmax(0, 1fr) auto;
-            gap: 28px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+            margin-top: 70px;
+          }
+          .catalog-philosophy article,
+          .catalog-process article {
+            padding: 28px;
+            border-top: 1px solid #A88F74;
+          }
+          .catalog-philosophy article span {
+            display: block;
+            width: 42px;
+            height: 42px;
+            margin-bottom: 24px;
+            border-radius: 50%;
+            background: #A88F74;
+          }
+          .catalog-philosophy h3,
+          .catalog-process h3,
+          .catalog-materials h3 {
+            margin: 0 0 12px;
+            font-size: 30px;
+            line-height: 1;
+          }
+          .catalog-philosophy p,
+          .catalog-process p,
+          .catalog-materials p,
+          .catalog-empty-page p {
+            margin: 0;
+            color: rgba(58, 51, 45, 0.66);
+            line-height: 1.6;
+          }
+          .catalog-materials__list {
+            display: grid;
+            gap: 0;
+            margin-top: 62px;
+            border-top: 1px solid #D8CEC1;
+          }
+          .catalog-materials article {
+            display: grid;
+            grid-template-columns: 90px minmax(0, 1fr);
+            gap: 24px;
+            padding: 28px 0;
+            border-bottom: 1px solid #D8CEC1;
+          }
+          .catalog-materials article > span,
+          .catalog-process article > span {
+            color: #A88F74;
+            font-weight: 900;
+            letter-spacing: 0.16em;
+          }
+          .catalog-category {
+            color: #F7F4EF;
+            min-height: 980px;
+            padding: 0;
+            background-color: #3A332D;
+            background-size: cover;
+            background-position: center;
+          }
+          .catalog-category__content {
+            position: absolute;
+            left: 58px;
+            right: 58px;
+            bottom: 58px;
+            max-width: 680px;
+          }
+          .catalog-category h2 {
+            margin: 0 0 18px;
+            font-size: 76px;
+            line-height: 0.92;
+          }
+          .catalog-category p {
+            margin: 0 0 26px;
+            color: rgba(247, 244, 239, 0.82);
+            font-size: 21px;
+            line-height: 1.55;
+          }
+          .catalog-category span {
+            display: inline-flex;
+            padding: 12px 18px;
+            border: 1px solid rgba(247, 244, 239, 0.35);
+            color: #F7F4EF;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+          }
+          .catalog-product-page {
+            padding: 46px;
+          }
+          .catalog-product-editorial {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 66% 34%;
+            gap: 34px;
             align-items: stretch;
           }
-          .catalog-category-cover__image {
-            width: min(620px, 100%);
-            aspect-ratio: 1 / 1;
-            margin: 0 auto;
-            border: 1px solid #dfcbbb;
-            border-radius: 34px;
-            background: #eadfd4;
-            display: grid;
-            place-items: center;
+          .catalog-product-editorial__image {
+            min-height: 820px;
             overflow: hidden;
-            color: #8a7564;
-            font-weight: 800;
-            box-shadow: 0 28px 70px rgba(62, 44, 30, 0.12);
+            background: #EAE4DA;
           }
-          .catalog-category-cover__copy {
-            max-width: 760px;
-          }
-          .catalog-category-cover__image img,
-          .catalog-product__image img {
+          .catalog-product-editorial__image img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            object-position: center;
             display: block;
           }
-          .catalog-pill {
-            display: inline-flex;
-            margin-top: 28px;
-            padding: 12px 18px;
-            color: #1a1714;
-            font-weight: 900;
-          }
-          .catalog-product-page__header {
-            margin-bottom: 18px;
-          }
-          .catalog-products {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 14px;
-          }
-          .catalog-product {
-            display: grid;
-            grid-template-columns: 230px minmax(0, 1fr);
-            min-height: 230px;
-            overflow: hidden;
-            border: 1px solid #dfcbbb;
-            border-radius: 24px;
-            background: #fffaf5;
-            break-inside: avoid;
-            box-shadow: 0 20px 44px rgba(62, 44, 30, 0.1);
-          }
-          .catalog-product__image {
-            aspect-ratio: 1 / 1;
-            min-height: 230px;
+          .catalog-product-editorial__image span {
+            height: 100%;
             display: grid;
             place-items: center;
-            color: #8a7564;
-            background: #efe4d9;
-            font-size: 12px;
+            color: rgba(58, 51, 45, 0.52);
             font-weight: 800;
-            overflow: hidden;
           }
-          .catalog-product__body {
-            padding: 20px 24px;
-            color: #1a1714;
+          .catalog-product-editorial__info {
+            align-self: center;
+            padding: 30px 0;
           }
-          .catalog-product__body p {
-            margin: 0 0 8px;
-            color: #c9956c;
+          .catalog-product-editorial__info h2 {
+            margin: 0 0 16px;
+            color: #3A332D;
+            font-size: 54px;
+            line-height: 0.96;
+          }
+          .catalog-product-editorial__info strong {
+            display: block;
+            margin-bottom: 28px;
+            color: #3A332D;
+            font-size: 24px;
+          }
+          .catalog-product-editorial__concept {
+            margin: 0 0 34px;
+            color: rgba(58, 51, 45, 0.72);
+            font-size: 18px;
+            line-height: 1.6;
+          }
+          .catalog-product-editorial dl {
+            display: grid;
+            gap: 18px;
+            margin: 0;
+            padding-top: 24px;
+            border-top: 1px solid #D8CEC1;
+          }
+          .catalog-product-editorial dl div {
+            display: grid;
+            gap: 4px;
+          }
+          .catalog-product-editorial dt {
+            color: #A88F74;
             font-size: 11px;
             font-weight: 900;
             letter-spacing: 0.18em;
             text-transform: uppercase;
           }
-          .catalog-product__body h3 {
-            margin: 0 0 8px;
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 28px;
-            line-height: 1;
-            font-weight: 400;
+          .catalog-product-editorial dd {
+            margin: 0;
+            color: #3A332D;
+            font-size: 15px;
+            line-height: 1.45;
           }
-          .catalog-product__body strong {
-            display: block;
-            margin: 0 0 9px;
-            font-size: 21px;
-          }
-          .catalog-product__meta {
+          .catalog-contact {
+            min-height: 980px;
+            color: #F7F4EF;
+            background:
+              radial-gradient(circle at 80% 20%, rgba(168, 143, 116, 0.28), transparent 34%),
+              linear-gradient(135deg, #3A332D 0%, #211c18 100%);
             display: grid;
-            gap: 5px;
+            grid-template-columns: minmax(0, 1fr) 360px;
+            gap: 48px;
+            align-items: end;
           }
-          .catalog-product__meta span,
-          .catalog-product__body em {
+          .catalog-contact h2 {
+            max-width: 720px;
+            margin: 0 0 22px;
+            font-size: 72px;
+            line-height: 0.94;
+          }
+          .catalog-contact p {
+            max-width: 560px;
+            margin: 0;
+            color: rgba(247, 244, 239, 0.76);
+            font-size: 19px;
+            line-height: 1.65;
+          }
+          .catalog-contact__box {
+            padding: 28px;
+            border: 1px solid rgba(247, 244, 239, 0.18);
+            background: rgba(247, 244, 239, 0.08);
+          }
+          .catalog-contact__box span {
             display: block;
-            color: #75695f;
-            font-size: 13px;
-            line-height: 1.32;
-            font-style: normal;
+            margin: 18px 0 5px;
+            color: #A88F74;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
           }
-          .catalog-product__body em {
-            margin-top: 9px;
+          .catalog-contact__box span:first-child {
+            margin-top: 0;
           }
-          .catalog-empty {
-            padding: 26px;
-            border: 1px dashed #dec7b6;
-            border-radius: 18px;
-            color: #75695f;
-            background: rgba(255, 255, 255, 0.7);
+          .catalog-contact__box strong {
+            display: block;
+            color: #F7F4EF;
+            font-size: 18px;
+            line-height: 1.45;
           }
-          @page { size: A4 portrait; margin: 6mm; }
+          @page { size: A4 portrait; margin: 0; }
           @media print {
-            body { background: #f3ece3; }
+            body { background: #F7F4EF; }
             .catalog {
               max-width: none;
               padding: 0;
             }
             .catalog-page {
+              width: 210mm;
+              height: 297mm;
               min-height: 0;
-              height: 285mm;
-              padding: 28px 34px;
               margin: 0;
-              border: 0;
               border-radius: 0;
               box-shadow: none;
             }
-            .catalog-product-page {
-              padding-top: 26px;
-              padding-bottom: 24px;
-            }
-            .catalog-product-page__header {
-              margin-bottom: 12px;
-            }
-            .catalog-product-page h2 {
-              font-size: 36px;
-              margin-bottom: 0;
-            }
-            .catalog-products {
-              gap: 10px;
-            }
-            .catalog-product {
-              grid-template-columns: 170px minmax(0, 1fr);
-              min-height: 170px;
-              border-radius: 18px;
-              box-shadow: 0 12px 26px rgba(62, 44, 30, 0.08);
-            }
-            .catalog-product__image {
-              min-height: 170px;
-            }
-            .catalog-product__body {
-              padding: 14px 18px;
-            }
-            .catalog-product__body p {
-              margin-bottom: 5px;
-              font-size: 9px;
-              letter-spacing: 0.16em;
-            }
-            .catalog-product__body h3 {
-              margin-bottom: 5px;
-              font-size: 23px;
-              line-height: 0.98;
-            }
-            .catalog-product__body strong {
-              margin-bottom: 6px;
-              font-size: 17px;
-            }
-            .catalog-product__meta {
-              gap: 2px;
-            }
-            .catalog-product__meta span,
-            .catalog-product__body em {
-              font-size: 10px;
-              line-height: 1.24;
-            }
-            .catalog-product__body em {
-              margin-top: 5px;
+            .catalog-product-editorial__image {
+              min-height: 0;
             }
           }
         </style>
       </head>
       <body>
         <main class="catalog">
-          <section class="catalog-page catalog-cover">
-            <div>
-              ${logoMarkup(logoImage)}
-              <p class="catalog-page__eyebrow">Catalogo de productos</p>
-              <h1>Muebles para vivir mejor cada espacio</h1>
-              <p class="catalog-lead">Una guia visual con las categorias y productos activos de FORMAS, pensada para elegir con calma, comparar ideas y empezar a imaginar tu proyecto.</p>
-              <div class="catalog-cover__date">Generado el ${escapeHtml(generatedAt)}</div>
+          <section class="catalog-page catalog-cover" ${backgroundStyle(coverImage, 1800)}>
+            <div class="catalog-cover__top">
+              ${logoMarkup(logoImage, 'light')}
+              <span class="catalog-cover__date">${escapeHtml(generatedAt)}</span>
             </div>
-            <aside class="catalog-cover__stats">
-              <div><strong>${visibleCategories.length}</strong><span>Categorias</span></div>
-              <div><strong>${visibleProducts.length}</strong><span>Productos activos</span></div>
-            </aside>
+            <div class="catalog-cover__content">
+              <div class="catalog-kicker">Catalogo de productos</div>
+              <h1>Espacios disenados a la medida de tu vida.</h1>
+              <p>Una mirada editorial a las lineas, materiales y productos que FORMAS desarrolla para convertir mobiliario en arquitectura interior.</p>
+            </div>
           </section>
 
           ${indexMarkup(visibleCategories, visibleProducts)}
+          ${philosophyMarkup()}
+          ${materialsMarkup()}
+          ${processMarkup()}
           ${visibleCategories.map((category, index) => `
             ${categoryCoverMarkup(category, visibleProducts, index)}
             ${categoryProductsMarkup(category, visibleProducts)}
           `).join('')}
+          ${contactMarkup(pageContent)}
         </main>
       </body>
     </html>
