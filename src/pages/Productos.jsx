@@ -45,7 +45,7 @@ function Productos() {
           <button
             type="button"
             className="products-catalog-download"
-            onClick={() => downloadCatalogPdf({ categories: visibleCategories, products })}
+            onClick={() => downloadCatalogPdf({ categories: visibleCategories, products, pageContent })}
           >
             <Download size={16} />
             Descargar catalogo PDF
