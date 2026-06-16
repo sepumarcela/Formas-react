@@ -85,32 +85,30 @@ function logoMarkup(logoImage, variant = 'light') {
 }
 
 function indexMarkup(categories, products) {
-  const heroCategory = categories[0]
-  const heroImage = heroCategory ? heroCategory.image || firstImage(categoryProducts(heroCategory, products)) : ''
-
   return `
     <section class="catalog-page catalog-page--light catalog-index">
       <div class="catalog-index__intro">
         <div>
           <div class="catalog-kicker">Indice</div>
-          <h2>Espacios para recorrer con calma</h2>
+          <h2>Una guia clara de nuestras lineas.</h2>
         </div>
-        <p class="catalog-lead">Una guia visual para moverte por las lineas de FORMAS sin perder la sensacion de proyecto integral.</p>
+        <p class="catalog-lead">Cada categoria abre una linea de diseno distinta, pensada para imaginar espacios completos y soluciones a medida.</p>
       </div>
-      <div class="catalog-index__layout">
-        <div class="catalog-index__hero">${imageMarkup(heroImage, heroCategory?.name || 'FORMAS', 1200)}</div>
-        <div class="catalog-index__list">
-          ${categories.map((category, index) => {
-            const items = categoryProducts(category, products)
-            return `
-              <article class="catalog-index__item">
+      <div class="catalog-index__grid">
+        ${categories.map((category, index) => {
+          const items = categoryProducts(category, products)
+          const image = category.image || firstImage(items)
+          return `
+            <article class="catalog-index__item">
+              <div class="catalog-index__thumb">${imageMarkup(image, category.name, 560)}</div>
+              <div>
                 <span>${String(index + 1).padStart(2, '0')}</span>
                 <strong>${escapeHtml(category.name)}</strong>
                 <small>${items.length} producto${items.length === 1 ? '' : 's'}</small>
-              </article>
-            `
-          }).join('')}
-        </div>
+              </div>
+            </article>
+          `
+        }).join('')}
       </div>
     </section>
   `
@@ -467,46 +465,46 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
             gap: 42px;
             align-items: end;
-            margin-bottom: 42px;
+            margin-bottom: 50px;
           }
-          .catalog-index__layout {
+          .catalog-index__grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
-            gap: 34px;
-            align-items: stretch;
-          }
-          .catalog-index__hero {
-            min-height: 620px;
-            overflow: hidden;
-            background: #EAE4DA;
-          }
-          .catalog-index__hero img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-          }
-          .catalog-index__hero span {
-            height: 100%;
-            display: grid;
-            place-items: center;
-            color: rgba(58, 51, 45, 0.52);
-          }
-          .catalog-index__list {
-            display: grid;
-            align-content: stretch;
-            border-top: 1px solid #D8CEC1;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
           }
           .catalog-index__item {
             min-width: 0;
             display: grid;
-            grid-template-columns: 48px minmax(0, 1fr) auto;
-            gap: 16px;
+            grid-template-columns: 128px minmax(0, 1fr);
+            gap: 18px;
             align-items: center;
-            padding: 18px 0;
-            border-bottom: 1px solid #D8CEC1;
+            min-height: 126px;
+            padding: 14px;
+            border: 1px solid #D8CEC1;
+            background: rgba(255, 255, 255, 0.48);
+            overflow: hidden;
+          }
+          .catalog-index__thumb {
+            width: 128px;
+            height: 98px;
+            overflow: hidden;
+            background: #EAE4DA;
+            display: grid;
+            place-items: center;
+          }
+          .catalog-index__thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+          }
+          .catalog-index__thumb span {
+            color: rgba(58, 51, 45, 0.52);
+            font-size: 10px;
           }
           .catalog-index__item span {
+            display: block;
+            margin-bottom: 8px;
             color: #A88F74;
             font-size: 12px;
             font-weight: 900;
@@ -516,15 +514,18 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             min-width: 0;
             color: #3A332D;
             font-family: "Cormorant Garamond", Georgia, serif;
-            font-size: clamp(23px, 2.25vw, 31px);
-            line-height: 0.96;
+            font-size: clamp(25px, 2.45vw, 34px);
+            line-height: 0.94;
             font-weight: 400;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            overflow-wrap: anywhere;
           }
           .catalog-index__item small {
+            display: block;
+            margin-top: 10px;
             color: rgba(58, 51, 45, 0.62);
             font-size: 11px;
             font-weight: 800;
@@ -887,7 +888,7 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
               padding: 32px;
             }
             .catalog-index__intro,
-            .catalog-index__layout,
+            .catalog-index__grid,
             .catalog-product-grid {
               grid-template-columns: 1fr;
               grid-template-rows: none;
@@ -910,8 +911,9 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             .catalog-contact {
               grid-template-columns: 1fr;
             }
-            .catalog-index__hero {
-              min-height: 260px;
+            .catalog-index__thumb {
+              width: 100%;
+              height: 180px;
             }
             .catalog-philosophy__grid,
             .catalog-process__steps {
@@ -956,6 +958,31 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             }
             .catalog-product-page__header h2 {
               font-size: 38px;
+            }
+            .catalog-index {
+              padding: 14mm;
+            }
+            .catalog-index h2 {
+              font-size: 46px;
+            }
+            .catalog-index__intro {
+              margin-bottom: 10mm;
+            }
+            .catalog-index__grid {
+              gap: 5mm;
+            }
+            .catalog-index__item {
+              min-height: 31mm;
+              padding: 3.5mm;
+              grid-template-columns: 34mm minmax(0, 1fr);
+              gap: 5mm;
+            }
+            .catalog-index__thumb {
+              width: 34mm;
+              height: 25mm;
+            }
+            .catalog-index__item strong {
+              font-size: 24px;
             }
             .catalog-product-grid {
               height: 245mm;
