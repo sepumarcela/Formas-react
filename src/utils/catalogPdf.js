@@ -38,6 +38,14 @@ function categoryProducts(category, products) {
   return products.filter((product) => product.categoryId === category.id && product.active !== false)
 }
 
+function chunkItems(items, size) {
+  const chunks = []
+  for (let index = 0; index < items.length; index += size) {
+    chunks.push(items.slice(index, index + size))
+  }
+  return chunks
+}
+
 function firstImage(items = []) {
   return items.find((item) => item?.image)?.image || ''
 }
@@ -186,34 +194,33 @@ function categoryCoverMarkup(category, products, index) {
   `
 }
 
-function productPageMarkup(product, category, index, total) {
+function productCardMarkup(product, category, index) {
   const concept = shortConcept(product, category)
 
   return `
-    <section class="catalog-page catalog-page--light catalog-product-page">
-      <div class="catalog-product-editorial">
-        <div class="catalog-product-editorial__image">
-          ${imageMarkup(product.image, product.name, 1400)}
-        </div>
-        <div class="catalog-product-editorial__info">
-          <p class="catalog-kicker">${escapeHtml(product.category || category.name)} / ${String(index + 1).padStart(2, '0')} de ${total}</p>
-          <h2>${escapeHtml(product.name)}</h2>
-          <strong>${escapeHtml(productPrice(product))}</strong>
-          <p class="catalog-product-editorial__concept">${escapeHtml(concept)}</p>
-          <dl>
-            ${product.size ? `<div><dt>Dimensiones</dt><dd>${escapeHtml(product.size)}</dd></div>` : ''}
-            ${product.material ? `<div><dt>Materiales</dt><dd>${escapeHtml(product.material)}</dd></div>` : ''}
-            ${product.color ? `<div><dt>Acabados</dt><dd>${escapeHtml(product.color)}</dd></div>` : ''}
-            ${product.leadTime ? `<div><dt>Fabricacion</dt><dd>${escapeHtml(product.leadTime)}</dd></div>` : ''}
-          </dl>
-        </div>
+    <article class="catalog-product-card">
+      <div class="catalog-product-card__image">
+        ${imageMarkup(product.image, product.name, 900)}
       </div>
-    </section>
+      <div class="catalog-product-card__body">
+        <p>${escapeHtml(product.category || category.name)} / ${String(index + 1).padStart(2, '0')}</p>
+        <h3>${escapeHtml(product.name)}</h3>
+        <strong>${escapeHtml(productPrice(product))}</strong>
+        <em>${escapeHtml(concept)}</em>
+        <dl>
+          ${product.size ? `<div><dt>Dimensiones</dt><dd>${escapeHtml(product.size)}</dd></div>` : ''}
+          ${product.material ? `<div><dt>Materiales</dt><dd>${escapeHtml(product.material)}</dd></div>` : ''}
+          ${product.color ? `<div><dt>Acabados</dt><dd>${escapeHtml(product.color)}</dd></div>` : ''}
+          ${product.leadTime ? `<div><dt>Fabricacion</dt><dd>${escapeHtml(product.leadTime)}</dd></div>` : ''}
+        </dl>
+      </div>
+    </article>
   `
 }
 
 function categoryProductsMarkup(category, products) {
   const items = categoryProducts(category, products)
+  const pages = chunkItems(items, 6)
 
   if (!items.length) {
     return `
@@ -225,7 +232,20 @@ function categoryProductsMarkup(category, products) {
     `
   }
 
-  return items.map((product, index) => productPageMarkup(product, category, index, items.length)).join('')
+  return pages.map((pageItems, pageIndex) => `
+    <section class="catalog-page catalog-page--light catalog-product-page">
+      <div class="catalog-product-page__header">
+        <div>
+          <div class="catalog-kicker">Productos ${pageIndex + 1} / ${pages.length}</div>
+          <h2>${escapeHtml(category.name)}</h2>
+        </div>
+        <span>${items.length} producto${items.length === 1 ? '' : 's'}</span>
+      </div>
+      <div class="catalog-product-grid">
+        ${pageItems.map((product, index) => productCardMarkup(product, category, pageIndex * 6 + index)).join('')}
+      </div>
+    </section>
+  `).join('')
 }
 
 function contactMarkup(pageContent) {
@@ -276,7 +296,7 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
           body,
           .catalog-page,
           .catalog-index__item,
-          .catalog-product-editorial,
+          .catalog-product-card,
           .catalog-contact__box {
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
@@ -439,6 +459,10 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             font-size: 32px;
             line-height: 1;
             font-weight: 400;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
           }
           .catalog-index__copy small {
             display: block;
@@ -537,78 +561,145 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             text-transform: uppercase;
           }
           .catalog-product-page {
-            padding: 46px;
+            padding: 42px;
           }
-          .catalog-product-editorial {
-            height: 100%;
+          .catalog-product-page__header {
+            min-height: 88px;
             display: grid;
-            grid-template-columns: 66% 34%;
-            gap: 34px;
-            align-items: stretch;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 24px;
+            align-items: start;
+            margin-bottom: 24px;
           }
-          .catalog-product-editorial__image {
-            min-height: 820px;
+          .catalog-product-page__header h2 {
+            max-width: 680px;
+            margin: 0;
+            color: #3A332D;
+            font-size: 52px;
+            line-height: 0.95;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+          .catalog-product-page__header span {
+            padding-top: 8px;
+            color: rgba(58, 51, 45, 0.56);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            white-space: nowrap;
+          }
+          .catalog-product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: repeat(3, 1fr);
+            gap: 18px;
+          }
+          .catalog-product-card {
+            min-height: 0;
+            height: 246px;
+            display: grid;
+            grid-template-rows: 58% 42%;
+            overflow: hidden;
+            border: 1px solid #D8CEC1;
+            background: rgba(255, 255, 255, 0.64);
+          }
+          .catalog-product-card__image {
+            min-width: 0;
+            min-height: 0;
             overflow: hidden;
             background: #EAE4DA;
+            display: grid;
+            place-items: center;
+            color: rgba(58, 51, 45, 0.5);
+            font-size: 11px;
+            font-weight: 800;
           }
-          .catalog-product-editorial__image img {
+          .catalog-product-card__image img {
             width: 100%;
             height: 100%;
             object-fit: contain;
             display: block;
           }
-          .catalog-product-editorial__image span {
-            height: 100%;
-            display: grid;
-            place-items: center;
-            color: rgba(58, 51, 45, 0.52);
-            font-weight: 800;
-          }
-          .catalog-product-editorial__info {
-            align-self: center;
-            padding: 30px 0;
-          }
-          .catalog-product-editorial__info h2 {
-            margin: 0 0 16px;
+          .catalog-product-card__body {
+            min-width: 0;
+            min-height: 0;
+            padding: 12px 14px 14px;
             color: #3A332D;
-            font-size: 54px;
-            line-height: 0.96;
           }
-          .catalog-product-editorial__info strong {
-            display: block;
-            margin-bottom: 28px;
-            color: #3A332D;
-            font-size: 24px;
-          }
-          .catalog-product-editorial__concept {
-            margin: 0 0 34px;
-            color: rgba(58, 51, 45, 0.72);
-            font-size: 18px;
-            line-height: 1.6;
-          }
-          .catalog-product-editorial dl {
-            display: grid;
-            gap: 18px;
-            margin: 0;
-            padding-top: 24px;
-            border-top: 1px solid #D8CEC1;
-          }
-          .catalog-product-editorial dl div {
-            display: grid;
-            gap: 4px;
-          }
-          .catalog-product-editorial dt {
+          .catalog-product-card__body p {
+            margin: 0 0 5px;
             color: #A88F74;
-            font-size: 11px;
+            font-size: 8px;
             font-weight: 900;
-            letter-spacing: 0.18em;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
-          .catalog-product-editorial dd {
-            margin: 0;
+          .catalog-product-card__body h3 {
+            min-height: 38px;
+            margin: 0 0 5px;
             color: #3A332D;
-            font-size: 15px;
-            line-height: 1.45;
+            font-size: 22px;
+            line-height: 0.95;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+          .catalog-product-card__body strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            line-height: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .catalog-product-card__body em {
+            display: block;
+            margin-bottom: 7px;
+            color: rgba(58, 51, 45, 0.62);
+            font-size: 10px;
+            line-height: 1.2;
+            font-style: normal;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .catalog-product-card__body dl {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 4px 10px;
+            margin: 0;
+          }
+          .catalog-product-card__body dl div {
+            min-width: 0;
+            display: grid;
+            gap: 1px;
+          }
+          .catalog-product-card__body dt {
+            color: #A88F74;
+            font-size: 7px;
+            font-weight: 900;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .catalog-product-card__body dd {
+            margin: 0;
+            color: rgba(58, 51, 45, 0.78);
+            font-size: 9px;
+            line-height: 1.15;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
           .catalog-contact {
             min-height: 980px;
@@ -658,6 +749,48 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             line-height: 1.45;
           }
           @page { size: A4 portrait; margin: 0; }
+          @media (max-width: 900px) {
+            .catalog {
+              padding: 16px;
+            }
+            .catalog-page {
+              min-height: auto;
+              padding: 32px;
+            }
+            .catalog-index__grid,
+            .catalog-product-grid {
+              grid-template-columns: 1fr;
+              grid-template-rows: none;
+            }
+            .catalog-product-card {
+              height: auto;
+              min-height: 360px;
+            }
+            .catalog-cover h1,
+            .catalog-category h2,
+            .catalog-contact h2 {
+              font-size: 54px;
+            }
+          }
+          @media (max-width: 620px) {
+            .catalog-page {
+              padding: 24px;
+            }
+            .catalog-index__item,
+            .catalog-contact {
+              grid-template-columns: 1fr;
+            }
+            .catalog-index__image {
+              height: 220px;
+            }
+            .catalog-philosophy__grid,
+            .catalog-process__steps {
+              grid-template-columns: 1fr;
+            }
+            .catalog-product-card {
+              grid-template-rows: 56% 44%;
+            }
+          }
           @media print {
             body { background: #F7F4EF; }
             .catalog {
@@ -672,8 +805,28 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
               border-radius: 0;
               box-shadow: none;
             }
-            .catalog-product-editorial__image {
+            .catalog-product-page {
+              padding: 12mm;
+            }
+            .catalog-product-page__header {
+              min-height: 22mm;
+              margin-bottom: 6mm;
+            }
+            .catalog-product-page__header h2 {
+              font-size: 38px;
+            }
+            .catalog-product-grid {
+              height: 245mm;
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+              grid-template-rows: repeat(3, 1fr);
+              gap: 5mm;
+            }
+            .catalog-product-card {
+              height: auto;
               min-height: 0;
+            }
+            .catalog-product-card__body h3 {
+              font-size: 20px;
             }
           }
         </style>
