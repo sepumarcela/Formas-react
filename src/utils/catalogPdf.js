@@ -33,6 +33,19 @@ function productSubtitle(product, category) {
   return fallback.length > 70 ? `${fallback.slice(0, 67).trim()}...` : fallback
 }
 
+function productPrice(product) {
+  return cleanText(product.price || product.priceText || '') || 'Cotizar'
+}
+
+function productDetails(product) {
+  return [
+    ['Medidas', product.size],
+    ['Material', product.material],
+    ['Acabado', product.color || product.colorFinish],
+    ['Entrega', product.leadTime],
+  ].map(([label, value]) => [label, cleanText(value)]).filter(([, value]) => value)
+}
+
 function categoryProducts(category, products) {
   return products.filter((product) => product.categoryId === category.id && product.active !== false)
 }
@@ -190,7 +203,10 @@ function categoryCoverMarkup(category, products, index) {
   const text = categoryCopy[category.id] || category.description || 'Una linea disenada para resolver necesidades reales con calidez, orden y precision.'
 
   return `
-    <section class="catalog-page catalog-category" ${backgroundStyle(image)}>
+    <section class="catalog-page catalog-category">
+      <div class="catalog-category__media">
+        ${imageMarkup(image, category.name, 1800, 'catalog-category__image')}
+      </div>
       <div class="catalog-category__content">
         <div class="catalog-kicker">Linea ${String(index + 1).padStart(2, '0')}</div>
         <h2>${escapeHtml(category.name)}</h2>
@@ -203,6 +219,8 @@ function categoryCoverMarkup(category, products, index) {
 
 function productCardMarkup(product, category, index) {
   const subtitle = productSubtitle(product, category)
+  const details = productDetails(product)
+  const description = cleanText(product.description)
 
   return `
     <article class="catalog-product-card">
@@ -212,7 +230,19 @@ function productCardMarkup(product, category, index) {
       <div class="catalog-product-card__body">
         <p>${escapeHtml(product.category || category.name)} / ${String(index + 1).padStart(2, '0')}</p>
         <h3>${escapeHtml(product.name)}</h3>
+        <strong>${escapeHtml(productPrice(product))}</strong>
         <em>${escapeHtml(subtitle)}</em>
+        ${details.length ? `
+          <dl class="catalog-product-card__details">
+            ${details.map(([label, value]) => `
+              <div>
+                <dt>${escapeHtml(label)}</dt>
+                <dd>${escapeHtml(value)}</dd>
+              </div>
+            `).join('')}
+          </dl>
+        ` : ''}
+        ${description ? `<small>${escapeHtml(description)}</small>` : ''}
       </div>
     </article>
   `
@@ -319,7 +349,14 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             overflow: hidden;
             position: relative;
             break-after: page;
+            page-break-after: always;
+            break-inside: avoid;
+            page-break-inside: avoid;
             background: #F7F4EF;
+          }
+          .catalog-page:last-child {
+            break-after: auto;
+            page-break-after: auto;
           }
           .catalog-page--light {
             background:
@@ -560,8 +597,38 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             min-height: 980px;
             padding: 0;
             background-color: #3A332D;
-            background-size: cover;
-            background-position: center;
+            display: grid;
+            place-items: stretch;
+          }
+          .catalog-category__media {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background: #2f2924;
+          }
+          .catalog-category__media::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+              linear-gradient(180deg, rgba(20, 17, 14, 0.08), rgba(20, 17, 14, 0.68)),
+              linear-gradient(90deg, rgba(20, 17, 14, 0.42), rgba(20, 17, 14, 0.12));
+          }
+          .catalog-category__image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+          }
+          .catalog-category__media span {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            color: rgba(247, 244, 239, 0.62);
           }
           .catalog-category__content {
             position: absolute;
@@ -569,6 +636,7 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             right: 58px;
             bottom: 58px;
             max-width: 680px;
+            z-index: 1;
           }
           .catalog-category h2 {
             margin: 0 0 18px;
@@ -626,13 +694,13 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             grid-template-rows: repeat(2, minmax(0, 1fr));
-            gap: 30px;
+            gap: 24px;
           }
           .catalog-product-card {
             min-height: 0;
-            height: 365px;
+            height: 392px;
             display: grid;
-            grid-template-rows: 76% 24%;
+            grid-template-rows: 58% 42%;
             overflow: hidden;
             border: 1px solid #D8CEC1;
             background: rgba(255, 255, 255, 0.64);
@@ -658,11 +726,12 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
           .catalog-product-card__body {
             min-width: 0;
             min-height: 0;
-            padding: 18px 22px 20px;
+            padding: 16px 20px 18px;
             color: #3A332D;
+            overflow: hidden;
           }
           .catalog-product-card__body p {
-            margin: 0 0 8px;
+            margin: 0 0 6px;
             color: #A88F74;
             font-size: 9px;
             font-weight: 900;
@@ -673,25 +742,66 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             text-overflow: ellipsis;
           }
           .catalog-product-card__body h3 {
-            min-height: 46px;
-            margin: 0 0 9px;
+            margin: 0 0 6px;
             color: #3A332D;
-            font-size: 29px;
-            line-height: 0.98;
+            font-size: 24px;
+            line-height: 1;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
           }
+          .catalog-product-card__body strong {
+            display: block;
+            margin: 0 0 5px;
+            color: #1f1a16;
+            font-size: 14px;
+            line-height: 1.1;
+            font-weight: 900;
+          }
           .catalog-product-card__body em {
             display: block;
             color: rgba(58, 51, 45, 0.62);
-            font-size: 13px;
+            font-size: 11px;
             line-height: 1.25;
             font-style: normal;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+          }
+          .catalog-product-card__details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 5px 12px;
+            margin: 10px 0 0;
+          }
+          .catalog-product-card__details div {
+            min-width: 0;
+          }
+          .catalog-product-card__details dt {
+            margin: 0 0 2px;
+            color: #A88F74;
+            font-size: 7px;
+            font-weight: 900;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+          }
+          .catalog-product-card__details dd {
+            margin: 0;
+            color: rgba(58, 51, 45, 0.76);
+            font-size: 9px;
+            line-height: 1.22;
+            overflow-wrap: anywhere;
+          }
+          .catalog-product-card__body small {
+            display: -webkit-box;
+            margin-top: 9px;
+            color: rgba(58, 51, 45, 0.58);
+            font-size: 9px;
+            line-height: 1.25;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
           }
           .catalog-contact {
             min-height: 980px;
@@ -801,6 +911,14 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
               margin: 0;
               border-radius: 0;
               box-shadow: none;
+              break-after: page;
+              page-break-after: always;
+              break-inside: avoid;
+              page-break-inside: avoid;
+            }
+            .catalog-page:last-child {
+              break-after: auto;
+              page-break-after: auto;
             }
             .catalog-product-page {
               padding: 12mm;
@@ -821,10 +939,16 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             .catalog-product-card {
               height: auto;
               min-height: 0;
-              grid-template-rows: 74% 26%;
+              grid-template-rows: 58% 42%;
             }
             .catalog-product-card__body h3 {
-              font-size: 25px;
+              font-size: 22px;
+            }
+            .catalog-product-card__body {
+              padding: 4.5mm 5mm 5mm;
+            }
+            .catalog-product-card__body small {
+              -webkit-line-clamp: 2;
             }
           }
         </style>
