@@ -1949,6 +1949,30 @@ section {
   background: var(--color-bg);
 }
 
+.products-catalog-download {
+  margin: 22px auto 0;
+  border: 1px solid var(--color-brand);
+  border-radius: 999px;
+  padding: 13px 22px;
+  background: var(--color-brand);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.products-catalog-download:hover {
+  transform: translateY(-2px);
+  background: var(--color-dark);
+}
+
 .products-category-list {
   max-width: var(--page-max);
   margin: 0 auto;

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Download } from 'lucide-react'
 import {
   PiBathtubDuotone,
   PiBedDuotone,
@@ -13,6 +14,7 @@ import {
 import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
+import { downloadCatalogPdf } from '../utils/catalogPdf'
 
 const categoryIcons = {
   tv: PiTelevisionDuotone,
@@ -40,6 +42,14 @@ function Productos() {
           <p className="eyebrow">Categorías</p>
           <h2>Soluciones para cada espacio</h2>
           <p>Explora nuestras líneas y entra a cada categoría para ver los productos disponibles.</p>
+          <button
+            type="button"
+            className="products-catalog-download"
+            onClick={() => downloadCatalogPdf({ categories: visibleCategories, products })}
+          >
+            <Download size={16} />
+            Descargar catalogo PDF
+          </button>
         </div>
 
         <div className="products-category-list">
