@@ -572,47 +572,54 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             text-transform: uppercase;
           }
           .catalog-philosophy__intro {
-            max-width: 820px;
+            max-width: 760px;
+            margin: 0 auto;
+            text-align: center;
           }
           .catalog-philosophy__grid {
             display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 30px;
-            margin-top: 58px;
-          }
-          .catalog-philosophy__grid article:first-child {
-            grid-row: span 2;
-            padding-right: 46px;
-          }
-          .catalog-philosophy__grid article:first-child h3 {
-            font-size: 42px;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            max-width: 620px;
+            margin: 54px auto 0;
           }
           .catalog-process__steps {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 24px;
-            margin-top: 70px;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            max-width: 660px;
+            margin: 54px auto 0;
           }
           .catalog-philosophy article,
           .catalog-process article {
-            padding: 28px 0;
+            display: grid;
+            grid-template-columns: 64px minmax(0, 1fr);
+            gap: 24px;
+            align-items: center;
+            padding: 20px 0;
             border-top: 1px solid #A88F74;
             min-width: 0;
+            text-align: left;
           }
           .catalog-philosophy article span {
             display: block;
-            width: 42px;
-            height: 42px;
-            margin-bottom: 24px;
+            width: 34px;
+            height: 34px;
+            margin: 0 auto;
             border-radius: 50%;
             background: #A88F74;
+          }
+          .catalog-process article > span {
+            align-self: start;
+            padding-top: 4px;
           }
           .catalog-philosophy h3,
           .catalog-process h3,
           .catalog-materials h3 {
             margin: 0 0 12px;
-            font-size: 30px;
-            line-height: 1;
+            font-size: 28px;
+            line-height: 1.04;
+            overflow-wrap: anywhere;
           }
           .catalog-philosophy p,
           .catalog-process p,
@@ -647,10 +654,10 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             padding: 58px;
             background:
               linear-gradient(135deg, rgba(234, 228, 218, 0.92), rgba(247, 244, 239, 0.98)),
-              #F7F4EF;
+            #F7F4EF;
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            gap: 46px;
+            grid-template-columns: minmax(0, 0.52fr) minmax(0, 0.48fr);
+            gap: 40px;
             align-items: stretch;
           }
           .catalog-category__media {
@@ -679,19 +686,26 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 28px 0;
+            padding: 28px 4px;
+            overflow: hidden;
           }
           .catalog-category h2 {
             margin: 0 0 24px;
             color: #3A332D;
-            font-size: 72px;
-            line-height: 0.92;
+            font-size: clamp(48px, 5.1vw, 66px);
+            line-height: 0.94;
+            max-width: 100%;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            overflow-wrap: anywhere;
           }
           .catalog-category p {
-            max-width: 430px;
+            max-width: 100%;
             margin: 0 0 42px;
             color: rgba(58, 51, 45, 0.72);
-            font-size: 22px;
+            font-size: 20px;
             line-height: 1.55;
           }
           .catalog-category__facts {
@@ -961,10 +975,6 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             .catalog-process__steps {
               grid-template-columns: 1fr;
             }
-            .catalog-philosophy__grid article:first-child {
-              grid-row: auto;
-              padding-right: 0;
-            }
             .catalog-product-card {
               grid-template-rows: 72% 28%;
             }
@@ -1036,6 +1046,65 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             }
             .catalog-index-card__body span {
               font-size: 9px;
+            }
+            .catalog-philosophy,
+            .catalog-process {
+              padding: 18mm;
+            }
+            .catalog-philosophy h2,
+            .catalog-process h2 {
+              max-width: 165mm;
+              margin-left: auto;
+              margin-right: auto;
+              font-size: 42px;
+              line-height: 1;
+              text-align: center;
+            }
+            .catalog-philosophy__grid,
+            .catalog-process__steps {
+              max-width: 138mm;
+              margin-top: 14mm;
+              gap: 4mm;
+            }
+            .catalog-philosophy article,
+            .catalog-process article {
+              grid-template-columns: 15mm minmax(0, 1fr);
+              gap: 7mm;
+              padding: 5mm 0;
+            }
+            .catalog-philosophy h3,
+            .catalog-process h3 {
+              font-size: 22px;
+              line-height: 1.08;
+            }
+            .catalog-philosophy p,
+            .catalog-process p {
+              font-size: 10px;
+              line-height: 1.45;
+            }
+            .catalog-category {
+              padding: 14mm;
+              grid-template-columns: minmax(0, 0.53fr) minmax(0, 0.47fr);
+              gap: 10mm;
+            }
+            .catalog-category h2 {
+              font-size: 44px;
+              line-height: 0.96;
+              -webkit-line-clamp: 3;
+            }
+            .catalog-category p {
+              font-size: 14px;
+              line-height: 1.55;
+              margin-bottom: 10mm;
+            }
+            .catalog-category__facts article {
+              grid-template-columns: 28mm minmax(0, 1fr);
+              gap: 5mm;
+              padding: 4mm 0;
+            }
+            .catalog-category__facts strong {
+              font-size: 13px;
+              overflow-wrap: anywhere;
             }
             .catalog-product-grid {
               height: 245mm;
