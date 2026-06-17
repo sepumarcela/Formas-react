@@ -54,6 +54,41 @@ function chunkItems(items, size) {
   return chunks
 }
 
+function categoryOrder(categories) {
+  const preferredOrder = [
+    'centros-entretenimiento',
+    'closets',
+    'cocinas',
+    'muebles-bano',
+    'bibliotecas',
+    'centros-estudio',
+    'repisas',
+    'alcobas-infantiles',
+  ]
+
+  return [...categories].sort((a, b) => {
+    const aIndex = preferredOrder.indexOf(a.id)
+    const bIndex = preferredOrder.indexOf(b.id)
+    if (aIndex === -1 && bIndex === -1) return 0
+    if (aIndex === -1) return 1
+    if (bIndex === -1) return -1
+    return aIndex - bIndex
+  })
+}
+
+function categoryStartPages(categories, products) {
+  const pages = new Map()
+  let currentPage = 7
+
+  categories.forEach((category) => {
+    const items = categoryProducts(category, products)
+    pages.set(category.id, currentPage)
+    currentPage += 1 + Math.max(1, Math.ceil(items.length / 4))
+  })
+
+  return pages
+}
+
 function firstImage(items = []) {
   return items.find((item) => item?.image)?.image || ''
 }
@@ -85,29 +120,38 @@ function logoMarkup(logoImage, variant = 'light') {
 }
 
 function indexMarkup(categories, products) {
-  return `
-    <section class="catalog-page catalog-page--light catalog-index">
+  const orderedCategories = categoryOrder(categories)
+  const startPages = categoryStartPages(categories, products)
+  const pages = chunkItems(orderedCategories, 4)
+
+  return pages.map((pageCategories, pageIndex) => `
+    <section class="catalog-page catalog-page--light catalog-index catalog-index--visual">
       <div class="catalog-index__intro">
         <div>
-          <div class="catalog-kicker">Índice</div>
-          <h2>Índice de categorías</h2>
+          <div class="catalog-kicker">Índice visual ${pageIndex + 1} / ${pages.length}</div>
+          <h2>${pageIndex === 0 ? 'Explora nuestras líneas' : 'Más espacios para imaginar'}</h2>
         </div>
-        <p class="catalog-lead">Todas las líneas del catálogo en una sola vista, para ubicar rápido cada espacio.</p>
+        <p class="catalog-lead">Una galería breve para recorrer las categorías del catálogo con una mirada más visual y editorial.</p>
       </div>
-      <div class="catalog-index__grid">
-        ${categories.map((category, index) => {
+      <div class="catalog-index__cards">
+        ${pageCategories.map((category) => {
           const items = categoryProducts(category, products)
+          const image = category.image || firstImage(items)
           return `
-            <article class="catalog-index__item">
-              <span>${String(index + 1).padStart(2, '0')}</span>
-              <strong>${escapeHtml(category.name)}</strong>
-              <small>${items.length} producto${items.length === 1 ? '' : 's'}</small>
+            <article class="catalog-index-card">
+              <div class="catalog-index-card__image">
+                ${imageMarkup(image, category.name, 900)}
+              </div>
+              <div class="catalog-index-card__body">
+                <strong>${escapeHtml(category.name)}</strong>
+                <span>Página ${startPages.get(category.id) || ''}</span>
+              </div>
             </article>
           `
         }).join('')}
       </div>
     </section>
-  `
+  `).join('')
 }
 
 function philosophyMarkup() {
@@ -327,7 +371,7 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
           html,
           body,
           .catalog-page,
-          .catalog-index__item,
+          .catalog-index-card,
           .catalog-product-card,
           .catalog-contact__box {
             -webkit-print-color-adjust: exact;
@@ -461,39 +505,57 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
             gap: 32px;
             align-items: end;
-            margin-bottom: 38px;
+            margin-bottom: 34px;
           }
-          .catalog-index__grid {
+          .catalog-index__cards {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0 32px;
-            border-top: 1px solid #D8CEC1;
+            grid-template-rows: repeat(2, minmax(0, 1fr));
+            gap: 30px;
+            height: 720px;
           }
-          .catalog-index__item {
+          .catalog-index-card {
             min-width: 0;
-            display: grid;
-            grid-template-columns: 56px minmax(0, 1fr) auto;
-            gap: 14px;
-            align-items: center;
-            min-height: 58px;
-            padding: 12px 0;
-            border-bottom: 1px solid #D8CEC1;
-            background: transparent;
+            min-height: 0;
             overflow: hidden;
+            display: grid;
+            grid-template-rows: 70% 30%;
+            border: 1px solid #D8CEC1;
+            background: rgba(255, 255, 255, 0.58);
+            box-shadow: 0 24px 58px rgba(58, 51, 45, 0.08);
           }
-          .catalog-index__item span {
+          .catalog-index-card__image {
+            min-height: 0;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            background: #EAE4DA;
+          }
+          .catalog-index-card__image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
-            color: #A88F74;
-            font-size: 12px;
-            font-weight: 900;
-            letter-spacing: 0.18em;
           }
-          .catalog-index__item strong {
+          .catalog-index-card__image span {
+            color: rgba(58, 51, 45, 0.48);
+            font-size: 12px;
+            font-weight: 800;
+          }
+          .catalog-index-card__body {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px 24px;
+          }
+          .catalog-index-card__body strong {
             min-width: 0;
             color: #3A332D;
             font-family: "Cormorant Garamond", Georgia, serif;
-            font-size: clamp(23px, 2.25vw, 30px);
-            line-height: 1;
+            font-size: clamp(29px, 2.8vw, 38px);
+            line-height: 0.95;
             font-weight: 400;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -501,12 +563,13 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             overflow: hidden;
             overflow-wrap: anywhere;
           }
-          .catalog-index__item small {
+          .catalog-index-card__body span {
             display: block;
-            color: rgba(58, 51, 45, 0.62);
+            color: #A88F74;
             font-size: 11px;
-            font-weight: 800;
-            white-space: nowrap;
+            font-weight: 900;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
           }
           .catalog-philosophy__intro {
             max-width: 820px;
@@ -865,10 +928,16 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
               padding: 32px;
             }
             .catalog-index__intro,
-            .catalog-index__grid,
+            .catalog-index__cards,
             .catalog-product-grid {
               grid-template-columns: 1fr;
               grid-template-rows: none;
+            }
+            .catalog-index__cards {
+              height: auto;
+            }
+            .catalog-index-card {
+              min-height: 360px;
             }
             .catalog-product-card {
               height: auto;
@@ -884,7 +953,7 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             .catalog-page {
               padding: 24px;
             }
-            .catalog-index__item,
+            .catalog-index-card,
             .catalog-contact {
               grid-template-columns: 1fr;
             }
@@ -949,21 +1018,23 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
               font-size: 14px;
               line-height: 1.45;
             }
-            .catalog-index__grid {
+            .catalog-index__cards {
               grid-template-columns: repeat(2, minmax(0, 1fr));
-              gap: 0 10mm;
+              grid-template-rows: repeat(2, minmax(0, 1fr));
+              gap: 8mm;
+              height: 232mm;
             }
-            .catalog-index__item {
-              min-height: 14mm;
-              padding: 3mm 0;
-              grid-template-columns: 10mm minmax(0, 1fr) auto;
-              gap: 4mm;
+            .catalog-index-card {
+              min-height: 0;
+              grid-template-rows: 70% 30%;
             }
-            .catalog-index__item strong {
-              font-size: 21px;
-              line-height: 1;
+            .catalog-index-card__body {
+              padding: 5mm 6mm;
             }
-            .catalog-index__item small {
+            .catalog-index-card__body strong {
+              font-size: 27px;
+            }
+            .catalog-index-card__body span {
               font-size: 9px;
             }
             .catalog-product-grid {
