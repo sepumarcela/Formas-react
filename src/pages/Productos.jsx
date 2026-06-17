@@ -45,10 +45,10 @@ function Productos() {
           <button
             type="button"
             className="products-catalog-download"
-            onClick={() => downloadCatalogPdf({ categories: visibleCategories, products, pageContent })}
+            onClick={downloadCatalogPdf}
           >
             <Download size={16} />
-            Descargar catalogo PDF
+            Descargar catálogo PDF
           </button>
         </div>
 
