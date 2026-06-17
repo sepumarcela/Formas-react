@@ -1,14 +1,14 @@
 import { optimizeImage } from './images'
 
 const categoryCopy = {
-  'centros-entretenimiento': 'Piezas pensadas para integrar tecnologia, almacenamiento y atmosfera en el centro social de la casa.',
-  'centros-estudio': 'Ambientes de trabajo que equilibran concentracion, orden y calidez para crear todos los dias.',
-  closets: 'Soluciones a medida para guardar mejor, ver mejor y disfrutar rutinas mas simples.',
-  cocinas: 'Cocinas disenadas para transformar la rutina diaria en una experiencia de diseno.',
-  'muebles-bano': 'Mobiliario resistente y refinado para convertir el bano en un espacio de calma.',
+  'centros-entretenimiento': 'Piezas pensadas para integrar tecnología, almacenamiento y atmósfera en el centro social de la casa.',
+  'centros-estudio': 'Ambientes de trabajo que equilibran concentración, orden y calidez para crear todos los días.',
+  closets: 'Soluciones a medida para guardar mejor, ver mejor y disfrutar rutinas más simples.',
+  cocinas: 'Cocinas diseñadas para transformar la rutina diaria en una experiencia de diseño.',
+  'muebles-bano': 'Mobiliario resistente y refinado para convertir el baño en un espacio de calma.',
   repisas: 'Elementos ligeros que organizan, exhiben y completan la personalidad de cada ambiente.',
-  'alcobas-infantiles': 'Muebles seguros, flexibles y cercanos para acompanar cada etapa de crecimiento.',
-  bibliotecas: 'Sistemas para ordenar, exhibir y dar caracter arquitectonico a tus espacios.',
+  'alcobas-infantiles': 'Muebles seguros, flexibles y cercanos para acompañar cada etapa de crecimiento.',
+  bibliotecas: 'Sistemas para ordenar, exhibir y dar carácter arquitectónico a tus espacios.',
 }
 
 function escapeHtml(value = '') {
@@ -29,7 +29,7 @@ function productSubtitle(product, category) {
   if (parts.length) return parts.slice(0, 2).join(' + ')
 
   const fallback = cleanText(product.description || categoryCopy[category.id] || category.description || '')
-  if (!fallback) return 'Diseno a medida para espacios con caracter'
+  if (!fallback) return 'Diseño a medida para espacios con carácter'
   return fallback.length > 70 ? `${fallback.slice(0, 67).trim()}...` : fallback
 }
 
@@ -79,7 +79,7 @@ function logoMarkup(logoImage, variant = 'light') {
   return `
     <div class="catalog-logo-fallback catalog-logo-fallback--${variant}">
       <strong>FORMAS</strong>
-      <small>DISENA TU ESTILO</small>
+      <small>DISEÑA TU ESTILO</small>
     </div>
   `
 }
@@ -89,10 +89,10 @@ function indexMarkup(categories, products) {
     <section class="catalog-page catalog-page--light catalog-index">
       <div class="catalog-index__intro">
         <div>
-          <div class="catalog-kicker">Indice</div>
-          <h2>Una guia clara de nuestras lineas.</h2>
+          <div class="catalog-kicker">Índice</div>
+          <h2>Índice de categorías</h2>
         </div>
-        <p class="catalog-lead">Cada categoria abre una linea de diseno distinta, pensada para imaginar espacios completos y soluciones a medida.</p>
+        <p class="catalog-lead">Todas las líneas del catálogo en una sola vista, para ubicar rápido cada espacio.</p>
       </div>
       <div class="catalog-index__grid">
         ${categories.map((category, index) => {
@@ -112,16 +112,16 @@ function indexMarkup(categories, products) {
 
 function philosophyMarkup() {
   const values = [
-    ['Diseno a medida', 'Cada proyecto nace de una necesidad real y se adapta al espacio, al uso y al estilo de vida.'],
-    ['Fabricacion precisa', 'Cuidamos proporciones, acabados y detalles tecnicos para que el mueble se sienta integrado.'],
-    ['Acompanamiento', 'Guiamos decisiones de material, color y distribucion para construir confianza desde el primer contacto.'],
+    ['Diseño a medida', 'Cada proyecto nace de una necesidad real y se adapta al espacio, al uso y al estilo de vida.'],
+    ['Fabricación precisa', 'Cuidamos proporciones, acabados y detalles técnicos para que el mueble se sienta integrado.'],
+    ['Acompañamiento', 'Guiamos decisiones de material, color y distribución para construir confianza desde el primer contacto.'],
   ]
 
   return `
     <section class="catalog-page catalog-page--light catalog-philosophy">
       <div class="catalog-philosophy__intro">
-        <div class="catalog-kicker">Nuestra filosofia</div>
-        <h2>No fabricamos muebles aislados. Disenamos espacios para vivir mejor.</h2>
+        <div class="catalog-kicker">Nuestra filosofía</div>
+        <h2>No fabricamos muebles aislados. Diseñamos espacios para vivir mejor.</h2>
       </div>
       <div class="catalog-philosophy__grid">
         ${values.map(([title, text]) => `
@@ -138,15 +138,15 @@ function philosophyMarkup() {
 
 function materialsMarkup() {
   const items = [
-    ['Materiales y acabados', 'MDF RH, melaminicos, laminados, tonos madera y superficies faciles de mantener.'],
-    ['Herrajes premium', 'Sistemas funcionales para apertura, cierre, organizacion y uso diario con mayor comodidad.'],
-    ['Proyectos personalizados', 'Medidas, distribuciones y detalles pensados para cocinas, closets, estudios, banos y zonas sociales.'],
+    ['Materiales y acabados', 'MDF RH, melamínicos, laminados, tonos madera y superficies fáciles de mantener.'],
+    ['Herrajes premium', 'Sistemas funcionales para apertura, cierre, organización y uso diario con mayor comodidad.'],
+    ['Proyectos personalizados', 'Medidas, distribuciones y detalles pensados para cocinas, closets, estudios, baños y zonas sociales.'],
   ]
 
   return `
     <section class="catalog-page catalog-page--light catalog-materials">
       <div class="catalog-kicker">Detalles que elevan el resultado</div>
-      <h2>Materialidad calida, funcionalidad precisa y acabados que se sienten bien.</h2>
+      <h2>Materialidad cálida, funcionalidad precisa y acabados que se sienten bien.</h2>
       <div class="catalog-materials__list">
         ${items.map(([title, text], index) => `
           <article>
@@ -164,15 +164,15 @@ function materialsMarkup() {
 
 function processMarkup() {
   const steps = [
-    ['Diagnostico', 'Entendemos el espacio, las medidas y la forma en que lo quieres usar.'],
-    ['Diseno', 'Definimos distribucion, materiales, acabados y detalles de fabricacion.'],
-    ['Produccion', 'Fabricamos con precision para lograr un resultado limpio y durable.'],
-    ['Instalacion', 'Cerramos el proyecto cuidando ajustes, remates y experiencia final.'],
+    ['Diagnóstico', 'Entendemos el espacio, las medidas y la forma en que lo quieres usar.'],
+    ['Diseño', 'Definimos distribución, materiales, acabados y detalles de fabricación.'],
+    ['Producción', 'Fabricamos con precisión para lograr un resultado limpio y durable.'],
+    ['Instalación', 'Cerramos el proyecto cuidando ajustes, remates y experiencia final.'],
   ]
 
   return `
     <section class="catalog-page catalog-page--light catalog-process">
-      <div class="catalog-kicker">Proceso de fabricacion</div>
+      <div class="catalog-kicker">Proceso de fabricación</div>
       <h2>Un recorrido claro desde la idea hasta el espacio instalado.</h2>
       <div class="catalog-process__steps">
         ${steps.map(([title, text], index) => `
@@ -190,7 +190,7 @@ function processMarkup() {
 function categoryCoverMarkup(category, products, index) {
   const items = categoryProducts(category, products)
   const image = category.image || firstImage(items)
-  const text = categoryCopy[category.id] || category.description || 'Una linea disenada para resolver necesidades reales con calidez, orden y precision.'
+  const text = categoryCopy[category.id] || category.description || 'Una línea diseñada para resolver necesidades reales con calidez, orden y precisión.'
 
   return `
     <section class="catalog-page catalog-category">
@@ -198,16 +198,16 @@ function categoryCoverMarkup(category, products, index) {
         ${imageMarkup(image, category.name, 1800, 'catalog-category__image')}
       </div>
       <div class="catalog-category__content">
-        <div class="catalog-kicker">Linea ${String(index + 1).padStart(2, '0')}</div>
+        <div class="catalog-kicker">Línea ${String(index + 1).padStart(2, '0')}</div>
         <h2>${escapeHtml(category.name)}</h2>
         <p>${escapeHtml(text)}</p>
         <div class="catalog-category__facts">
           <article>
             <span>Enfoque</span>
-            <strong>Diseno a medida</strong>
+            <strong>Diseño a medida</strong>
           </article>
           <article>
-            <span>Linea</span>
+            <span>Línea</span>
             <strong>${items.length} producto${items.length === 1 ? '' : 's'}</strong>
           </article>
           <article>
@@ -259,7 +259,7 @@ function categoryProductsMarkup(category, products) {
       <section class="catalog-page catalog-page--light catalog-empty-page">
         <div class="catalog-kicker">Productos</div>
         <h2>${escapeHtml(category.name)}</h2>
-        <p>No hay productos activos en esta categoria.</p>
+        <p>No hay productos activos en esta categoría.</p>
       </section>
     `
   }
@@ -284,19 +284,19 @@ function contactMarkup(pageContent) {
   const contact = pageContent?.contacto || {}
   const phone = contact.phone || contact.whatsapp || ''
   const email = contact.email || ''
-  const city = contact.city || 'Medellin, Colombia'
+  const city = contact.city || 'Medellín, Colombia'
 
   return `
     <section class="catalog-page catalog-contact">
       <div>
-        <div class="catalog-kicker">Contacto y cotizacion</div>
+        <div class="catalog-kicker">Contacto y cotización</div>
         <h2>Hablemos del espacio que quieres transformar.</h2>
-        <p>Cuentanos que necesitas, comparte medidas o referentes, y te acompanamos para convertir la idea en una solucion fabricable, funcional y coherente con tu estilo.</p>
+        <p>Cuéntanos qué necesitas, comparte medidas o referentes, y te acompañamos para convertir la idea en una solución fabricable, funcional y coherente con tu estilo.</p>
       </div>
       <div class="catalog-contact__box">
-        ${phone ? `<span>Telefono / WhatsApp</span><strong>${escapeHtml(phone)}</strong>` : ''}
+        ${phone ? `<span>Teléfono / WhatsApp</span><strong>${escapeHtml(phone)}</strong>` : ''}
         ${email ? `<span>Correo</span><strong>${escapeHtml(email)}</strong>` : ''}
-        <span>Ubicacion</span><strong>${escapeHtml(city)}</strong>
+        <span>Ubicación</span><strong>${escapeHtml(city)}</strong>
       </div>
     </section>
   `
@@ -321,7 +321,7 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
     <html lang="es">
       <head>
         <meta charset="utf-8">
-        <title>Catalogo FORMAS</title>
+        <title>Catálogo FORMAS</title>
         <style>
           * { box-sizing: border-box; }
           html,
@@ -459,24 +459,24 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
           .catalog-index__intro {
             display: grid;
             grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
-            gap: 42px;
+            gap: 32px;
             align-items: end;
-            margin-bottom: 62px;
+            margin-bottom: 38px;
           }
           .catalog-index__grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 18px 28px;
+            gap: 0 32px;
             border-top: 1px solid #D8CEC1;
           }
           .catalog-index__item {
             min-width: 0;
             display: grid;
             grid-template-columns: 56px minmax(0, 1fr) auto;
-            gap: 18px;
+            gap: 14px;
             align-items: center;
-            min-height: 72px;
-            padding: 18px 0;
+            min-height: 58px;
+            padding: 12px 0;
             border-bottom: 1px solid #D8CEC1;
             background: transparent;
             overflow: hidden;
@@ -492,8 +492,8 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             min-width: 0;
             color: #3A332D;
             font-family: "Cormorant Garamond", Georgia, serif;
-            font-size: clamp(25px, 2.45vw, 34px);
-            line-height: 0.94;
+            font-size: clamp(23px, 2.25vw, 30px);
+            line-height: 1;
             font-weight: 400;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -933,25 +933,38 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
               font-size: 38px;
             }
             .catalog-index {
-              padding: 14mm;
+              padding: 16mm;
             }
             .catalog-index h2 {
-              font-size: 46px;
+              font-size: 40px;
+              margin-bottom: 8px;
             }
             .catalog-index__intro {
-              margin-bottom: 10mm;
+              grid-template-columns: 1fr;
+              gap: 4mm;
+              margin-bottom: 9mm;
+            }
+            .catalog-index .catalog-lead {
+              max-width: 150mm;
+              font-size: 14px;
+              line-height: 1.45;
             }
             .catalog-index__grid {
-              gap: 5mm;
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+              gap: 0 10mm;
             }
             .catalog-index__item {
-              min-height: 17mm;
-              padding: 4mm 0;
-              grid-template-columns: 12mm minmax(0, 1fr) auto;
-              gap: 5mm;
+              min-height: 14mm;
+              padding: 3mm 0;
+              grid-template-columns: 10mm minmax(0, 1fr) auto;
+              gap: 4mm;
             }
             .catalog-index__item strong {
-              font-size: 24px;
+              font-size: 21px;
+              line-height: 1;
+            }
+            .catalog-index__item small {
+              font-size: 9px;
             }
             .catalog-product-grid {
               height: 245mm;
@@ -984,9 +997,9 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
               <span class="catalog-cover__date">${escapeHtml(generatedAt)}</span>
             </div>
             <div class="catalog-cover__content">
-              <div class="catalog-kicker">Catalogo de productos</div>
-              <h1>Espacios disenados a la medida de tu vida.</h1>
-              <p>Una mirada editorial a las lineas, materiales y productos que FORMAS desarrolla para convertir mobiliario en arquitectura interior.</p>
+              <div class="catalog-kicker">Catálogo de productos</div>
+              <h1>Espacios diseñados a la medida de tu vida.</h1>
+              <p>Una mirada editorial a las líneas, materiales y productos que FORMAS desarrolla para convertir mobiliario en arquitectura interior.</p>
             </div>
           </section>
 
