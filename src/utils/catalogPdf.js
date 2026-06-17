@@ -595,7 +595,7 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             display: grid;
             grid-template-columns: 64px minmax(0, 1fr);
             gap: 24px;
-            align-items: center;
+            align-items: start;
             padding: 20px 0;
             border-top: 1px solid #A88F74;
             min-width: 0;
@@ -612,6 +612,16 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
           .catalog-process article > span {
             align-self: start;
             padding-top: 4px;
+          }
+          .catalog-philosophy article h3,
+          .catalog-philosophy article p,
+          .catalog-process article h3,
+          .catalog-process article p {
+            grid-column: 2;
+          }
+          .catalog-philosophy article span,
+          .catalog-process article > span {
+            grid-row: 1 / span 2;
           }
           .catalog-philosophy h3,
           .catalog-process h3,
@@ -1068,19 +1078,31 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             }
             .catalog-philosophy article,
             .catalog-process article {
-              grid-template-columns: 15mm minmax(0, 1fr);
-              gap: 7mm;
+              grid-template-columns: 18mm minmax(0, 1fr);
+              gap: 8mm;
               padding: 5mm 0;
+            }
+            .catalog-philosophy article h3,
+            .catalog-philosophy article p,
+            .catalog-process article h3,
+            .catalog-process article p {
+              grid-column: 2;
+            }
+            .catalog-philosophy article span,
+            .catalog-process article > span {
+              grid-row: 1 / span 2;
             }
             .catalog-philosophy h3,
             .catalog-process h3 {
               font-size: 22px;
               line-height: 1.08;
+              margin-bottom: 3mm;
             }
             .catalog-philosophy p,
             .catalog-process p {
-              font-size: 10px;
-              line-height: 1.45;
+              max-width: 96mm;
+              font-size: 11px;
+              line-height: 1.5;
             }
             .catalog-category {
               padding: 14mm;
