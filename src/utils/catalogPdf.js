@@ -702,8 +702,8 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
           .catalog-category h2 {
             margin: 0 0 24px;
             color: #3A332D;
-            font-size: clamp(48px, 5.1vw, 66px);
-            line-height: 0.94;
+            font-size: clamp(40px, 4.25vw, 56px);
+            line-height: 0.98;
             max-width: 100%;
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -1106,12 +1106,12 @@ export function downloadCatalogPdf({ categories, products, pageContent }) {
             }
             .catalog-category {
               padding: 14mm;
-              grid-template-columns: minmax(0, 0.53fr) minmax(0, 0.47fr);
-              gap: 10mm;
+              grid-template-columns: minmax(0, 0.5fr) minmax(0, 0.5fr);
+              gap: 8mm;
             }
             .catalog-category h2 {
-              font-size: 44px;
-              line-height: 0.96;
+              font-size: 34px;
+              line-height: 1.02;
               -webkit-line-clamp: 3;
             }
             .catalog-category p {
