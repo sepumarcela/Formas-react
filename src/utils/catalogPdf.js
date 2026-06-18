@@ -1,5 +1,4 @@
 import { optimizeImage } from './images'
-import { API_BASE_URL } from '../api/cmsApi'
 
 const categoryCopy = {
   'centros-entretenimiento': 'Piezas pensadas para integrar tecnología, almacenamiento y atmósfera en el centro social de la casa.',
@@ -347,14 +346,6 @@ function contactMarkup(pageContent) {
   `
 }
 
-export function downloadCatalogPdf() {
-  const link = document.createElement('a')
-  link.href = `${API_BASE_URL}/api/catalog/pdf`
-  link.download = 'Catalogo FORMAS.pdf'
-  document.body.appendChild(link)
-  link.click()
-  link.remove()
-}
 
 export function printCatalogPdf({ categories, products, pageContent }) {
   const visibleCategories = categories.filter((category) => category.active !== false)
