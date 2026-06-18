@@ -5,6 +5,7 @@ import {
   Eye,
   EyeOff,
   FileJson,
+  FileText,
   Images,
   LayoutDashboard,
   Lock,
@@ -39,6 +40,7 @@ import {
   saveTestimonial,
   uploadImage,
   uploadProductImagesZip,
+  uploadProductTechnicalSheetsZip,
 } from '../api/cmsApi'
 import { createSlug } from '../data/siteContent'
 import { useSiteContent } from '../hooks/useSiteContent'
@@ -83,6 +85,7 @@ function getEmptyProduct(category) {
     discountStart: '',
     discountEnd: '',
     image: '',
+    technicalSheet: '',
     featured: false,
   }
 }
@@ -219,7 +222,7 @@ const csvConfig = {
   products: {
     label: 'Productos',
     filename: 'productos-formas.csv',
-    headers: ['id', 'categoryId', 'category', 'name', 'price', 'netPrice', 'size', 'description', 'material', 'color', 'leadTime', 'discountPercent', 'discountLabel', 'discountStart', 'discountEnd', 'image', 'featured'],
+    headers: ['id', 'categoryId', 'category', 'name', 'price', 'netPrice', 'size', 'description', 'material', 'color', 'leadTime', 'discountPercent', 'discountLabel', 'discountStart', 'discountEnd', 'image', 'technicalSheet', 'featured'],
   },
   categories: {
     label: 'Categorías',
@@ -783,6 +786,7 @@ function Cuenta() {
         ...row,
         id: createSlug(row.id || row.name || row.title || crypto.randomUUID()),
         image: normalizeImagePath(row.image),
+        technicalSheet: normalizeImagePath(row.technicalSheet || row.fichaTecnica || row.ficha_tecnica),
         netPrice: bulkType === 'products' ? cleanNumber(row.netPrice) : row.netPrice,
         discountPercent: bulkType === 'products' ? cleanNumber(row.discountPercent) : row.discountPercent,
         discountStart: bulkType === 'products' ? cleanDate(row.discountStart) : row.discountStart,
@@ -851,6 +855,26 @@ function Cuenta() {
       flash(`${result.matched} imagen(es) asignadas a productos.${unmatched}`)
     } catch (error) {
       reportBackendError('No se pudo cargar el ZIP de imágenes.', error)
+    } finally {
+      event.target.value = ''
+    }
+  }
+
+  async function handleProductTechnicalSheetsZip(event) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    try {
+      const result = await uploadProductTechnicalSheetsZip(file)
+      const catalog = await fetchCatalogContent()
+      setContent((current) => ({
+        ...current,
+        products: catalog.products.length ? catalog.products : current.products,
+      }))
+      const unmatched = result.unmatchedFiles?.length ? ` ${result.unmatchedFiles.length} ficha(s) no encontraron producto.` : ''
+      flash(`${result.matched} ficha(s) técnica(s) asignadas a productos.${unmatched}`)
+    } catch (error) {
+      reportBackendError('No se pudo cargar el ZIP de fichas técnicas.', error)
     } finally {
       event.target.value = ''
     }
@@ -1368,6 +1392,7 @@ function Cuenta() {
               <label>Inicio oferta<input type="date" value={newProduct.discountStart} onChange={(event) => updateNewProduct({ discountStart: event.target.value })} /></label>
               <label>Fin oferta<input type="date" value={newProduct.discountEnd} onChange={(event) => updateNewProduct({ discountEnd: event.target.value })} /></label>
               <label className="admin-colspan">Descripción para la ficha<textarea value={newProduct.description} onChange={(event) => updateNewProduct({ description: event.target.value })} placeholder="Describe el producto, su uso y lo que lo hace especial." /></label>
+              <label className="admin-colspan">Ficha técnica PDF<input value={newProduct.technicalSheet || ''} onChange={(event) => updateNewProduct({ technicalSheet: event.target.value })} placeholder="URL del PDF o carga masiva por ZIP" /></label>
               <label className="admin-check"><input type="checkbox" checked={newProduct.featured} onChange={(event) => updateNewProduct({ featured: event.target.checked })} /> Destacado</label>
             </div>
           </div>
@@ -1435,6 +1460,7 @@ function Cuenta() {
                 <label>Inicio oferta<input type="date" value={product.discountStart || ''} onChange={(event) => updateCollection('products', product.id, { discountStart: event.target.value })} /></label>
                 <label>Fin oferta<input type="date" value={product.discountEnd || ''} onChange={(event) => updateCollection('products', product.id, { discountEnd: event.target.value })} /></label>
                 <label className="admin-colspan">Descripción para la ficha<textarea value={product.description || ''} onChange={(event) => updateCollection('products', product.id, { description: event.target.value })} /></label>
+                <label className="admin-colspan">Ficha técnica PDF<input value={product.technicalSheet || ''} onChange={(event) => updateCollection('products', product.id, { technicalSheet: event.target.value })} placeholder="URL del PDF o carga masiva por ZIP" /></label>
                 <label className="admin-check"><input type="checkbox" checked={product.featured} onChange={(event) => updateCollection('products', product.id, { featured: event.target.checked })} /> Destacado</label>
               </div>
 
@@ -1588,10 +1614,16 @@ function Cuenta() {
             <input type="file" accept=".csv,text/csv" onChange={handleCsvFile} />
           </label>
           {bulkType === 'products' && (
-            <label className="admin-upload-csv">
-              <Images size={16} /> Cargar ZIP de imágenes
-              <input type="file" accept=".zip,application/zip" onChange={handleProductImagesZip} />
-            </label>
+            <>
+              <label className="admin-upload-csv">
+                <Images size={16} /> Cargar ZIP de imágenes
+                <input type="file" accept=".zip,application/zip" onChange={handleProductImagesZip} />
+              </label>
+              <label className="admin-upload-csv">
+                <FileText size={16} /> Cargar ZIP de fichas técnicas
+                <input type="file" accept=".zip,application/zip" onChange={handleProductTechnicalSheetsZip} />
+              </label>
+            </>
           )}
         </div>
 
@@ -1604,6 +1636,13 @@ function Cuenta() {
           <div className="admin-csv-schema">
             <strong>Imágenes masivas:</strong>
             <span>Sube un ZIP con fotos llamadas igual que el ID del producto, por ejemplo <code>centro-tv-nogal-001.jpg</code>. El sistema las asigna automáticamente.</span>
+          </div>
+        )}
+
+        {bulkType === 'products' && (
+          <div className="admin-csv-schema">
+            <strong>Fichas técnicas masivas:</strong>
+            <span>Sube un ZIP con PDFs llamados igual que el ID del producto, por ejemplo <code>centro-tv-nogal-001.pdf</code>. El botón Ver ficha técnica aparecerá automáticamente.</span>
           </div>
         )}
 

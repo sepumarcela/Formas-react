@@ -1,6 +1,6 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, FileText } from 'lucide-react'
 import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { addCartItem } from '../utils/cart'
@@ -34,13 +34,13 @@ function ProductDetail() {
   const visibleRelated = related.slice(relatedStart, relatedStart + relatedWindowSize)
   const canGoBack = relatedStart > 0
   const canGoNext = relatedStart + relatedWindowSize < related.length
-  const description = product.description || category?.description || 'Diseño funcional fabricado a la medida para adaptarse a tu espacio, tu estilo y tus necesidades.'
+  const description = product.description || category?.description || 'DiseÃ±o funcional fabricado a la medida para adaptarse a tu espacio, tu estilo y tus necesidades.'
   const specs = [
-    { label: 'Categoría', value: product.category || category?.name },
+    { label: 'CategorÃ­a', value: product.category || category?.name },
     { label: 'Medidas', value: product.size },
     { label: 'Material', value: product.material || 'A definir' },
     { label: 'Color/acabado', value: product.color || 'Personalizable' },
-    { label: 'Entrega', value: product.leadTime || 'Según proyecto' },
+    { label: 'Entrega', value: product.leadTime || 'SegÃºn proyecto' },
   ].filter((item) => item.value)
 
   function moveRelated(direction) {
@@ -73,7 +73,7 @@ function ProductDetail() {
             <div className="breadcrumb product-breadcrumb">
               <Link to="/">Inicio</Link> &rsaquo; <Link to={`/categorias/${product.categoryId}`}>{category?.name || 'Productos'}</Link> &rsaquo; {product.name}
             </div>
-            <Link to={`/categorias/${product.categoryId}`} className="product-back"><ArrowLeft size={16} /> Volver a la categoría</Link>
+            <Link to={`/categorias/${product.categoryId}`} className="product-back"><ArrowLeft size={16} /> Volver a la categorÃ­a</Link>
             <p className="admin-kicker">{product.category || category?.name}</p>
             <h1>{product.name}</h1>
             <p className="product-summary__desc">{description}</p>
@@ -93,12 +93,17 @@ function ProductDetail() {
             <div className="product-feature-row">
               <span><PiRulerDuotone size={16} /> {product.size || 'A medida'}</span>
               <span><PiSketchLogoDuotone size={16} /> Personalizable</span>
-              <span><PiFactoryDuotone size={16} /> Fabricación local</span>
+              <span><PiFactoryDuotone size={16} /> FabricaciÃ³n local</span>
             </div>
 
             <div className="product-actions">
               <Link to="/contacto" className="button button--primary">Cotizar este producto</Link>
               <button type="button" className="button button--outline" onClick={handleAddToCart}>Agregar al carrito</button>
+              {product.technicalSheet && (
+                <a className="button button--outline" href={product.technicalSheet} target="_blank" rel="noreferrer">
+                  <FileText size={16} /> Ver ficha técnica
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -108,7 +113,7 @@ function ProductDetail() {
         <div className="product-detail-grid">
           <article className="product-detail-card product-detail-card--wide">
             <p className="admin-kicker">Detalles</p>
-            <h2>Información del producto</h2>
+            <h2>InformaciÃ³n del producto</h2>
             <p>{description}</p>
             <div className="product-spec-grid">
               {specs.map((item) => (
@@ -121,12 +126,12 @@ function ProductDetail() {
           </article>
 
           <article className="product-detail-card">
-            <p className="admin-kicker">Acompañamiento</p>
+            <p className="admin-kicker">AcompaÃ±amiento</p>
             <h2>Hecho para tu espacio</h2>
             <ul className="product-service-list">
-              <li><PiCheckCircleDuotone size={18} /> Diseño personalizado</li>
-              <li><PiClockDuotone size={18} /> Planeación por etapas</li>
-              <li><PiHandshakeDuotone size={18} /> Asesoría durante el proceso</li>
+              <li><PiCheckCircleDuotone size={18} /> DiseÃ±o personalizado</li>
+              <li><PiClockDuotone size={18} /> PlaneaciÃ³n por etapas</li>
+              <li><PiHandshakeDuotone size={18} /> AsesorÃ­a durante el proceso</li>
             </ul>
           </article>
         </div>
@@ -136,8 +141,8 @@ function ProductDetail() {
         <section className="product-related">
           <div className="product-related__header">
             <div>
-              <p className="eyebrow">También puede gustarte</p>
-              <h2>Más productos de esta categoría</h2>
+              <p className="eyebrow">TambiÃ©n puede gustarte</p>
+              <h2>MÃ¡s productos de esta categorÃ­a</h2>
             </div>
             {related.length > relatedWindowSize && (
               <div className="product-related__controls">
@@ -145,7 +150,7 @@ function ProductDetail() {
                   <ChevronLeft size={20} />
                 </button>
                 <span>{Math.min(relatedStart + 1, related.length)}-{Math.min(relatedStart + relatedWindowSize, related.length)} de {related.length}</span>
-                <button onClick={() => moveRelated(1)} disabled={!canGoNext} aria-label="Ver más productos">
+                <button onClick={() => moveRelated(1)} disabled={!canGoNext} aria-label="Ver mÃ¡s productos">
                   <ChevronRight size={20} />
                 </button>
               </div>

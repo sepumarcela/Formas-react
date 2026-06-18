@@ -1,4 +1,4 @@
-export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8080').replace(/\/$/, '')
+﻿export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8080').replace(/\/$/, '')
 const AUTH_TOKEN_KEY = 'formas-admin-token'
 
 function text(value) {
@@ -82,6 +82,7 @@ function toFrontendProduct(product, categories = []) {
     discountStart: text(product.discountStart),
     discountEnd: text(product.discountEnd),
     image: assetUrl(text(product.image)),
+    technicalSheet: assetUrl(text(product.technicalSheet)),
     featured: Boolean(product.featured),
     active: product.active !== false,
     persisted: true,
@@ -101,6 +102,7 @@ function toBackendProduct(product) {
     colorFinish: text(product.color),
     leadTime: text(product.leadTime),
     image: backendAssetPath(text(product.image)),
+    technicalSheet: backendAssetPath(text(product.technicalSheet)),
     discountPercent: product.discountPercent ? Number(product.discountPercent) : null,
     discountLabel: text(product.discountLabel),
     discountStart: product.discountStart || null,
@@ -295,7 +297,7 @@ async function request(path, options = {}) {
     if (response.status === 401 || response.status === 403) {
       sessionStorage.removeItem(AUTH_TOKEN_KEY)
       sessionStorage.removeItem('formas-admin-authenticated')
-      const error = new Error('Tu sesión venció. Inicia sesión otra vez para guardar cambios.')
+      const error = new Error('Tu sesiÃ³n venciÃ³. Inicia sesiÃ³n otra vez para guardar cambios.')
       error.status = response.status
       throw error
     }
@@ -326,15 +328,15 @@ export async function loginAdmin(email, password) {
       body: JSON.stringify({ email, password }),
     })
   } catch {
-    throw new Error('No se pudo conectar con el backend. Verifica que Spring Boot esté encendido.')
+    throw new Error('No se pudo conectar con el backend. Verifica que Spring Boot estÃ© encendido.')
   }
 
   if (!loginResponse.ok) {
     if (loginResponse.status === 401 || loginResponse.status === 403) {
-      throw new Error('Correo o contraseña incorrectos.')
+      throw new Error('Correo o contraseÃ±a incorrectos.')
     }
 
-    throw new Error(`No se pudo iniciar sesión. Error ${loginResponse.status}.`)
+    throw new Error(`No se pudo iniciar sesiÃ³n. Error ${loginResponse.status}.`)
   }
 
   const response = await loginResponse.json()
@@ -369,7 +371,7 @@ export async function uploadImage(folder, file) {
     if (response.status === 401 || response.status === 403) {
       sessionStorage.removeItem(AUTH_TOKEN_KEY)
       sessionStorage.removeItem('formas-admin-authenticated')
-      throw new Error('Tu sesión venció. Inicia sesión otra vez para subir imágenes.')
+      throw new Error('Tu sesiÃ³n venciÃ³. Inicia sesiÃ³n otra vez para subir imÃ¡genes.')
     }
     throw new Error(message || `No se pudo subir la imagen. Error ${response.status}.`)
   }
@@ -396,14 +398,39 @@ export async function uploadProductImagesZip(file) {
     if (response.status === 401 || response.status === 403) {
       sessionStorage.removeItem(AUTH_TOKEN_KEY)
       sessionStorage.removeItem('formas-admin-authenticated')
-      throw new Error('Tu sesión venció. Inicia sesión otra vez para subir imágenes.')
+      throw new Error('Tu sesiÃ³n venciÃ³. Inicia sesiÃ³n otra vez para subir imÃ¡genes.')
     }
-    throw new Error(message || `No se pudo subir el ZIP de imágenes. Error ${response.status}.`)
+    throw new Error(message || `No se pudo subir el ZIP de imÃ¡genes. Error ${response.status}.`)
   }
 
   return response.json()
 }
 
+export async function uploadProductTechnicalSheetsZip(file) {
+  const token = sessionStorage.getItem(AUTH_TOKEN_KEY)
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const response = await fetch(`${API_BASE_URL}/api/import/products/technical-sheets/zip`, {
+    method: 'POST',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  })
+
+  if (!response.ok) {
+    const message = await response.text().catch(() => '')
+    if (response.status === 401 || response.status === 403) {
+      sessionStorage.removeItem(AUTH_TOKEN_KEY)
+      sessionStorage.removeItem('formas-admin-authenticated')
+      throw new Error('Tu sesión venció. Inicia sesión otra vez para subir fichas técnicas.')
+    }
+    throw new Error(message || `No se pudo subir el ZIP de fichas técnicas. Error ${response.status}.`)
+  }
+
+  return response.json()
+}
 export async function submitContactForm(submission) {
   return request('/api/contact-submissions', {
     method: 'POST',
