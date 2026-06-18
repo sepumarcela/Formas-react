@@ -297,7 +297,7 @@ async function request(path, options = {}) {
     if (response.status === 401 || response.status === 403) {
       sessionStorage.removeItem(AUTH_TOKEN_KEY)
       sessionStorage.removeItem('formas-admin-authenticated')
-      const error = new Error('Tu sesiÃ³n venciÃ³. Inicia sesiÃ³n otra vez para guardar cambios.')
+      const error = new Error('Tu sesión venció. Inicia sesión otra vez para guardar cambios.')
       error.status = response.status
       throw error
     }
@@ -328,15 +328,15 @@ export async function loginAdmin(email, password) {
       body: JSON.stringify({ email, password }),
     })
   } catch {
-    throw new Error('No se pudo conectar con el backend. Verifica que Spring Boot estÃ© encendido.')
+    throw new Error('No se pudo conectar con el backend. Verifica que Spring Boot esté encendido.')
   }
 
   if (!loginResponse.ok) {
     if (loginResponse.status === 401 || loginResponse.status === 403) {
-      throw new Error('Correo o contraseÃ±a incorrectos.')
+      throw new Error('Correo o contraseña incorrectos.')
     }
 
-    throw new Error(`No se pudo iniciar sesiÃ³n. Error ${loginResponse.status}.`)
+    throw new Error(`No se pudo iniciar sesión. Error ${loginResponse.status}.`)
   }
 
   const response = await loginResponse.json()
@@ -371,7 +371,7 @@ export async function uploadImage(folder, file) {
     if (response.status === 401 || response.status === 403) {
       sessionStorage.removeItem(AUTH_TOKEN_KEY)
       sessionStorage.removeItem('formas-admin-authenticated')
-      throw new Error('Tu sesiÃ³n venciÃ³. Inicia sesiÃ³n otra vez para subir imÃ¡genes.')
+      throw new Error('Tu sesión venció. Inicia sesión otra vez para subir imágenes.')
     }
     throw new Error(message || `No se pudo subir la imagen. Error ${response.status}.`)
   }
@@ -398,9 +398,9 @@ export async function uploadProductImagesZip(file) {
     if (response.status === 401 || response.status === 403) {
       sessionStorage.removeItem(AUTH_TOKEN_KEY)
       sessionStorage.removeItem('formas-admin-authenticated')
-      throw new Error('Tu sesiÃ³n venciÃ³. Inicia sesiÃ³n otra vez para subir imÃ¡genes.')
+      throw new Error('Tu sesión venció. Inicia sesión otra vez para subir imágenes.')
     }
-    throw new Error(message || `No se pudo subir el ZIP de imÃ¡genes. Error ${response.status}.`)
+    throw new Error(message || `No se pudo subir el ZIP de imágenes. Error ${response.status}.`)
   }
 
   return response.json()

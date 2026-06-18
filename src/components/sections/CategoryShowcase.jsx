@@ -36,7 +36,7 @@ function CategoryShowcase() {
               className="category-card"
               key={category.id}
               to={`/categorias/${category.id}`}
-              aria-label={`Ver categorÃ­a ${category.name}`}
+              aria-label={`Ver categoría ${category.name}`}
             >
               <div className="category-card__image">
                 {category.image ? (
