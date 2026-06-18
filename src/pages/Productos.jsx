@@ -14,7 +14,7 @@ import {
 import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
-import { downloadCatalogPdf } from '../utils/catalogPdf'
+import { printCatalogPdf } from '../utils/catalogPdf'
 
 const categoryIcons = {
   tv: PiTelevisionDuotone,
@@ -45,7 +45,7 @@ function Productos() {
           <button
             type="button"
             className="products-catalog-download"
-            onClick={downloadCatalogPdf}
+            onClick={() => printCatalogPdf({ categories, products, pageContent })}
           >
             <Download size={16} />
             Descargar catálogo PDF

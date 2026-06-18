@@ -94,7 +94,7 @@ function firstImage(items = []) {
   return items.find((item) => item?.image)?.image || ''
 }
 
-function imageUrl(image, width = 1200) {
+function imageUrl(image, width = 900) {
   return image ? optimizeImage(image, { width }) : ''
 }
 
@@ -109,7 +109,7 @@ function backgroundStyle(image, width = 1600) {
 
 function logoMarkup(logoImage, variant = 'light') {
   if (logoImage) {
-    return `<img class="catalog-logo catalog-logo--${variant}" src="${escapeHtml(imageUrl(logoImage, 420))}" alt="FORMAS">`
+    return `<img class="catalog-logo catalog-logo--${variant}" src="${escapeHtml(imageUrl(logoImage, 360))}" alt="FORMAS">`
   }
 
   return `
@@ -240,7 +240,7 @@ function categoryCoverMarkup(category, products, index) {
   return `
     <section class="catalog-page catalog-category">
       <div class="catalog-category__media">
-        ${imageMarkup(image, category.name, 1800, 'catalog-category__image')}
+        ${imageMarkup(image, category.name, 1200, 'catalog-category__image')}
       </div>
       <div class="catalog-category__content">
         <div class="catalog-kicker">Línea ${String(index + 1).padStart(2, '0')}</div>
@@ -273,7 +273,7 @@ function productCardMarkup(product, category, index) {
   return `
     <article class="catalog-product-card">
       <div class="catalog-product-card__image">
-        ${imageMarkup(product.image, product.name, 1100)}
+        ${imageMarkup(product.image, product.name, 800)}
       </div>
       <div class="catalog-product-card__body">
         <p>Pieza ${String(index + 1).padStart(2, '0')}</p>
@@ -1163,7 +1163,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
       </head>
       <body>
         <main class="catalog">
-          <section class="catalog-page catalog-cover" ${backgroundStyle(coverImage, 1800)}>
+          <section class="catalog-page catalog-cover" ${backgroundStyle(coverImage, 1200)}>
             <div class="catalog-cover__top">
               ${logoMarkup(logoImage, 'light')}
               <span class="catalog-cover__date">${escapeHtml(generatedAt)}</span>
