@@ -121,12 +121,11 @@ function ProductDetail() {
                 <a
                   className="product-technical-card__download"
                   href={technicalSheetViewerUrl}
-                  download
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={"Descargar ficha técnica de " + product.name}
+                  aria-label={"Abrir ficha técnica de " + product.name}
                 >
-                  DESCARGAR PDF <span aria-hidden="true">→</span>
+                  VER PDF <span aria-hidden="true">→</span>
                 </a>
               ) : (
                 <span className="product-technical-card__download product-technical-card__download--disabled">PDF PENDIENTE</span>
