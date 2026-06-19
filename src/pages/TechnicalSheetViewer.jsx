@@ -9,12 +9,13 @@ function TechnicalSheetViewer() {
   const navigate = useNavigate()
   const fileUrl = searchParams.get('url') || ''
   const productName = searchParams.get('name') || 'Producto'
+  const returnTo = searchParams.get('returnTo') || '/productos'
 
   return (
     <main className="page technical-sheet-page">
       <section className="technical-sheet-shell">
         <div className="technical-sheet-header">
-          <button className="technical-sheet-back" type="button" onClick={() => navigate(-1)}>
+          <button className="technical-sheet-back" type="button" onClick={() => navigate(returnTo)}>
             <ArrowLeft size={16} /> Volver
           </button>
           <div className="technical-sheet-heading">
