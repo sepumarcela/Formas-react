@@ -106,6 +106,32 @@ function ProductDetail() {
               <Link to="/contacto" className="button button--primary">Cotizar este producto</Link>
               <button type="button" className="button button--cart" onClick={handleAddToCart}>Agregar al carrito</button>
             </div>
+
+            <section className={`product-technical-card${showTechnicalSheet ? ' is-open' : ''}`}>
+              <button
+                type="button"
+                className="product-technical-card__button"
+                onClick={() => product.technicalSheet && setShowTechnicalSheet((current) => !current)}
+                disabled={!product.technicalSheet}
+              >
+                <span className="product-technical-card__icon"><FileText size={30} /></span>
+                <span className="product-technical-card__copy">
+                  <strong>Ficha técnica</strong>
+                  <small>Consulta medidas, materiales, acabados y especificaciones del producto.</small>
+                </span>
+                <span className="product-technical-card__action">{product.technicalSheet ? (showTechnicalSheet ? 'Ocultar' : 'Ver ficha') : 'Pendiente'}</span>
+              </button>
+              {technicalSheetViewerUrl && showTechnicalSheet && (
+                <div className="product-technical-viewer">
+                  <a className="product-technical-download" href={technicalSheetViewerUrl} download aria-label="Descargar ficha técnica">
+                    Descargar PDF
+                  </a>
+                  <Suspense fallback={<div className="pdf-inline-viewer__state pdf-inline-viewer__state--static">Cargando ficha técnica...</div>}>
+                    <PdfInlineViewer fileUrl={technicalSheetViewerUrl} title={`Ficha técnica de ${product.name}`} />
+                  </Suspense>
+                </div>
+              )}
+            </section>
           </div>
         </div>
       </section>
@@ -124,27 +150,7 @@ function ProductDetail() {
                 </div>
               ))}
             </div>
-            <div className="product-technical-sheet-row">
-              {product.technicalSheet ? (
-                <button type="button" className="product-technical-sheet" onClick={() => setShowTechnicalSheet((current) => !current)}>
-                  <FileText size={16} /> {showTechnicalSheet ? 'Ocultar ficha técnica' : 'Ver ficha técnica'}
-                </button>
-              ) : (
-                <span className="product-technical-sheet product-technical-sheet--muted">
-                  <FileText size={16} /> Ficha técnica pendiente
-                </span>
-              )}
-            </div>
-            {technicalSheetViewerUrl && showTechnicalSheet && (
-              <div className="product-technical-viewer">
-                <a className="product-technical-download" href={technicalSheetViewerUrl} download aria-label="Descargar ficha técnica">
-                  Descargar PDF
-                </a>
-                <Suspense fallback={<div className="pdf-inline-viewer__state pdf-inline-viewer__state--static">Cargando ficha técnica...</div>}>
-                  <PdfInlineViewer fileUrl={technicalSheetViewerUrl} title={`Ficha técnica de ${product.name}`} />
-                </Suspense>
-              </div>
-            )}
+
           </article>
 
           <article className="product-detail-card">
