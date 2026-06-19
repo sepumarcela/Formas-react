@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ChevronLeft, ChevronRight, FileText } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { addCartItem } from '../utils/cart'
@@ -113,25 +113,22 @@ function ProductDetail() {
               <button type="button" className="button button--cart" onClick={handleAddToCart}>Agregar al carrito</button>
             </div>
             <section className={`product-technical-card${technicalSheetViewerUrl ? '' : ' product-technical-card--disabled'}`}>
-              <div className="product-technical-card__icon" aria-hidden="true">
-                <FileText size={28} />
-              </div>
+              {technicalSheetViewerUrl ? (
+                <a
+                  className="product-technical-card__download"
+                  href={`/ficha-tecnica?url=${encodeURIComponent(technicalSheetViewerUrl)}&name=${encodeURIComponent(product.name)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={"Abrir ficha técnica de " + product.name}
+                >
+                  VER PDF <span aria-hidden="true">→</span>
+                </a>
+              ) : (
+                <span className="product-technical-card__download product-technical-card__download--disabled">PDF PENDIENTE</span>
+              )}
               <div className="product-technical-card__body">
                 <p className="product-technical-card__title">FICHA TÉCNICA</p>
-                <p className="product-technical-card__description">Consulta medidas, materiales, acabados y especificaciones del producto.</p>
-                {technicalSheetViewerUrl ? (
-                  <a
-                    className="product-technical-card__download"
-                    href={`/ficha-tecnica?url=${encodeURIComponent(technicalSheetViewerUrl)}&name=${encodeURIComponent(product.name)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={"Abrir ficha técnica de " + product.name}
-                  >
-                    VER PDF <span aria-hidden="true">→</span>
-                  </a>
-                ) : (
-                  <span className="product-technical-card__download product-technical-card__download--disabled">PDF PENDIENTE</span>
-                )}
+                <p className="product-technical-card__description">Consulta medidas, materiales. Acabados y especificaciones del producto</p>
               </div>
             </section>
           </div>
