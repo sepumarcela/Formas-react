@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, ChevronLeft, ChevronRight, FileText } from 'lucide-react'
 import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
@@ -6,7 +6,8 @@ import { useSiteContent } from '../hooks/useSiteContent'
 import { addCartItem } from '../utils/cart'
 import { getActiveDiscount } from '../utils/discounts'
 import { optimizeImage } from '../utils/images'
-import PdfInlineViewer from '../components/PdfInlineViewer'
+
+const PdfInlineViewer = lazy(() => import('../components/PdfInlineViewer'))
 
 const relatedWindowSize = 3
 
@@ -136,7 +137,9 @@ function ProductDetail() {
             </div>
             {technicalSheetViewerUrl && showTechnicalSheet && (
               <div className="product-technical-viewer">
-                <PdfInlineViewer fileUrl={technicalSheetViewerUrl} title={`Ficha técnica de ${product.name}`} />
+                <Suspense fallback={<div className="pdf-inline-viewer__state pdf-inline-viewer__state--static">Cargando ficha técnica...</div>}>
+                  <PdfInlineViewer fileUrl={technicalSheetViewerUrl} title={`Ficha técnica de ${product.name}`} />
+                </Suspense>
               </div>
             )}
           </article>

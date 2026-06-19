@@ -180,7 +180,7 @@ async function saveRowsOneByOne(rows, saver) {
     try {
       saved.push(await saver(rows[index]))
     } catch (error) {
-      throw new Error(`No se pudo guardar la fila ${index + 2} (${rows[index].id || rows[index].name || 'sin ID'}). ${error.message || ''}`)
+      throw new Error(`No se pudo guardar la fila ${index + 2} (${rows[index].id || rows[index].name || 'sin ID'}). ${error.message || ''}`, { cause: error })
     }
   }
   return saved

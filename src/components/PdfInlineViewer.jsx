@@ -49,7 +49,7 @@ function PdfInlineViewer({ fileUrl, title }) {
         }
 
         if (!cancelled && renderTokenRef.current === renderToken) setStatus('ready')
-      } catch (error) {
+      } catch {
         if (!cancelled && renderTokenRef.current === renderToken) setStatus('error')
       }
     }

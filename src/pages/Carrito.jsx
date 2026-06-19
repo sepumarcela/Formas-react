@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Trash2 } from 'lucide-react'
 import {
@@ -82,17 +82,24 @@ function Carrito() {
   const hasPricedItems = totalWithIva > 0
   const productCount = items.reduce((sum, item) => sum + item.quantity, 0)
   const selectedPayment = paymentOptions.find((option) => option.id === paymentMethod) || paymentOptions[0]
-  useEffect(() => {
-    setQuantityInputs(Object.fromEntries(items.map((item) => [item.id, String(item.quantity)])))
-  }, [items])
+
+  const quantityMap = useCallback((nextItems) => {
+    return Object.fromEntries(nextItems.map((item) => [item.id, String(item.quantity)]))
+  }, [])
+
+  const syncCartItems = useCallback((nextItems) => {
+    setItems(nextItems)
+    setQuantityInputs(quantityMap(nextItems))
+  }, [quantityMap])
+
   useEffect(() => {
     function syncCart(event) {
-      setItems(event.detail || loadCartItems())
+      syncCartItems(event.detail || loadCartItems())
     }
 
     function syncStorage(event) {
       if (event.storageArea === window.sessionStorage && (!event.key || event.key === 'formas-cart-v1')) {
-        setItems(loadCartItems())
+        syncCartItems(loadCartItems())
       }
     }
 
@@ -103,7 +110,7 @@ function Carrito() {
       window.removeEventListener(CART_UPDATED_EVENT, syncCart)
       window.removeEventListener('storage', syncStorage)
     }
-  }, [])
+  }, [syncCartItems])
 
   function handleQuantity(id, quantity) {
     setQuantityInputs((current) => ({ ...current, [id]: quantity }))
@@ -122,11 +129,11 @@ function Carrito() {
   }
 
   function handleRemove(id) {
-    setItems(removeCartItem(id))
+    syncCartItems(removeCartItem(id))
   }
 
   function handleClear() {
-    setItems(clearCart())
+    syncCartItems(clearCart())
   }
 
   async function handleCheckout(event) {

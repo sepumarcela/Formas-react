@@ -5215,6 +5215,11 @@ section {
   font-weight: 700;
 }
 
+.pdf-inline-viewer__state--static {
+  position: static;
+  min-height: 520px;
+}
+
 .pdf-inline-viewer__pages {
   display: grid;
   gap: 16px;
