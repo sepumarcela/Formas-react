@@ -36,6 +36,9 @@ function ProductDetail() {
   const canGoBack = relatedStart > 0
   const canGoNext = relatedStart + relatedWindowSize < related.length
   const description = product.description || category?.description || 'Diseño funcional fabricado a la medida para adaptarse a tu espacio, tu estilo y tus necesidades.'
+  const technicalSheetViewerUrl = product.technicalSheet
+    ? product.technicalSheet.replace('/uploads/fichas-tecnicas/', '/api/technical-sheets/')
+    : ''
   const specs = [
     { label: 'Categoría', value: product.category || category?.name },
     { label: 'Medidas', value: product.size },
@@ -130,9 +133,9 @@ function ProductDetail() {
                 </span>
               )}
             </div>
-            {product.technicalSheet && showTechnicalSheet && (
+            {technicalSheetViewerUrl && showTechnicalSheet && (
               <div className="product-technical-viewer">
-                <iframe src={`${product.technicalSheet}#toolbar=0&navpanes=0`} title={`Ficha técnica de ${product.name}`} />
+                <iframe src={`${technicalSheetViewerUrl}#toolbar=0&navpanes=0`} title={`Ficha técnica de ${product.name}`} />
               </div>
             )}
           </article>
