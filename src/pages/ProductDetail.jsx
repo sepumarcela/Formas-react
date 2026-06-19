@@ -5,9 +5,20 @@ import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuot
 import { useSiteContent } from '../hooks/useSiteContent'
 import { addCartItem } from '../utils/cart'
 import { getActiveDiscount } from '../utils/discounts'
+import { API_BASE_URL } from '../api/cmsApi'
 import { optimizeImage } from '../utils/images'
 
 const relatedWindowSize = 3
+
+function technicalSheetUrl(value) {
+  if (!value) return ''
+  const cleanValue = value.split('?')[0]
+  if (cleanValue.includes('/api/technical-sheets/')) return value
+  if (!cleanValue.toLowerCase().endsWith('.pdf')) return value
+
+  const fileName = cleanValue.split('/').filter(Boolean).pop()
+  return fileName ? `${API_BASE_URL}/api/technical-sheets/${encodeURIComponent(decodeURIComponent(fileName))}` : value
+}
 
 function ProductDetail() {
   const { productId } = useParams()
@@ -35,9 +46,7 @@ function ProductDetail() {
   const canGoBack = relatedStart > 0
   const canGoNext = relatedStart + relatedWindowSize < related.length
   const description = product.description || category?.description || 'Diseño funcional fabricado a la medida para adaptarse a tu espacio, tu estilo y tus necesidades.'
-  const technicalSheetViewerUrl = product.technicalSheet
-    ? product.technicalSheet.replace('/uploads/fichas-tecnicas/', '/api/technical-sheets/')
-    : ''
+  const technicalSheetViewerUrl = technicalSheetUrl(product.technicalSheet)
   const specs = [
     { label: 'Categoría', value: product.category || category?.name },
     { label: 'Medidas', value: product.size },
