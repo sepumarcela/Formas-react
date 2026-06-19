@@ -79,8 +79,8 @@ function PdfInlineViewer({ fileUrl, title }) {
 
   return (
     <div className="pdf-inline-viewer" aria-label={title}>
-      {status === 'loading' && <div className="pdf-inline-viewer__state">Cargando ficha tcnica...</div>}
-      {status === 'error' && <div className="pdf-inline-viewer__state">No se pudo mostrar la ficha tcnica.</div>}
+      {status === 'loading' && <div className="pdf-inline-viewer__state">Cargando ficha técnica...</div>}
+      {status === 'error' && <div className="pdf-inline-viewer__state">No se pudo mostrar la ficha técnica.</div>}
       <div className="pdf-inline-viewer__pages" ref={containerRef} />
     </div>
   )

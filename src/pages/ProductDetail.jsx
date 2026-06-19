@@ -129,7 +129,7 @@ function ProductDetail() {
               {technicalSheetViewerUrl ? (
                 <a
                   className="product-technical-card__download"
-                  href={technicalSheetViewerUrl}
+                  href={`/ficha-tecnica?url=${encodeURIComponent(technicalSheetViewerUrl)}&name=${encodeURIComponent(product.name)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={"Abrir ficha técnica de " + product.name}

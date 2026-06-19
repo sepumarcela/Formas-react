@@ -9,6 +9,7 @@ import Contacto from './pages/Contacto'
 import Productos from './pages/Productos'
 import CategoryDetail from './pages/CategoryDetail'
 import ProductDetail from './pages/ProductDetail'
+import TechnicalSheetViewer from './pages/TechnicalSheetViewer'
 import Cuenta from './pages/Cuenta'
 import Carrito from './pages/Carrito'
 import './styles/global.css'
@@ -27,6 +28,7 @@ function App() {
           <Route path="/productos" element={<Productos />} />
           <Route path="/categorias/:categoryId" element={<CategoryDetail />} />
           <Route path="/productos/:productId" element={<ProductDetail />} />
+          <Route path="/ficha-tecnica" element={<TechnicalSheetViewer />} />
           <Route path="/cuenta" element={<Cuenta />} />
           <Route path="/carrito" element={<Carrito />} />
         </Route>
