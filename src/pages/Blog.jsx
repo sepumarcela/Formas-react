@@ -22,7 +22,7 @@ function Blog() {
     try {
       await subscribeNewsletter(newsletterEmail)
       setNewsletterEmail('')
-      setNewsletterMessage('Listo. Guardamos tu correo para enviarte novedades.')
+      setNewsletterMessage('Gracias por suscribirte. Pronto recibirás inspiración, novedades y contenido de FORMAS en tu correo.')
     } catch {
       setNewsletterMessage('No se pudo guardar el correo. Inténtalo de nuevo.')
     } finally {
