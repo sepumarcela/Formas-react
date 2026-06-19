@@ -6,6 +6,7 @@ import { useSiteContent } from '../hooks/useSiteContent'
 import { addCartItem } from '../utils/cart'
 import { getActiveDiscount } from '../utils/discounts'
 import { optimizeImage } from '../utils/images'
+import PdfInlineViewer from '../components/PdfInlineViewer'
 
 const relatedWindowSize = 3
 
@@ -38,9 +39,6 @@ function ProductDetail() {
   const description = product.description || category?.description || 'Diseño funcional fabricado a la medida para adaptarse a tu espacio, tu estilo y tus necesidades.'
   const technicalSheetViewerUrl = product.technicalSheet
     ? product.technicalSheet.replace('/uploads/fichas-tecnicas/', '/api/technical-sheets/')
-    : ''
-  const technicalSheetEmbedUrl = technicalSheetViewerUrl
-    ? `https://docs.google.com/gview?embedded=1&url=${encodeURIComponent(technicalSheetViewerUrl)}`
     : ''
   const specs = [
     { label: 'Categoría', value: product.category || category?.name },
@@ -136,9 +134,9 @@ function ProductDetail() {
                 </span>
               )}
             </div>
-            {technicalSheetEmbedUrl && showTechnicalSheet && (
+            {technicalSheetViewerUrl && showTechnicalSheet && (
               <div className="product-technical-viewer">
-                <iframe src={technicalSheetEmbedUrl} title={`Ficha técnica de ${product.name}`} />
+                <PdfInlineViewer fileUrl={technicalSheetViewerUrl} title={`Ficha técnica de ${product.name}`} />
               </div>
             )}
           </article>
