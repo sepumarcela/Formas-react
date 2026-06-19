@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, ChevronLeft, ChevronRight, FileText } from 'lucide-react'
 import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
@@ -7,8 +7,6 @@ import { addCartItem } from '../utils/cart'
 import { getActiveDiscount } from '../utils/discounts'
 import { optimizeImage } from '../utils/images'
 
-const PdfInlineViewer = lazy(() => import('../components/PdfInlineViewer'))
-
 const relatedWindowSize = 3
 
 function ProductDetail() {
@@ -16,7 +14,6 @@ function ProductDetail() {
   const navigate = useNavigate()
   const [{ categories, products }] = useSiteContent()
   const [relatedStart, setRelatedStart] = useState(0)
-  const [showTechnicalSheet, setShowTechnicalSheet] = useState(false)
   const product = products.find((item) => item.id === productId && item.active !== false)
 
   if (!product) {
@@ -107,31 +104,31 @@ function ProductDetail() {
               <button type="button" className="button button--cart" onClick={handleAddToCart}>Agregar al carrito</button>
             </div>
 
-            <section className={`product-technical-card${showTechnicalSheet ? ' is-open' : ''}`}>
-              <button
-                type="button"
-                className="product-technical-card__button"
-                onClick={() => product.technicalSheet && setShowTechnicalSheet((current) => !current)}
-                disabled={!product.technicalSheet}
+            {technicalSheetViewerUrl ? (
+              <a
+                className="product-technical-card"
+                href={technicalSheetViewerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={"Abrir ficha técnica de " + product.name}
               >
-                <span className="product-technical-card__icon"><FileText size={30} /></span>
+                <span className="product-technical-card__icon"><FileText size={20} /></span>
                 <span className="product-technical-card__copy">
                   <strong>Ficha técnica</strong>
                   <small>Consulta medidas, materiales, acabados y especificaciones del producto.</small>
                 </span>
-                <span className="product-technical-card__action">{product.technicalSheet ? (showTechnicalSheet ? 'Ocultar' : 'Ver ficha') : 'Pendiente'}</span>
-              </button>
-              {technicalSheetViewerUrl && showTechnicalSheet && (
-                <div className="product-technical-viewer">
-                  <a className="product-technical-download" href={technicalSheetViewerUrl} download aria-label="Descargar ficha técnica">
-                    Descargar PDF
-                  </a>
-                  <Suspense fallback={<div className="pdf-inline-viewer__state pdf-inline-viewer__state--static">Cargando ficha técnica...</div>}>
-                    <PdfInlineViewer fileUrl={technicalSheetViewerUrl} title={`Ficha técnica de ${product.name}`} />
-                  </Suspense>
-                </div>
-              )}
-            </section>
+                <span className="product-technical-card__action">Ver ficha</span>
+              </a>
+            ) : (
+              <div className="product-technical-card product-technical-card--disabled" aria-disabled="true">
+                <span className="product-technical-card__icon"><FileText size={20} /></span>
+                <span className="product-technical-card__copy">
+                  <strong>Ficha técnica</strong>
+                  <small>Consulta medidas, materiales, acabados y especificaciones del producto.</small>
+                </span>
+                <span className="product-technical-card__action">Pendiente</span>
+              </div>
+            )}
           </div>
         </div>
       </section>
