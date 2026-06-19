@@ -5151,92 +5151,121 @@ section {
 }
 
 .product-technical-card {
-  width: fit-content;
-  max-width: min(100%, 560px);
-  margin-top: 12px;
-  display: inline-flex;
+  width: 100%;
+  min-height: 115px;
+  margin-top: 18px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
+  border: 1px solid rgba(201, 162, 117, 0.20);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.055);
   color: #fff;
-  text-decoration: none;
-  cursor: pointer;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.10);
+  transition: border-color 0.24s, background 0.24s, box-shadow 0.24s, transform 0.24s;
 }
 
-.product-technical-card:hover .product-technical-card__action,
-.product-technical-card:hover .product-technical-card__copy strong {
-  color: var(--color-brand-light);
-}
-
-.product-technical-card:hover .product-technical-card__icon {
-  border-color: rgba(214, 156, 107, 0.5);
-  background: rgba(214, 156, 107, 0.14);
+.product-technical-card:hover {
+  border-color: rgba(201, 162, 117, 0.42);
+  background: rgba(255, 255, 255, 0.075);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.16);
+  transform: translateY(-1px);
 }
 
 .product-technical-card--disabled {
-  cursor: not-allowed;
-  opacity: 0.58;
+  opacity: 0.72;
 }
 
 .product-technical-card__icon {
   display: grid;
   place-items: center;
-  flex: 0 0 auto;
-  width: 30px;
-  height: 30px;
-  border: 1px solid rgba(220, 197, 178, 0.34);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.035);
-  color: var(--color-brand-light);
-  transition: border-color 0.22s, background 0.22s;
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgba(201, 162, 117, 0.24);
+  border-radius: 14px;
+  background: rgba(228, 200, 166, 0.10);
+  color: #E4C8A6;
 }
 
-.product-technical-card__copy {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
+.product-technical-card__body {
   min-width: 0;
+  display: grid;
+  gap: 8px;
 }
 
-.product-technical-card__copy strong {
-  flex: 0 0 auto;
-  font-family: var(--serif);
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: 0;
-  transition: color 0.22s;
+.product-technical-card__title {
+  margin: 0;
+  color: #E4C8A6;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
-.product-technical-card__copy small {
-  color: rgba(255, 255, 255, 0.68);
+.product-technical-card__description {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.product-technical-card__benefits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.product-technical-card__download {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 158px;
+  padding: 12px 16px;
+  border: 1px solid rgba(228, 200, 166, 0.34);
+  border-radius: 999px;
+  background: rgba(228, 200, 166, 0.12);
+  color: #E4C8A6;
   font-size: 11px;
-  line-height: 1.45;
-}
-
-.product-technical-card__action {
-  color: var(--color-brand-light);
-  font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  text-decoration: none;
   white-space: nowrap;
-  transition: color 0.22s;
+  transition: background 0.22s, border-color 0.22s, color 0.22s, transform 0.22s;
 }
-@media (max-width: 640px) {
+
+.product-technical-card__download:hover {
+  border-color: rgba(228, 200, 166, 0.68);
+  background: #E4C8A6;
+  color: #241a13;
+  transform: translateY(-1px);
+}
+
+.product-technical-card__download--disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+@media (max-width: 760px) {
   .product-technical-card {
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: flex-start;
-    max-width: 100%;
+    padding: 20px;
   }
 
-  .product-technical-card__copy {
-    display: grid;
-    gap: 3px;
-  }
-
-  .product-technical-card__action {
-    padding-top: 4px;
+  .product-technical-card__download {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    width: 100%;
   }
 }
-
 .product-service-list {
   margin: 20px 0 0;
   padding: 0;

@@ -103,32 +103,35 @@ function ProductDetail() {
               <Link to="/contacto" className="button button--primary">Cotizar este producto</Link>
               <button type="button" className="button button--cart" onClick={handleAddToCart}>Agregar al carrito</button>
             </div>
-
-            {technicalSheetViewerUrl ? (
-              <a
-                className="product-technical-card"
-                href={technicalSheetViewerUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={"Abrir ficha técnica de " + product.name}
-              >
-                <span className="product-technical-card__icon"><FileText size={20} /></span>
-                <span className="product-technical-card__copy">
-                  <strong>Ficha técnica</strong>
-                  <small>Consulta medidas, materiales, acabados y especificaciones del producto.</small>
-                </span>
-                <span className="product-technical-card__action">Ver ficha</span>
-              </a>
-            ) : (
-              <div className="product-technical-card product-technical-card--disabled" aria-disabled="true">
-                <span className="product-technical-card__icon"><FileText size={20} /></span>
-                <span className="product-technical-card__copy">
-                  <strong>Ficha técnica</strong>
-                  <small>Consulta medidas, materiales, acabados y especificaciones del producto.</small>
-                </span>
-                <span className="product-technical-card__action">Pendiente</span>
+            <section className={`product-technical-card${technicalSheetViewerUrl ? '' : ' product-technical-card--disabled'}`}>
+              <div className="product-technical-card__icon" aria-hidden="true">
+                <FileText size={28} />
               </div>
-            )}
+              <div className="product-technical-card__body">
+                <p className="product-technical-card__title">FICHA TÉCNICA</p>
+                <p className="product-technical-card__description">Consulta medidas, materiales, acabados y especificaciones del producto.</p>
+                <div className="product-technical-card__benefits" aria-label="Contenido de la ficha técnica">
+                  <span>✓ Medidas</span>
+                  <span>✓ Materiales</span>
+                  <span>✓ Acabados</span>
+                  <span>✓ Recomendaciones</span>
+                </div>
+              </div>
+              {technicalSheetViewerUrl ? (
+                <a
+                  className="product-technical-card__download"
+                  href={technicalSheetViewerUrl}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={"Descargar ficha técnica de " + product.name}
+                >
+                  DESCARGAR PDF <span aria-hidden="true">→</span>
+                </a>
+              ) : (
+                <span className="product-technical-card__download product-technical-card__download--disabled">PDF PENDIENTE</span>
+              )}
+            </section>
           </div>
         </div>
       </section>
