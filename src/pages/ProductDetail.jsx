@@ -126,14 +126,9 @@ function ProductDetail() {
             </div>
             <div className="product-technical-sheet-row">
               {product.technicalSheet ? (
-                <>
-                  <button type="button" className="product-technical-sheet" onClick={() => setShowTechnicalSheet((current) => !current)}>
-                    <FileText size={16} /> {showTechnicalSheet ? 'Ocultar ficha técnica' : 'Ver ficha técnica'}
-                  </button>
-                  <a className="product-technical-sheet product-technical-sheet--download" href={technicalSheetViewerUrl} download>
-                    Descargar ficha técnica
-                  </a>
-                </>
+                <button type="button" className="product-technical-sheet" onClick={() => setShowTechnicalSheet((current) => !current)}>
+                  <FileText size={16} /> {showTechnicalSheet ? 'Ocultar ficha técnica' : 'Ver ficha técnica'}
+                </button>
               ) : (
                 <span className="product-technical-sheet product-technical-sheet--muted">
                   <FileText size={16} /> Ficha técnica pendiente
@@ -142,6 +137,9 @@ function ProductDetail() {
             </div>
             {technicalSheetViewerUrl && showTechnicalSheet && (
               <div className="product-technical-viewer">
+                <a className="product-technical-download" href={technicalSheetViewerUrl} download aria-label="Descargar ficha técnica">
+                  Descargar PDF
+                </a>
                 <Suspense fallback={<div className="pdf-inline-viewer__state pdf-inline-viewer__state--static">Cargando ficha técnica...</div>}>
                   <PdfInlineViewer fileUrl={technicalSheetViewerUrl} title={`Ficha técnica de ${product.name}`} />
                 </Suspense>

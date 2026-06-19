@@ -5189,22 +5189,36 @@ section {
   transform: none;
 }
 
-.product-technical-sheet--download {
-  color: var(--color-muted);
-  font-size: 12px;
-}
-
-.product-technical-sheet--download:hover {
-  color: var(--color-brand-dark);
-}
-
 .product-technical-viewer {
+  position: relative;
   margin-top: 18px;
   overflow: hidden;
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: #f4f1ec;
   box-shadow: inset 0 0 0 1px rgba(26, 23, 20, 0.02);
+}
+
+.product-technical-download {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--color-brand-dark);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(26, 23, 20, 0.16);
+}
+
+.product-technical-download:hover {
+  background: var(--color-brand-light);
+  color: #1f1711;
 }
 
 .pdf-inline-viewer {
@@ -5236,23 +5250,34 @@ section {
 }
 
 .pdf-inline-viewer__page {
-  max-width: 100%;
+  max-width: none;
   height: auto !important;
   border-radius: 6px;
   background: #fff;
   box-shadow: 0 12px 28px rgba(26, 23, 20, 0.16);
 }
 
-
 @media (max-width: 640px) {
   .pdf-inline-viewer {
-    height: 70vh;
-    min-height: 460px;
+    height: 72vh;
+    min-height: 500px;
+    overflow: auto;
     padding: 8px;
   }
 
   .pdf-inline-viewer__state--static {
-    min-height: 460px;
+    min-height: 500px;
+  }
+
+  .pdf-inline-viewer__pages {
+    justify-items: start;
+  }
+
+  .product-technical-download {
+    top: 10px;
+    right: 10px;
+    padding: 8px 10px;
+    font-size: 10px;
   }
 }
 .product-service-list {
