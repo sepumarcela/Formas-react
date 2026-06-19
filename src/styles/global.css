@@ -5189,6 +5189,15 @@ section {
   transform: none;
 }
 
+.product-technical-sheet--download {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+.product-technical-sheet--download:hover {
+  color: var(--color-brand-dark);
+}
+
 .product-technical-viewer {
   margin-top: 18px;
   overflow: hidden;

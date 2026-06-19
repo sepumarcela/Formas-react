@@ -126,9 +126,14 @@ function ProductDetail() {
             </div>
             <div className="product-technical-sheet-row">
               {product.technicalSheet ? (
-                <button type="button" className="product-technical-sheet" onClick={() => setShowTechnicalSheet((current) => !current)}>
-                  <FileText size={16} /> {showTechnicalSheet ? 'Ocultar ficha técnica' : 'Ver ficha técnica'}
-                </button>
+                <>
+                  <button type="button" className="product-technical-sheet" onClick={() => setShowTechnicalSheet((current) => !current)}>
+                    <FileText size={16} /> {showTechnicalSheet ? 'Ocultar ficha técnica' : 'Ver ficha técnica'}
+                  </button>
+                  <a className="product-technical-sheet product-technical-sheet--download" href={technicalSheetViewerUrl} download>
+                    Descargar ficha técnica
+                  </a>
+                </>
               ) : (
                 <span className="product-technical-sheet product-technical-sheet--muted">
                   <FileText size={16} /> Ficha técnica pendiente
