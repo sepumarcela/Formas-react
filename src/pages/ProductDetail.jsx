@@ -39,6 +39,9 @@ function ProductDetail() {
   const technicalSheetViewerUrl = product.technicalSheet
     ? product.technicalSheet.replace('/uploads/fichas-tecnicas/', '/api/technical-sheets/')
     : ''
+  const technicalSheetEmbedUrl = technicalSheetViewerUrl
+    ? `https://docs.google.com/gview?embedded=1&url=${encodeURIComponent(technicalSheetViewerUrl)}`
+    : ''
   const specs = [
     { label: 'Categoría', value: product.category || category?.name },
     { label: 'Medidas', value: product.size },
@@ -133,9 +136,9 @@ function ProductDetail() {
                 </span>
               )}
             </div>
-            {technicalSheetViewerUrl && showTechnicalSheet && (
+            {technicalSheetEmbedUrl && showTechnicalSheet && (
               <div className="product-technical-viewer">
-                <iframe src={`${technicalSheetViewerUrl}#toolbar=0&navpanes=0`} title={`Ficha técnica de ${product.name}`} />
+                <iframe src={technicalSheetEmbedUrl} title={`Ficha técnica de ${product.name}`} />
               </div>
             )}
           </article>

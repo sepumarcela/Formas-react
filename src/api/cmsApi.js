@@ -1,4 +1,4 @@
-﻿export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8080').replace(/\/$/, '')
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8080').replace(/\/$/, '')
 const AUTH_TOKEN_KEY = 'formas-admin-token'
 
 function text(value) {
@@ -7,14 +7,14 @@ function text(value) {
 
 function assetUrl(value) {
   if (!value) return ''
-  if (value.startsWith('/uploads/')) return `${API_BASE_URL}${value}`
+  if (value.startsWith('/uploads/') || value.startsWith('/api/technical-sheets/')) return `${API_BASE_URL}${value}`
   return value
 }
 
 function backendAssetPath(value) {
   if (!value) return ''
   if (value.startsWith('data:image/')) return ''
-  if (value.startsWith(`${API_BASE_URL}/uploads/`)) {
+  if (value.startsWith(`${API_BASE_URL}/uploads/`) || value.startsWith(`${API_BASE_URL}/api/technical-sheets/`)) {
     return value.slice(API_BASE_URL.length)
   }
   return value
