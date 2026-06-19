@@ -2035,7 +2035,7 @@ section {
 }
 
 .products-category-card__body {
-  padding: 24px;
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -2857,7 +2857,7 @@ section {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 14px;
-  padding: 24px;
+  padding: 20px 22px;
 }
 
 .blog-sidebar__box h4,
@@ -3527,7 +3527,7 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 16px;
+  padding: 8px 13px;
   border-radius: 999px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -4238,7 +4238,7 @@ section {
   right: 28px;
   top: 110px;
   z-index: 2000;
-  padding: 12px 16px;
+  padding: 8px 13px;
   border-radius: 10px;
   background: var(--color-dark);
   color: #fff;
@@ -4353,7 +4353,7 @@ section {
 }
 
 .admin-stats article {
-  padding: 24px;
+  padding: 20px 22px;
   display: grid;
   gap: 6px;
 }
@@ -5152,11 +5152,11 @@ section {
 
 .product-technical-card {
   width: 100%;
-  min-height: 115px;
+  min-height: 96px;
   margin-top: 18px;
-  padding: 24px;
+  padding: 20px 22px;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 16px;
   border: 1px solid rgba(201, 162, 117, 0.20);
@@ -5211,28 +5211,19 @@ section {
   line-height: 1.5;
 }
 
-.product-technical-card__benefits {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 14px;
-  color: rgba(255, 255, 255, 0.78);
-  font-size: 12px;
-  font-weight: 700;
-}
-
 .product-technical-card__download {
-  justify-self: end;
+  justify-self: start;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-width: 158px;
-  padding: 12px 16px;
+  min-width: auto;
+  padding: 8px 13px;
   border: 1px solid rgba(228, 200, 166, 0.34);
   border-radius: 999px;
   background: rgba(228, 200, 166, 0.12);
   color: #E4C8A6;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -5261,9 +5252,8 @@ section {
   }
 
   .product-technical-card__download {
-    grid-column: 1 / -1;
-    justify-self: stretch;
-    width: 100%;
+    justify-self: start;
+    width: auto;
   }
 }
 .product-service-list {
@@ -5411,7 +5401,7 @@ section {
   background: #cf2e1f;
   color: #fff;
   box-shadow: 0 10px 24px rgba(26, 23, 20, 0.2);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -5687,7 +5677,7 @@ section {
 .technical-sheet-header {
   margin-bottom: 22px;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 18px;
 }
@@ -5751,7 +5741,7 @@ section {
 }
 
 .technical-sheet-download {
-  padding: 12px 16px;
+  padding: 8px 13px;
   border: 1px solid rgba(228, 200, 166, 0.34);
   border-radius: 999px;
   background: rgba(228, 200, 166, 0.12);

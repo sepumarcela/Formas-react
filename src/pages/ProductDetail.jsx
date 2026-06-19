@@ -119,26 +119,20 @@ function ProductDetail() {
               <div className="product-technical-card__body">
                 <p className="product-technical-card__title">FICHA TÉCNICA</p>
                 <p className="product-technical-card__description">Consulta medidas, materiales, acabados y especificaciones del producto.</p>
-                <div className="product-technical-card__benefits" aria-label="Contenido de la ficha técnica">
-                  <span>✓ Medidas</span>
-                  <span>✓ Materiales</span>
-                  <span>✓ Acabados</span>
-                  <span>✓ Recomendaciones</span>
-                </div>
+                {technicalSheetViewerUrl ? (
+                  <a
+                    className="product-technical-card__download"
+                    href={`/ficha-tecnica?url=${encodeURIComponent(technicalSheetViewerUrl)}&name=${encodeURIComponent(product.name)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={"Abrir ficha técnica de " + product.name}
+                  >
+                    VER PDF <span aria-hidden="true">→</span>
+                  </a>
+                ) : (
+                  <span className="product-technical-card__download product-technical-card__download--disabled">PDF PENDIENTE</span>
+                )}
               </div>
-              {technicalSheetViewerUrl ? (
-                <a
-                  className="product-technical-card__download"
-                  href={`/ficha-tecnica?url=${encodeURIComponent(technicalSheetViewerUrl)}&name=${encodeURIComponent(product.name)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={"Abrir ficha técnica de " + product.name}
-                >
-                  VER PDF <span aria-hidden="true">→</span>
-                </a>
-              ) : (
-                <span className="product-technical-card__download product-technical-card__download--disabled">PDF PENDIENTE</span>
-              )}
             </section>
           </div>
         </div>
