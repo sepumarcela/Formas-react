@@ -14,6 +14,7 @@ function ProductDetail() {
   const navigate = useNavigate()
   const [{ categories, products }] = useSiteContent()
   const [relatedStart, setRelatedStart] = useState(0)
+  const [showTechnicalSheet, setShowTechnicalSheet] = useState(false)
   const product = products.find((item) => item.id === productId && item.active !== false)
 
   if (!product) {
@@ -120,15 +121,20 @@ function ProductDetail() {
             </div>
             <div className="product-technical-sheet-row">
               {product.technicalSheet ? (
-                <a className="product-technical-sheet" href={product.technicalSheet} target="_blank" rel="noreferrer">
-                  <FileText size={16} /> Ver ficha técnica
-                </a>
+                <button type="button" className="product-technical-sheet" onClick={() => setShowTechnicalSheet((current) => !current)}>
+                  <FileText size={16} /> {showTechnicalSheet ? 'Ocultar ficha técnica' : 'Ver ficha técnica'}
+                </button>
               ) : (
                 <span className="product-technical-sheet product-technical-sheet--muted">
                   <FileText size={16} /> Ficha técnica pendiente
                 </span>
               )}
             </div>
+            {product.technicalSheet && showTechnicalSheet && (
+              <div className="product-technical-viewer">
+                <iframe src={`${product.technicalSheet}#toolbar=0&navpanes=0`} title={`Ficha técnica de ${product.name}`} />
+              </div>
+            )}
           </article>
 
           <article className="product-detail-card">
