@@ -842,7 +842,26 @@ picture,
   background: rgba(255, 255, 255, 0.08);
 }
 
-.button--dark {
+
+.button:disabled,
+.button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.button--cart {
+  background: #fff;
+  color: var(--color-dark);
+  border: 1.5px solid #fff;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+}
+
+.button--cart:hover {
+  background: var(--color-brand-light);
+  border-color: var(--color-brand-light);
+  color: #1f1711;
+  transform: translateY(-1px);
+}.button--dark {
   background: var(--color-dark);
   color: #fff;
 }
@@ -5131,7 +5150,40 @@ section {
   font-size: 14px;
 }
 
-.product-service-list {
+
+.product-technical-sheet-row {
+  margin-top: 18px;
+}
+
+.product-technical-sheet {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  color: var(--color-brand-dark);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.product-technical-sheet:hover {
+  color: var(--color-brand);
+  transform: translateX(2px);
+}
+
+.product-technical-sheet--muted {
+  color: var(--color-muted);
+  cursor: default;
+  opacity: 0.72;
+}
+
+.product-technical-sheet--muted:hover {
+  color: var(--color-muted);
+  transform: none;
+}.product-service-list {
   margin: 20px 0 0;
   padding: 0;
   list-style: none;

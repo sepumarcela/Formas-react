@@ -98,16 +98,7 @@ function ProductDetail() {
 
             <div className="product-actions">
               <Link to="/contacto" className="button button--primary">Cotizar este producto</Link>
-              <button type="button" className="button button--outline" onClick={handleAddToCart}>Agregar al carrito</button>
-              {product.technicalSheet ? (
-                <a className="button button--outline" href={product.technicalSheet} target="_blank" rel="noreferrer">
-                  <FileText size={16} /> Ver ficha técnica
-                </a>
-              ) : (
-                <button type="button" className="button button--outline" disabled title="Ficha técnica pendiente">
-                  <FileText size={16} /> Ver ficha técnica
-                </button>
-              )}
+              <button type="button" className="button button--cart" onClick={handleAddToCart}>Agregar al carrito</button>
             </div>
           </div>
         </div>
@@ -126,6 +117,17 @@ function ProductDetail() {
                   <strong>{item.value}</strong>
                 </div>
               ))}
+            </div>
+            <div className="product-technical-sheet-row">
+              {product.technicalSheet ? (
+                <a className="product-technical-sheet" href={product.technicalSheet} target="_blank" rel="noreferrer">
+                  <FileText size={16} /> Ver ficha técnica
+                </a>
+              ) : (
+                <span className="product-technical-sheet product-technical-sheet--muted">
+                  <FileText size={16} /> Ficha técnica pendiente
+                </span>
+              )}
             </div>
           </article>
 
