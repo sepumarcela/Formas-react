@@ -5152,32 +5152,32 @@ section {
 
 
 .product-technical-card {
-  width: min(100%, 640px);
-  margin-top: 18px;
+  width: min(100%, 620px);
+  margin-top: 12px;
 }
 
 .product-technical-card__button {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
-  padding: 14px 16px;
-  border: 1px solid rgba(220, 197, 178, 0.28);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.045);
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: #fff;
   font-family: inherit;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.22s, background 0.22s, box-shadow 0.22s, transform 0.22s;
 }
 
-.product-technical-card__button:hover:not(:disabled) {
-  border-color: rgba(214, 156, 107, 0.52);
-  background: rgba(255, 255, 255, 0.07);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
+.product-technical-card__button:hover:not(:disabled) .product-technical-card__action,
+.product-technical-card__button:hover:not(:disabled) .product-technical-card__copy strong {
+  color: var(--color-brand-light);
+}
+
+.product-technical-card__button:hover:not(:disabled) .product-technical-card__icon {
+  border-color: rgba(214, 156, 107, 0.5);
+  background: rgba(214, 156, 107, 0.14);
 }
 
 .product-technical-card__button:disabled {
@@ -5188,43 +5188,51 @@ section {
 .product-technical-card__icon {
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.11);
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(220, 197, 178, 0.28);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.045);
   color: var(--color-brand-light);
+  transition: border-color 0.22s, background 0.22s;
 }
 
 .product-technical-card__copy {
-  display: grid;
-  gap: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
 }
 
 .product-technical-card__copy strong {
+  flex: 0 0 auto;
   font-family: var(--serif);
-  font-size: 21px;
+  font-size: 18px;
   font-weight: 500;
   letter-spacing: 0;
+  transition: color 0.22s;
 }
 
 .product-technical-card__copy small {
-  max-width: 420px;
   color: rgba(255, 255, 255, 0.68);
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .product-technical-card__action {
+  margin-left: auto;
   color: var(--color-brand-light);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   white-space: nowrap;
+  transition: color 0.22s;
 }
 
-.product-technical-card.is-open .product-technical-card__button {
-  background: rgba(255, 255, 255, 0.065);
+.product-technical-card.is-open .product-technical-card__action {
+  color: #fff;
 }
 
 .product-technical-viewer {
@@ -5318,23 +5326,35 @@ section {
     font-size: 10px;
   }
 
+  .product-technical-card {
+    margin-top: 12px;
+  }
+
   .product-technical-card__button {
-    grid-template-columns: auto minmax(0, 1fr);
-    padding: 18px;
+    align-items: flex-start;
+    gap: 10px;
   }
 
   .product-technical-card__icon {
-    width: 50px;
-    height: 50px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .product-technical-card__copy {
+    display: grid;
+    gap: 3px;
   }
 
   .product-technical-card__copy strong {
-    font-size: 22px;
+    font-size: 18px;
   }
 
-  .product-technical-card__copy small,
+  .product-technical-card__copy small {
+    font-size: 12px;
+  }
+
   .product-technical-card__action {
-    grid-column: 1 / -1;
+    padding-top: 4px;
   }
 }
 .product-service-list {
