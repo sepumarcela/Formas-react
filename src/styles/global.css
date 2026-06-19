@@ -5234,6 +5234,18 @@ section {
   box-shadow: 0 12px 28px rgba(26, 23, 20, 0.16);
 }
 
+
+@media (max-width: 640px) {
+  .pdf-inline-viewer {
+    height: 68vh;
+    min-height: 420px;
+    padding: 10px;
+  }
+
+  .pdf-inline-viewer__state--static {
+    min-height: 420px;
+  }
+}
 .product-service-list {
   margin: 20px 0 0;
   padding: 0;

@@ -22,30 +22,40 @@ function PdfInlineViewer({ fileUrl, title }) {
       container.replaceChildren()
 
       try {
-        const loadingTask = pdfjs.getDocument({ url: fileUrl, withCredentials: false })
+        const response = await fetch(fileUrl, { cache: 'no-store', mode: 'cors' })
+        if (!response.ok) throw new Error(`PDF ${response.status}`)
+
+        const fileData = new Uint8Array(await response.arrayBuffer())
+        const loadingTask = pdfjs.getDocument({
+          data: fileData,
+          disableAutoFetch: true,
+          disableStream: true,
+        })
         const pdf = await loadingTask.promise
-        const pageWidth = Math.max(container.clientWidth - 28, 280)
+        const pageWidth = Math.max(container.clientWidth - 24, 260)
+        const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.35)
 
         for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
           if (cancelled || renderTokenRef.current !== renderToken) return
 
           const page = await pdf.getPage(pageNumber)
           const baseViewport = page.getViewport({ scale: 1 })
-          const scale = pageWidth / baseViewport.width
-          const viewport = page.getViewport({ scale: Math.min(scale, 1.55) })
+          const scale = Math.min(pageWidth / baseViewport.width, 1.25)
+          const viewport = page.getViewport({ scale })
           const canvas = document.createElement('canvas')
-          const context = canvas.getContext('2d')
-          const ratio = window.devicePixelRatio || 1
+          const context = canvas.getContext('2d', { alpha: false })
+          if (!context) throw new Error('Canvas no disponible')
 
-          canvas.width = Math.floor(viewport.width * ratio)
-          canvas.height = Math.floor(viewport.height * ratio)
+          canvas.width = Math.floor(viewport.width * pixelRatio)
+          canvas.height = Math.floor(viewport.height * pixelRatio)
           canvas.style.width = `${viewport.width}px`
           canvas.style.height = `${viewport.height}px`
           canvas.className = 'pdf-inline-viewer__page'
-          context.setTransform(ratio, 0, 0, ratio, 0, 0)
+          context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
           container.appendChild(canvas)
 
           await page.render({ canvasContext: context, viewport }).promise
+          page.cleanup()
         }
 
         if (!cancelled && renderTokenRef.current === renderToken) setStatus('ready')
@@ -58,6 +68,7 @@ function PdfInlineViewer({ fileUrl, title }) {
 
     return () => {
       cancelled = true
+      container.replaceChildren()
     }
   }, [fileUrl])
 
