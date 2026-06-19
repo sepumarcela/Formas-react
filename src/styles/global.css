@@ -5237,13 +5237,13 @@ section {
 
 @media (max-width: 640px) {
   .pdf-inline-viewer {
-    height: 68vh;
-    min-height: 420px;
-    padding: 10px;
+    height: 70vh;
+    min-height: 460px;
+    padding: 8px;
   }
 
   .pdf-inline-viewer__state--static {
-    min-height: 420px;
+    min-height: 460px;
   }
 }
 .product-service-list {
