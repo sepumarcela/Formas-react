@@ -9,7 +9,8 @@ function TechnicalSheetViewer() {
   const navigate = useNavigate()
   const fileUrl = searchParams.get('url') || ''
   const productName = searchParams.get('name') || 'Producto'
-  const returnTo = searchParams.get('returnTo') || '/productos'
+  const productId = searchParams.get('productId') || ''
+  const returnTo = searchParams.get('returnTo') || (productId ? '/productos/' + productId : '/productos')
 
   return (
     <main className="page technical-sheet-page">
