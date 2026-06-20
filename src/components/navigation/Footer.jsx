@@ -24,7 +24,7 @@ function Footer() {
         <div className="site-footer__col">
           <h4>Productos</h4>
           <ul>
-            {visibleCategories.slice(0, 6).map((cat) => (
+            {visibleCategories.map((cat) => (
               <li key={cat.id}>
                 <Link to={`/categorias/${cat.id}`}>{cat.name}</Link>
               </li>
