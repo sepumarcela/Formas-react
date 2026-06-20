@@ -5903,12 +5903,12 @@ section {
 
 .blog-post-hero__media {
   width: 100%;
-  max-width: 620px;
+  max-width: 560px;
   justify-self: end;
   overflow: hidden;
   border-radius: 18px;
   border: 1px solid rgba(201, 162, 117, 0.24);
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 9.4;
   background: var(--color-surface-warm);
   box-shadow: 0 18px 44px rgba(45, 33, 25, 0.14);
 }
