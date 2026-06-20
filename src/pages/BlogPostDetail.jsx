@@ -1,21 +1,32 @@
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, CalendarDays, Clock, Eye } from 'lucide-react'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
 
-function articleParagraphs(post) {
+function articleBlocks(post) {
   const source = post.body || post.desc || ''
-  return source
+  const lines = source
     .split(/\n{2,}|\r?\n/)
-    .map((paragraph) => paragraph.trim())
+    .map((line) => line.trim())
     .filter(Boolean)
+
+  return lines.map((line, index) => {
+    const cleanLine = line.replace(/^#+\s*/, '')
+    const looksLikeHeading = /^#+\s/.test(line) || (/^[¿?A-ZÁÉÍÓÚÑ]/.test(cleanLine) && cleanLine.length <= 86 && /[?:]$/.test(cleanLine))
+
+    return {
+      id: `section-${index + 1}`,
+      text: cleanLine,
+      type: looksLikeHeading ? 'heading' : 'paragraph',
+    }
+  })
 }
 
 function BlogPostDetail() {
   const { postId } = useParams()
   const [{ blogPosts }] = useSiteContent()
   const post = blogPosts.find((item) => item.id === postId && item.active !== false)
-  const relatedPosts = blogPosts.filter((item) => item.id !== postId && item.active !== false).slice(0, 3)
+  const relatedPosts = blogPosts.filter((item) => item.id !== postId && item.active !== false).slice(0, 2)
 
   if (!post) {
     return (
@@ -29,7 +40,8 @@ function BlogPostDetail() {
     )
   }
 
-  const paragraphs = articleParagraphs(post)
+  const blocks = articleBlocks(post)
+  const headings = blocks.filter((block) => block.type === 'heading').slice(0, 6)
 
   return (
     <main className="page blog-post-page">
@@ -38,37 +50,54 @@ function BlogPostDetail() {
           <Link to="/blog" className="blog-post-back"><ArrowLeft size={16} /> Volver al blog</Link>
           <div className="blog-post-meta">
             {post.tag && <span>{post.tag}</span>}
-            {post.date && <time>{post.date}</time>}
+            {post.date && <time><CalendarDays size={13} /> {post.date}</time>}
+            <span><Clock size={13} /> 5 min de lectura</span>
+            <span><Eye size={13} /> Blog FORMAS</span>
           </div>
           <h1>{post.title}</h1>
           {post.desc && <p>{post.desc}</p>}
         </div>
         <div className="blog-post-hero__media">
-          {post.image ? <img src={optimizeImage(post.image, { width: 1400 })} alt={post.title} /> : <div className="blog-ph">Foto pendiente</div>}
+          {post.image ? <img src={optimizeImage(post.image, { width: 1100 })} alt={post.title} /> : <div className="blog-ph">Foto pendiente</div>}
         </div>
       </section>
 
       <section className="blog-post-content-section">
         <article className="blog-post-article">
-          {paragraphs.length ? paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>) : (
+          {blocks.length ? blocks.map((block) => (
+            block.type === 'heading'
+              ? <h2 id={block.id} key={block.id}>{block.text}</h2>
+              : <p key={block.id}>{block.text}</p>
+          )) : (
             <p>Muy pronto ampliaremos este artículo con más inspiración, recomendaciones y detalles para tu proyecto.</p>
           )}
         </article>
 
-        {relatedPosts.length > 0 && (
-          <aside className="blog-post-related">
-            <h2>Más inspiración</h2>
-            <div className="blog-post-related__grid">
+        <aside className="blog-post-sidebar">
+          {relatedPosts.length > 0 && (
+            <div className="blog-post-sidebar__box">
+              <h3>Te recomendamos</h3>
               {relatedPosts.map((item) => (
-                <Link to={`/blog/${item.id}`} className="blog-post-related__item" key={item.id}>
-                  {item.image ? <img src={optimizeImage(item.image, { width: 420 })} alt="" loading="lazy" /> : <div className="blog-ph" />}
+                <Link to={`/blog/${item.id}`} className="blog-post-sidebar__item" key={item.id}>
+                  {item.image ? <img src={optimizeImage(item.image, { width: 220 })} alt="" loading="lazy" /> : <div className="blog-ph" />}
                   <span>{item.tag}</span>
                   <strong>{item.title}</strong>
                 </Link>
               ))}
             </div>
-          </aside>
-        )}
+          )}
+
+          {headings.length > 0 && (
+            <div className="blog-post-sidebar__box blog-post-sidebar__box--outline">
+              <h3>En este artículo</h3>
+              <ol>
+                {headings.map((heading) => (
+                  <li key={heading.id}><a href={`#${heading.id}`}>{heading.text}</a></li>
+                ))}
+              </ol>
+            </div>
+          )}
+        </aside>
       </section>
     </main>
   )
