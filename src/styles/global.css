@@ -5831,9 +5831,9 @@ section {
   margin: 0;
   padding: 58px clamp(72px, 15vw, 220px) 40px;
   display: grid;
-  grid-template-columns: minmax(0, 620px) minmax(320px, 430px);
+  grid-template-columns: minmax(0, 620px) minmax(420px, 540px);
   gap: clamp(34px, 5vw, 70px);
-  align-items: end;
+  align-items: center;
   background: #f7f3ec;
   color: var(--color-text);
 }
@@ -5903,12 +5903,12 @@ section {
 
 .blog-post-hero__media {
   width: 100%;
-  max-width: 590px;
+  max-width: 540px;
   justify-self: end;
   overflow: hidden;
   border-radius: 18px;
   border: 1px solid rgba(201, 162, 117, 0.24);
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 3;
   background: var(--color-surface-warm);
   box-shadow: 0 18px 44px rgba(45, 33, 25, 0.14);
 }
