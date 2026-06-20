@@ -41,7 +41,7 @@ function Header({ transparent = false }) {
   const dropRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
-  const usesDarkHeader = location.pathname.startsWith('/cuenta') || location.pathname.startsWith('/carrito')
+  const usesDarkHeader = location.pathname.startsWith('/cuenta') || location.pathname.startsWith('/carrito') || location.pathname.startsWith('/blog')
 
   useEffect(() => {
     function handleClick(event) {
