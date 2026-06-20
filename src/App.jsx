@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Nosotros from './pages/Nosotros'
 import Proyectos from './pages/Proyectos'
 import Blog from './pages/Blog'
+import BlogPostDetail from './pages/BlogPostDetail'
 import Contacto from './pages/Contacto'
 import Productos from './pages/Productos'
 import CategoryDetail from './pages/CategoryDetail'
@@ -24,6 +25,7 @@ function App() {
           <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/proyectos" element={<Proyectos />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:postId" element={<BlogPostDetail />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/productos" element={<Productos />} />
           <Route path="/categorias/:categoryId" element={<CategoryDetail />} />
