@@ -13,6 +13,7 @@ import ProductDetail from './pages/ProductDetail'
 import TechnicalSheetViewer from './pages/TechnicalSheetViewer'
 import Cuenta from './pages/Cuenta'
 import Carrito from './pages/Carrito'
+import PaymentResult from './pages/PaymentResult'
 import './styles/global.css'
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/ficha-tecnica" element={<TechnicalSheetViewer />} />
           <Route path="/cuenta" element={<Cuenta />} />
           <Route path="/carrito" element={<Carrito />} />
+          <Route path="/pago/resultado" element={<PaymentResult />} />
         </Route>
       </Routes>
     </BrowserRouter>

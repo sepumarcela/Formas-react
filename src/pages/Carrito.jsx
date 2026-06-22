@@ -15,7 +15,7 @@ import {
   PiShoppingCartSimpleDuotone,
   PiTruckDuotone,
 } from 'react-icons/pi'
-import { submitContactForm } from '../api/cmsApi'
+import { createWompiCheckout, submitContactForm } from '../api/cmsApi'
 import {
   CART_UPDATED_EVENT,
   clearCart,
@@ -26,6 +26,7 @@ import {
   updateCartItemQuantity,
 } from '../utils/cart'
 import { optimizeImage } from '../utils/images'
+import { submitCheckoutForm } from '../utils/payments'
 
 const IVA_RATE = 0.19
 
@@ -58,6 +59,10 @@ const paymentOptions = [
 
 function getItemTotal(item) {
   return parseMoney(item.price) * item.quantity
+}
+
+function amountToCents(value) {
+  return Math.round((Number(value) || 0) * 100)
 }
 
 function splitIncludedIva(total) {
@@ -150,6 +155,38 @@ function Carrito() {
     setError('')
 
     try {
+      if (hasPricedItems) {
+        const checkout = await createWompiCheckout({
+          name: data.get('name'),
+          phone: data.get('phone'),
+          email: data.get('email'),
+          city: data.get('city'),
+          address: data.get('address'),
+          notes: data.get('notes'),
+          amountCents: amountToCents(totalWithIva),
+          subtotalCents: amountToCents(priceBeforeIva),
+          taxCents: amountToCents(ivaAmount),
+          paymentMethod,
+          items: items.map((item) => ({
+            productId: item.id,
+            name: item.name,
+            category: item.category || '',
+            image: item.image || '',
+            quantity: item.quantity,
+            unitAmountCents: amountToCents(parseMoney(item.price)),
+          })),
+        })
+
+        if (checkout.configured && checkout.checkoutUrl && checkout.checkoutParams) {
+          submitCheckoutForm(checkout.checkoutUrl, checkout.checkoutParams)
+          return
+        }
+
+        setSent(true)
+        setError(checkout.message || 'El pedido quedo registrado. Falta activar las llaves de Wompi para abrir pagos reales.')
+        return
+      }
+
       await submitContactForm({
         name: data.get('name'),
         phone: data.get('phone'),
@@ -189,7 +226,7 @@ function Carrito() {
             <p className="eyebrow">Compra segura</p>
             <h1>Carrito y pago</h1>
             <p>
-              Reúne tus productos, confirma tus datos y elige cómo prefieres pagar. Los datos de tarjeta se manejan solo por una pasarela segura externa.
+              Reúne tus productos, confirma tus datos y paga por una pasarela segura cuando el comercio de FORMAS quede activo.
             </p>
           </div>
           <div className="carrito-hero__badge">
@@ -333,7 +370,7 @@ function Carrito() {
                 {sent && <p className="checkout-message">Solicitud enviada. Te contactaremos para confirmar disponibilidad, medidas y enlace de pago seguro.</p>}
 
                 <button className="button button--primary checkout-submit" type="submit" disabled={sending}>
-                  {sending ? 'Enviando solicitud...' : 'Solicitar pago seguro'}
+                  {sending ? 'Preparando pago...' : hasPricedItems ? 'Pagar con Wompi' : 'Solicitar cotización'}
                 </button>
               </form>
             </div>

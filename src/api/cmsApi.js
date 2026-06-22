@@ -449,6 +449,13 @@ export async function submitContactForm(submission) {
   })
 }
 
+export async function createWompiCheckout(order) {
+  return request('/api/payments/wompi/checkout', {
+    method: 'POST',
+    body: JSON.stringify(order),
+  })
+}
+
 export async function subscribeNewsletter(email) {
   return request('/api/newsletter-subscriptions', {
     method: 'POST',
