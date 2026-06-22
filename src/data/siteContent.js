@@ -229,9 +229,9 @@ export const defaultSiteContent = {
     { id: 'alcoba-sueno', categoryId: 'alcobas-infantiles', category: 'Alcoba infantil', name: 'Alcoba Dulce Sueño', price: 'Desde $8.900.000', size: 'Cama, escritorio y closet', image: '', featured: false },
   ],
   blogPosts: [
-    { id: 'cocinas-modernas', tag: 'TENDENCIAS', date: '20 de mayo, 2024', title: 'Cocinas modernas: 5 tendencias que seguirán marcando el 2024', desc: 'Descubre los estilos, colores y materiales que transformarán tu cocina en el corazón de tu hogar.', image: '', body: '' },
-    { id: 'centro-entretenimiento-perfecto', tag: 'TIPS Y CONSEJOS', date: '8 de mayo, 2024', title: 'Cómo elegir el centro de entretenimiento perfecto para tu sala', desc: 'Te compartimos claves para lograr un diseño funcional, estético y a la medida de tu espacio.', image: '', body: '' },
-    { id: 'closets-orden', tag: 'DISEÑO DE INTERIORES', date: '25 de abril, 2024', title: 'Clósets que enamoran: organización con estilo', desc: 'Ideas y soluciones para mantener todo en orden sin sacrificar el diseño.', image: '', body: '' },
+    { id: 'cocinas-modernas', tag: 'TENDENCIAS', date: '20 de mayo, 2024', title: 'Cocinas modernas: 5 tendencias que seguirán marcando el 2024', desc: 'Descubre los estilos, colores y materiales que transformarán tu cocina en el corazón de tu hogar.', image: '', body: '', originalUrl: '', trending: true, active: true },
+    { id: 'centro-entretenimiento-perfecto', tag: 'TIPS Y CONSEJOS', date: '8 de mayo, 2024', title: 'Cómo elegir el centro de entretenimiento perfecto para tu sala', desc: 'Te compartimos claves para lograr un diseño funcional, estético y a la medida de tu espacio.', image: '', body: '', originalUrl: '', trending: false, active: true },
+    { id: 'closets-orden', tag: 'DISEÑO DE INTERIORES', date: '25 de abril, 2024', title: 'Clósets que enamoran: organización con estilo', desc: 'Ideas y soluciones para mantener todo en orden sin sacrificar el diseño.', image: '', body: '', originalUrl: '', trending: false, active: true },
   ],
 }
 

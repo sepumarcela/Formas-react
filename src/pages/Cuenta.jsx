@@ -232,7 +232,7 @@ const csvConfig = {
   blogPosts: {
     label: 'Blog',
     filename: 'blog-formas.csv',
-    headers: ['id', 'tag', 'date', 'title', 'desc', 'image', 'body'],
+    headers: ['id', 'tag', 'date', 'title', 'desc', 'image', 'body', 'originalUrl', 'trending', 'active'],
   },
 }
 
@@ -615,12 +615,15 @@ function Cuenta() {
     try {
       const savedPost = await saveBlogPost({
         id: createSlug(baseTitle),
-        tag: 'TENDENCIAS',
+        tag: '',
         date: new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }),
         title: baseTitle,
         desc: 'Resumen del artículo.',
         image: '',
         body: '',
+        originalUrl: '',
+        trending: false,
+        active: true,
       })
       setContent((current) => ({ ...current, blogPosts: [...current.blogPosts, savedPost] }))
       setActiveSection('blog')
@@ -1500,9 +1503,12 @@ function Cuenta() {
 
               <div className="admin-form-grid admin-form-grid--wide">
                 <label>ID<input value={post.id} onChange={(event) => updateCollection('blogPosts', post.id, { id: createSlug(event.target.value) })} /></label>
-                <label>Etiqueta<input value={post.tag} onChange={(event) => updateCollection('blogPosts', post.id, { tag: event.target.value })} /></label>
+                <label>Etiqueta opcional<input value={post.tag || ''} onChange={(event) => updateCollection('blogPosts', post.id, { tag: event.target.value })} placeholder="Ej: Consejos, Inspiración" /></label>
                 <label>Fecha<input value={post.date} onChange={(event) => updateCollection('blogPosts', post.id, { date: event.target.value })} /></label>
                 <label>Título<input value={post.title} onChange={(event) => updateCollection('blogPosts', post.id, { title: event.target.value })} /></label>
+                <label className="admin-colspan">URL original del artículo<input value={post.originalUrl || ''} onChange={(event) => updateCollection('blogPosts', post.id, { originalUrl: event.target.value })} placeholder="https://..." /></label>
+                <label className="admin-check"><input type="checkbox" checked={post.trending === true} onChange={(event) => updateCollection('blogPosts', post.id, { trending: event.target.checked })} /> Marcar como tendencia</label>
+                <label className="admin-check"><input type="checkbox" checked={post.active !== false} onChange={(event) => updateCollection('blogPosts', post.id, { active: event.target.checked })} /> Visible en página</label>
                 <label className="admin-colspan">Descripción<textarea value={post.desc} onChange={(event) => updateCollection('blogPosts', post.id, { desc: event.target.value })} /></label>
                 <label className="admin-colspan">Contenido largo<textarea value={post.body} onChange={(event) => updateCollection('blogPosts', post.id, { body: event.target.value })} /></label>
               </div>

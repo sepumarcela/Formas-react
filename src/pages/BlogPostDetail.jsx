@@ -3,6 +3,22 @@ import { ArrowLeft, CalendarDays, Clock, Eye } from 'lucide-react'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
 
+function BlogPostLink({ post, className, children }) {
+  if (post.originalUrl) {
+    return (
+      <a className={className} href={post.originalUrl}>
+        {children}
+      </a>
+    )
+  }
+
+  return (
+    <Link className={className} to={`/blog/${post.id}`}>
+      {children}
+    </Link>
+  )
+}
+
 function articleBlocks(post) {
   const source = post.body || post.desc || ''
   const lines = source
@@ -54,7 +70,6 @@ function BlogPostDetail() {
           <div className="blog-post-hero__eyebrow">
             <Link to="/blog" className="blog-post-back"><ArrowLeft size={16} /> Volver al blog</Link>
             <div className="blog-post-meta">
-              {post.tag && <span>{post.tag}</span>}
               {post.date && <time><CalendarDays size={13} /> {post.date}</time>}
               <span><Clock size={13} /> 5 min de lectura</span>
               <span><Eye size={13} /> Blog Formas Interiores</span>
@@ -84,11 +99,11 @@ function BlogPostDetail() {
             <div className="blog-post-sidebar__box">
               <h3>Te recomendamos</h3>
               {relatedPosts.map((item) => (
-                <Link to={`/blog/${item.id}`} className="blog-post-sidebar__item" key={item.id}>
+                <BlogPostLink post={item} className="blog-post-sidebar__item" key={item.id}>
                   {item.image ? <img src={optimizeImage(item.image, { width: 220 })} alt="" loading="lazy" /> : <div className="blog-ph" />}
-                  <span>{item.tag}</span>
+                  {item.trending && <span>Tendencia</span>}
                   <strong>{item.title}</strong>
-                </Link>
+                </BlogPostLink>
               ))}
             </div>
           )}

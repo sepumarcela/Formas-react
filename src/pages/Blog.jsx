@@ -5,13 +5,26 @@ import { subscribeNewsletter } from '../api/cmsApi'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
 
+function BlogPostLink({ post, className, children }) {
+  if (post.originalUrl) {
+    return (
+      <a className={className} href={post.originalUrl}>
+        {children}
+      </a>
+    )
+  }
+
+  return (
+    <Link className={className} to={`/blog/${post.id}`}>
+      {children}
+    </Link>
+  )
+}
+
 function Blog() {
   const [{ blogPosts, pageContent }] = useSiteContent()
   const page = pageContent.blog
   const activePosts = blogPosts.filter((post) => post.active !== false)
-  const categories = ['Todos', ...Array.from(new Set(activePosts.map((post) => post.tag).filter(Boolean)))]
-  const [activeCategory, setActiveCategory] = useState('Todos')
-  const visiblePosts = activeCategory === 'Todos' ? activePosts : activePosts.filter((post) => post.tag === activeCategory)
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [newsletterMessage, setNewsletterMessage] = useState('')
   const [subscribing, setSubscribing] = useState(false)
@@ -37,33 +50,19 @@ function Blog() {
       <PageHero content={page} fallbackTitle="Blog" />
 
       <section style={{ background: 'var(--color-bg)' }}>
-        <div className="blog-cats">
-          <span className="blog-cats__label">Categorías:</span>
-          {categories.map((category) => (
-            <button
-              type="button"
-              key={category}
-              className={`blog-cat-btn ${activeCategory === category ? 'active' : ''}`}
-              onClick={() => setActiveCategory(category)}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
         <div className="blog-layout">
           <div className="blog-grid">
-            {visiblePosts.map((post) => (
+            {activePosts.map((post) => (
               <article className="blog-card" key={post.id}>
                 <div className="blog-card__img">
-                  <span className="blog-card__tag">{post.tag}</span>
+                  {post.trending && <span className="blog-card__tag">Tendencia</span>}
                   {post.image ? <img src={optimizeImage(post.image, { width: 1000 })} alt={post.title} loading="lazy" /> : <div className="blog-ph">Foto pendiente</div>}
                 </div>
                 <div className="blog-card__body">
                   <span className="blog-card__date">{post.date}</span>
                   <h3>{post.title}</h3>
                   <p>{post.desc}</p>
-                  <Link to={`/blog/${post.id}`} className="blog-card__more">Leer más &rarr;</Link>
+                  <BlogPostLink post={post} className="blog-card__more">Leer más &rarr;</BlogPostLink>
                 </div>
               </article>
             ))}
@@ -73,13 +72,13 @@ function Blog() {
             <div className="blog-sidebar__box">
               <h4>{page.sidebarTitle}</h4>
               {activePosts.slice(0, 3).map((post) => (
-                <Link className="blog-sidebar__art" to={`/blog/${post.id}`} key={post.id}>
+                <BlogPostLink className="blog-sidebar__art" post={post} key={post.id}>
                   {post.image ? <img className="blog-sidebar__ph" src={optimizeImage(post.image, { width: 360 })} alt="" loading="lazy" /> : <div className="blog-sidebar__ph" />}
                   <div>
                     <div className="blog-sidebar__title">{post.title}</div>
                     <div className="blog-sidebar__date">{post.date}</div>
                   </div>
-                </Link>
+                </BlogPostLink>
               ))}
             </div>
             <div className="blog-sidebar__cta">

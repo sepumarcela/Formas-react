@@ -158,14 +158,17 @@ function toBackendHeroSlide(slide, displayOrder = 0) {
 }
 
 function toFrontendBlogPost(post) {
+  const tag = text(post.category)
   return {
     id: post.id,
-    tag: text(post.category),
+    tag,
     date: post.displayDate || text(post.publishedAt),
     title: text(post.title),
     desc: text(post.excerpt),
     image: assetUrl(text(post.image)),
     body: text(post.content),
+    originalUrl: text(post.originalUrl),
+    trending: post.trending === true || tag.toLowerCase().includes('tendencia'),
     active: post.active !== false,
     persisted: true,
   }
@@ -180,6 +183,8 @@ function toBackendBlogPost(post) {
     excerpt: text(post.desc),
     content: text(post.body),
     image: backendAssetPath(text(post.image)),
+    originalUrl: text(post.originalUrl),
+    trending: post.trending === true,
     publishedAt: /^\d{4}-\d{2}-\d{2}$/.test(post.date || '') ? post.date : null,
     active: post.active !== false,
   }
