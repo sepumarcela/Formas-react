@@ -1,4 +1,15 @@
-export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8080').replace(/\/$/, '')
+const DEFAULT_API_BASE_URL = 'https://formas-backend-msro.onrender.com'
+const LOCAL_API_BASE_URL = 'http://127.0.0.1:8080'
+
+function defaultApiBaseUrl() {
+  if (typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+    return LOCAL_API_BASE_URL
+  }
+
+  return DEFAULT_API_BASE_URL
+}
+
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl()).replace(/\/$/, '')
 const AUTH_TOKEN_KEY = 'formas-admin-token'
 
 function text(value) {
