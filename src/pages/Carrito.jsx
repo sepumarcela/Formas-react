@@ -15,7 +15,7 @@ import {
   PiShoppingCartSimpleDuotone,
   PiTruckDuotone,
 } from 'react-icons/pi'
-import { createWompiCheckout, submitContactForm } from '../api/cmsApi'
+import { createCustomerOrder, createWompiCheckout } from '../api/cmsApi'
 import {
   CART_UPDATED_EVENT,
   clearCart,
@@ -86,7 +86,6 @@ function Carrito() {
   const { priceBeforeIva, ivaAmount } = useMemo(() => splitIncludedIva(totalWithIva), [totalWithIva])
   const hasPricedItems = totalWithIva > 0
   const productCount = items.reduce((sum, item) => sum + item.quantity, 0)
-  const selectedPayment = paymentOptions.find((option) => option.id === paymentMethod) || paymentOptions[0]
 
   const quantityMap = useCallback((nextItems) => {
     return Object.fromEntries(nextItems.map((item) => [item.id, String(item.quantity)]))
@@ -147,9 +146,6 @@ function Carrito() {
 
     const form = event.currentTarget
     const data = new FormData(form)
-    const orderLines = items
-      .map((item) => `- ${item.quantity} x ${item.name} (${item.category || 'Producto'}) ${item.price || 'Cotizar'}`)
-      .join('\n')
 
     setSending(true)
     setError('')
@@ -187,25 +183,25 @@ function Carrito() {
         return
       }
 
-      await submitContactForm({
+      await createCustomerOrder({
         name: data.get('name'),
         phone: data.get('phone'),
         email: data.get('email'),
-        interest: 'Carrito de compra',
-        message: [
-          'Solicitud desde carrito Formas Interiores',
-          '',
-          orderLines,
-          '',
-          `Precio antes de IVA: ${hasPricedItems ? formatMoney(priceBeforeIva) : 'Por cotizar'}`,
-          `IVA (${Math.round(IVA_RATE * 100)}%): ${hasPricedItems ? formatMoney(ivaAmount) : 'Por cotizar'}`,
-          `Total con IVA: ${hasPricedItems ? formatMoney(totalWithIva) : 'Por cotizar'}`,
-          `Método de pago preferido: ${selectedPayment.title}`,
-          `Ciudad: ${data.get('city') || 'No indicada'}`,
-          `Dirección/sector: ${data.get('address') || 'No indicado'}`,
-          '',
-          `Notas: ${data.get('notes') || 'Sin notas adicionales'}`,
-        ].join('\n'),
+        city: data.get('city'),
+        address: data.get('address'),
+        notes: data.get('notes'),
+        paymentMethod,
+        amountCents: hasPricedItems ? amountToCents(totalWithIva) : null,
+        subtotalCents: hasPricedItems ? amountToCents(priceBeforeIva) : null,
+        taxCents: hasPricedItems ? amountToCents(ivaAmount) : null,
+        items: items.map((item) => ({
+          productId: item.id,
+          name: item.name,
+          category: item.category || '',
+          image: item.image || '',
+          quantity: item.quantity,
+          unitAmountCents: item.price ? amountToCents(parseMoney(item.price)) : null,
+        })),
       })
 
       setSent(true)

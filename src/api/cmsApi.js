@@ -461,6 +461,13 @@ export async function createWompiCheckout(order) {
   })
 }
 
+export async function createCustomerOrder(order) {
+  return request('/api/payments/orders', {
+    method: 'POST',
+    body: JSON.stringify(order),
+  })
+}
+
 export async function subscribeNewsletter(email) {
   return request('/api/newsletter-subscriptions', {
     method: 'POST',
