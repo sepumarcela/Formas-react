@@ -22,6 +22,10 @@ function articleBlocks(post) {
   })
 }
 
+function sidebarHeadingText(text) {
+  return text.replace(/^\d+\.\s*/, '')
+}
+
 function BlogPostDetail() {
   const { postId } = useParams()
   const [{ blogPosts }] = useSiteContent()
@@ -47,12 +51,14 @@ function BlogPostDetail() {
     <main className="page blog-post-page">
       <section className="blog-post-hero">
         <div className="blog-post-hero__content">
-          <Link to="/blog" className="blog-post-back"><ArrowLeft size={16} /> Volver al blog</Link>
-          <div className="blog-post-meta">
-            {post.tag && <span>{post.tag}</span>}
-            {post.date && <time><CalendarDays size={13} /> {post.date}</time>}
-            <span><Clock size={13} /> 5 min de lectura</span>
-            <span><Eye size={13} /> Blog Formas Interiores</span>
+          <div className="blog-post-hero__eyebrow">
+            <Link to="/blog" className="blog-post-back"><ArrowLeft size={16} /> Volver al blog</Link>
+            <div className="blog-post-meta">
+              {post.tag && <span>{post.tag}</span>}
+              {post.date && <time><CalendarDays size={13} /> {post.date}</time>}
+              <span><Clock size={13} /> 5 min de lectura</span>
+              <span><Eye size={13} /> Blog Formas Interiores</span>
+            </div>
           </div>
           <h1>{post.title}</h1>
           {post.desc && <p>{post.desc}</p>}
@@ -92,7 +98,7 @@ function BlogPostDetail() {
               <h3>En este artículo</h3>
               <ol>
                 {headings.map((heading) => (
-                  <li key={heading.id}><a href={`#${heading.id}`}>{heading.text}</a></li>
+                  <li key={heading.id}><a href={`#${heading.id}`}>{sidebarHeadingText(heading.text)}</a></li>
                 ))}
               </ol>
             </div>
