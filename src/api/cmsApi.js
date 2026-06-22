@@ -168,7 +168,7 @@ function toFrontendBlogPost(post) {
     image: assetUrl(text(post.image)),
     body: text(post.content),
     originalUrl: text(post.originalUrl),
-    trending: post.trending === true || tag.toLowerCase().includes('tendencia'),
+    trending: post.trending === true,
     active: post.active !== false,
     persisted: true,
   }
