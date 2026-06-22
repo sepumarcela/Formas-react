@@ -1,4 +1,4 @@
-import { PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone, PiToolboxDuotone } from 'react-icons/pi'
+﻿import { PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone, PiToolboxDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { optimizeImage } from '../../utils/images'
 
@@ -37,7 +37,7 @@ function WhyFormas() {
   return (
     <section className="why-formas">
       <div className="section-heading">
-        <p className="eyebrow">Por qué Formas</p>
+        <p className="eyebrow">Por qué Formas Interiores</p>
         <h2>Convertimos ideas en espacios únicos</h2>
         <p>
           Cuidamos cada detalle para crear muebles funcionales, cálidos y

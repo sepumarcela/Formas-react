@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import {
   ChevronDown, Menu, Search, ShoppingCart, User, X,
@@ -41,7 +41,7 @@ function Header({ transparent = false }) {
   const dropRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
-  const usesDarkHeader = location.pathname.startsWith('/cuenta') || location.pathname.startsWith('/carrito') || location.pathname.startsWith('/blog')
+  const usesDarkHeader = location.pathname.startsWith('/cuenta') || location.pathname.startsWith('/carrito')
 
   useEffect(() => {
     function handleClick(event) {
@@ -93,7 +93,7 @@ function Header({ transparent = false }) {
       <div className="site-header__inner">
         <Link to="/" className="brand">
           {logoImage ? (
-            <img className="brand__logo-img" src={optimizeImage(logoImage, { width: 320 })} alt="FORMAS" style={{ '--logo-height': `${logoHeight}px` }} />
+            <img className="brand__logo-img" src={optimizeImage(logoImage, { width: 320 })} alt="Formas Interiores" style={{ '--logo-height': `${logoHeight}px` }} />
           ) : (
             <>
               <svg className="brand__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,7 +103,7 @@ function Header({ transparent = false }) {
                 <path d="M34 28 L41 22 L31 18 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
               </svg>
               <span className="brand__textwrap">
-                <span className="brand__text">FORMAS</span>
+                <span className="brand__text">Formas Interiores</span>
                 <span className="brand__tagline">DISEÑA TU ESTILO</span>
               </span>
             </>
@@ -165,7 +165,7 @@ function Header({ transparent = false }) {
               </div>
               <div className="nav-dropdown__promo">
                 <div className="nav-dropdown__promo-ph">
-                  {productsMenuImage ? <img src={optimizeImage(productsMenuImage, { width: 500 })} alt="Productos FORMAS" /> : 'Foto pendiente'}
+                  {productsMenuImage ? <img src={optimizeImage(productsMenuImage, { width: 500 })} alt="Productos Formas Interiores" /> : 'Foto pendiente'}
                 </div>
                 <strong>Diseñamos muebles</strong>
                 <span>que se adaptan a tu <em>estilo de vida.</em></span>

@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom'
+﻿import { Link, useSearchParams } from 'react-router-dom'
 import { PiCheckCircleDuotone, PiClockDuotone, PiWarningCircleDuotone } from 'react-icons/pi'
 
 const statusCopy = {
@@ -35,7 +35,7 @@ function PaymentResult() {
     <main className="page payment-result-page">
       <section className="payment-result">
         <Icon size={48} />
-        <p className="eyebrow">Pago FORMAS</p>
+        <p className="eyebrow">Pago Formas Interiores</p>
         <h1>{copy.title}</h1>
         <p>{copy.text}</p>
         {reference && <span className="payment-reference">Referencia: {reference}</span>}

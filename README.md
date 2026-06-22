@@ -1,6 +1,6 @@
-# FORMAS Frontend
+﻿# Formas Interiores Frontend
 
-Sitio público y panel administrativo de FORMAS, construido con React y Vite.
+Sitio público y panel administrativo de Formas Interiores, construido con React y Vite.
 
 ## Qué contiene
 

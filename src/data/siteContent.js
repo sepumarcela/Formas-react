@@ -1,4 +1,4 @@
-export const SITE_CONTENT_KEY = 'formas-site-content-v1'
+﻿export const SITE_CONTENT_KEY = 'formas-site-content-v1'
 export const SITE_CONTENT_EVENT = 'formas-site-content-updated'
 
 const legacyDemoProductIds = new Set([
@@ -60,7 +60,7 @@ export const defaultSiteContent = {
       breadcrumb: 'Proyectos',
       eyebrow: '',
       title: 'Proyectos',
-      description: 'Descubre espacios reales transformados por Formas. Cada proyecto refleja nuestro compromiso con el diseño, la funcionalidad y los detalles que marcan la diferencia.',
+      description: 'Descubre espacios reales transformados por Formas Interiores. Cada proyecto refleja nuestro compromiso con el diseño, la funcionalidad y los detalles que marcan la diferencia.',
       image: '',
       ctaLabel: 'Ver más proyectos',
       ctaLink: '/contacto',
@@ -79,10 +79,10 @@ export const defaultSiteContent = {
       breadcrumb: 'Nosotros',
       eyebrow: 'Nosotros',
       title: 'Diseñamos experiencias,\ncreamos hogares.',
-      description: 'En Formas transformamos espacios en lugares que reflejan tu estilo de vida y se adaptan a tus necesidades. Combinamos diseño, calidad y funcionalidad en cada detalle.',
+      description: 'En Formas Interiores transformamos espacios en lugares que reflejan tu estilo de vida y se adaptan a tus necesidades. Combinamos diseño, calidad y funcionalidad en cada detalle.',
       image: '',
       historyTitle: 'Nuestra historia',
-      historyText: 'Formas nació con la visión de ofrecer muebles personalizados de alta calidad que elevaran los espacios de nuestros clientes.\nHoy, somos un equipo apasionado por el diseño y la innovación, consolidado como una marca referente en mobiliario personalizado en Colombia.\nCada proyecto es único y refleja nuestra dedicación por crear espacios que transformen la vida de las personas.',
+      historyText: 'Formas Interiores nació con la visión de ofrecer muebles personalizados de alta calidad que elevaran los espacios de nuestros clientes.\nHoy, somos un equipo apasionado por el diseño y la innovación, consolidado como una marca referente en mobiliario personalizado en Colombia.\nCada proyecto es único y refleja nuestra dedicación por crear espacios que transformen la vida de las personas.',
       historyImage: '',
       locationImage: '',
     },
@@ -109,7 +109,7 @@ export const defaultSiteContent = {
       phoneTitle: 'Llámanos',
       phone: '+57 300 123 4567\n+57 604 444 7890',
       emailTitle: 'Escríbenos',
-      email: 'hola@formas.com',
+      email: 'hola@formasinteriores.com',
       hoursTitle: 'Horario de atención',
       hours: 'Lunes a Viernes: 8:00 a.m. - 6:00 p.m.\nSábados: 9:00 a.m. - 1:00 p.m.',
       mapAddress: 'Medellín, Colombia',

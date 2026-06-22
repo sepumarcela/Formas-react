@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+﻿import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, CalendarDays, Clock, Eye } from 'lucide-react'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
@@ -52,7 +52,7 @@ function BlogPostDetail() {
             {post.tag && <span>{post.tag}</span>}
             {post.date && <time><CalendarDays size={13} /> {post.date}</time>}
             <span><Clock size={13} /> 5 min de lectura</span>
-            <span><Eye size={13} /> Blog FORMAS</span>
+            <span><Eye size={13} /> Blog Formas Interiores</span>
           </div>
           <h1>{post.title}</h1>
           {post.desc && <p>{post.desc}</p>}

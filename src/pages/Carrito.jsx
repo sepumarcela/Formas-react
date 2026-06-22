@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+﻿import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Trash2 } from 'lucide-react'
 import {
@@ -193,7 +193,7 @@ function Carrito() {
         email: data.get('email'),
         interest: 'Carrito de compra',
         message: [
-          'Solicitud desde carrito FORMAS',
+          'Solicitud desde carrito Formas Interiores',
           '',
           orderLines,
           '',
@@ -226,7 +226,7 @@ function Carrito() {
             <p className="eyebrow">Compra segura</p>
             <h1>Carrito y pago</h1>
             <p>
-              Reúne tus productos, confirma tus datos y paga por una pasarela segura cuando el comercio de FORMAS quede activo.
+              Reúne tus productos, confirma tus datos y paga por una pasarela segura cuando el comercio de Formas Interiores quede activo.
             </p>
           </div>
           <div className="carrito-hero__badge">
@@ -288,7 +288,7 @@ function Carrito() {
                         {item.image ? <img src={optimizeImage(item.image, { width: 360 })} alt={item.name} /> : <span>Foto pendiente</span>}
                       </Link>
                       <div className="cart-line__body">
-                        <p>{item.category || 'Producto FORMAS'}</p>
+                        <p>{item.category || 'Producto Formas Interiores'}</p>
                         <Link to={`/productos/${item.id}`}>{item.name}</Link>
                         <span>{item.size}</span>
                       </div>
@@ -395,7 +395,7 @@ function Carrito() {
               </div>
               <div className="carrito-summary__note">
                 <PiShieldCheckDuotone size={18} />
-                FORMAS no solicita claves ni códigos. Los pagos con tarjeta se completan únicamente por enlace seguro de pasarela.
+                Formas Interiores no solicita claves ni códigos. Los pagos con tarjeta se completan únicamente por enlace seguro de pasarela.
               </div>
             </aside>
           </div>

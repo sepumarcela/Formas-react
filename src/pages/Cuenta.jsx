@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import {
   BadgePlus,
   Download,
@@ -825,9 +825,9 @@ function Cuenta() {
           homeProducts: savedPage,
         },
       }))
-      flash('Foto de Por qué Formas subida y guardada.')
+      flash('Foto de Por qué Formas Interiores subida y guardada.')
     } catch (error) {
-      reportBackendError('No se pudo subir la foto de Por qué Formas al backend.', error)
+      reportBackendError('No se pudo subir la foto de Por qué Formas Interiores al backend.', error)
     }
   }
 
@@ -885,7 +885,7 @@ function Cuenta() {
       <div className="admin-panel">
         <div className="admin-panel__header">
           <div>
-            <p className="admin-kicker">Panel FORMAS</p>
+            <p className="admin-kicker">Panel Formas Interiores</p>
             <h1>Administrador de contenido</h1>
             <p>Actualiza productos, categorías, blog e imágenes desde un solo lugar.</p>
           </div>
@@ -1040,7 +1040,7 @@ function Cuenta() {
             </div>
             <div className="admin-editor-card admin-editor-card--hero">
               <div className="admin-image-box admin-image-box--hero">
-                {page.logoImage ? <img src={page.logoImage} alt="Logo FORMAS" /> : <Images size={30} />}
+                {page.logoImage ? <img src={page.logoImage} alt="Logo Formas Interiores" /> : <Images size={30} />}
                 <label>
                   Cargar logo
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('homeProducts', 'logoImage', event)} />
@@ -1072,7 +1072,7 @@ function Cuenta() {
               <label className="admin-colspan">Descripción destacados<textarea value={page.featuredDescription || ''} onChange={(event) => updatePageContent('homeProducts', { featuredDescription: event.target.value })} /></label>
             </div>
             <div className="admin-list-heading">
-              <h2>Fotos de Por qué Formas</h2>
+              <h2>Fotos de Por qué Formas Interiores</h2>
             </div>
             <div className="admin-editor-list admin-editor-list--compact">
               {[
@@ -1668,7 +1668,7 @@ function Cuenta() {
         <section className="cuenta-section cuenta-section--admin">
           <div className="cuenta-shell cuenta-shell--admin">
             <aside className="cuenta-panel cuenta-panel--admin">
-              <p className="cuenta-panel__eyebrow">ADMIN FORMAS</p>
+              <p className="cuenta-panel__eyebrow">ADMIN Formas Interiores</p>
               <h2>Acceso privado al gestor de contenido.</h2>
               <p>
                 Inicia sesión para crear productos, administrar artículos, subir imágenes y hacer cargas masivas.
@@ -1741,7 +1741,7 @@ function Cuenta() {
     <main className="page admin-page">
       <aside className="admin-sidebar">
         <div className="admin-sidebar__brand">
-          <span>FORMAS</span>
+          <span>Formas Interiores</span>
           <small>Administrador</small>
         </div>
         <nav>

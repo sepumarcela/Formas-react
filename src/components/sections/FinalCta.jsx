@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+﻿import { Link } from 'react-router-dom'
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { optimizeImage } from '../../utils/images'
 
@@ -50,7 +50,7 @@ function FinalCta() {
       </div>
 
       <div className="final-cta__photo">
-        {section.finalImage ? <img src={optimizeImage(section.finalImage, { width: 900 })} alt={section.finalTitle || 'Proyecto Formas'} loading="lazy" /> : <span>Foto pendiente</span>}
+        {section.finalImage ? <img src={optimizeImage(section.finalImage, { width: 900 })} alt={section.finalTitle || 'Proyecto Formas Interiores'} loading="lazy" /> : <span>Foto pendiente</span>}
       </div>
     </section>
   )

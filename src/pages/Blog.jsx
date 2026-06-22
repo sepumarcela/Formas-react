@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageHero from '../components/sections/PageHero'
 import { subscribeNewsletter } from '../api/cmsApi'
@@ -24,7 +24,7 @@ function Blog() {
     try {
       await subscribeNewsletter(newsletterEmail)
       setNewsletterEmail('')
-      setNewsletterMessage('Gracias por suscribirte. Pronto recibirás inspiración, novedades y contenido de FORMAS en tu correo.')
+      setNewsletterMessage('Gracias por suscribirte. Pronto recibirás inspiración, novedades y contenido de Formas Interiores en tu correo.')
     } catch {
       setNewsletterMessage('No se pudo guardar el correo. Inténtalo de nuevo.')
     } finally {

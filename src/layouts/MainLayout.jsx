@@ -4,7 +4,7 @@ import Footer from '../components/navigation/Footer'
 
 function MainLayout() {
   const { pathname } = useLocation()
-  const needsSolidHeader = pathname === '/cuenta' || pathname === '/carrito' || pathname.startsWith('/blog')
+  const needsSolidHeader = pathname === '/cuenta' || pathname === '/carrito'
 
   return (
     <>

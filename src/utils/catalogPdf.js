@@ -1,4 +1,4 @@
-import { optimizeImage } from './images'
+﻿import { optimizeImage } from './images'
 
 const categoryCopy = {
   'centros-entretenimiento': 'Piezas pensadas para integrar tecnología, almacenamiento y atmósfera en el centro social de la casa.',
@@ -108,12 +108,12 @@ function backgroundStyle(image, width = 1600) {
 
 function logoMarkup(logoImage, variant = 'light') {
   if (logoImage) {
-    return `<img class="catalog-logo catalog-logo--${variant}" src="${escapeHtml(imageUrl(logoImage, 360))}" alt="FORMAS">`
+    return `<img class="catalog-logo catalog-logo--${variant}" src="${escapeHtml(imageUrl(logoImage, 360))}" alt="Formas Interiores">`
   }
 
   return `
     <div class="catalog-logo-fallback catalog-logo-fallback--${variant}">
-      <strong>FORMAS</strong>
+      <strong>Formas Interiores</strong>
       <small>DISEÑA TU ESTILO</small>
     </div>
   `
@@ -366,7 +366,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
     <html lang="es">
       <head>
         <meta charset="utf-8">
-        <title>Catálogo FORMAS</title>
+        <title>Catálogo Formas Interiores</title>
         <style>
           * { box-sizing: border-box; }
           html,
@@ -1162,7 +1162,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             <div class="catalog-cover__content">
               <div class="catalog-kicker">Catálogo de productos</div>
               <h1>Espacios diseñados a la medida de tu vida.</h1>
-              <p>Una mirada editorial a las líneas, materiales y productos que FORMAS desarrolla para convertir mobiliario en arquitectura interior.</p>
+              <p>Una mirada editorial a las líneas, materiales y productos que Formas Interiores desarrolla para convertir mobiliario en arquitectura interior.</p>
             </div>
           </section>
 
