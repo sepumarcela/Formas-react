@@ -228,9 +228,9 @@ picture,
 .brand__logo-img {
   display: block;
   width: auto;
-  height: clamp(64px, var(--logo-height, 120px), 220px);
-  max-height: none;
-  max-width: min(360px, 24vw);
+  height: clamp(72px, calc(var(--logo-height, 120px) * 0.72), 118px);
+  max-height: 118px;
+  max-width: min(300px, 20vw);
   object-fit: contain;
   object-position: var(--logo-position, center);
   transform: translateX(var(--logo-shift, 0));
@@ -735,8 +735,8 @@ picture,
   }
 
   .brand__logo-img {
-    height: clamp(54px, var(--logo-height, 78px), 130px);
-    max-width: min(260px, 58vw);
+    height: clamp(58px, calc(var(--logo-height, 78px) * 0.68), 96px);
+    max-width: min(220px, 48vw);
   }
 
   .brand__tagline {
@@ -789,8 +789,8 @@ picture,
   }
 
   .brand__logo-img {
-    height: clamp(48px, var(--logo-height, 58px), 96px);
-    max-width: min(220px, 54vw);
+    height: clamp(48px, calc(var(--logo-height, 58px) * 0.6), 72px);
+    max-width: min(180px, 48vw);
   }
 
   .header-actions {
