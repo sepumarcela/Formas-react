@@ -1639,6 +1639,7 @@ section {
 .page-hero {
   position: relative;
   min-height: calc(100vh - 24px);
+  height: calc(100vh - 24px);
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -3075,6 +3076,7 @@ section {
 
   .page-hero {
     min-height: calc(100vh - 24px);
+    height: calc(100vh - 24px);
     margin-top: -72px;
     padding-top: 168px;
   }
@@ -5008,6 +5010,13 @@ section {
   }
 }
 
+@supports (height: 100svh) {
+  .page-hero {
+    min-height: calc(100svh - 24px);
+    height: calc(100svh - 24px);
+  }
+}
+
 /* Página individual de producto */
 .product-detail-page {
   background: var(--color-bg);
@@ -5513,11 +5522,15 @@ section {
   .site-header--transparent .site-header__inner {
     padding-top: 32px;
   }
-
-  .home-hero,
-  .page-hero {
+  .home-hero {
     min-height: 980px;
   }
+
+  .page-hero {
+    min-height: calc(100vh - 24px);
+    height: calc(100vh - 24px);
+  }
+
 
   .home-hero {
     padding-top: 190px;
