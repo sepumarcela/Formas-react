@@ -178,7 +178,6 @@ function Carrito() {
           return
         }
 
-        setSent(true)
         setError(checkout.message || 'El pedido quedo registrado. Falta activar las llaves de Wompi para abrir pagos reales.')
         return
       }
@@ -363,7 +362,7 @@ function Carrito() {
                 </div>
 
                 {error && <p className="checkout-message checkout-message--error">{error}</p>}
-                {sent && <p className="checkout-message">Solicitud enviada. Te contactaremos para confirmar disponibilidad, medidas y enlace de pago seguro.</p>}
+                {sent && !hasPricedItems && <p className="checkout-message">Solicitud enviada. Te contactaremos para revisar los detalles de tu cotización.</p>}
 
                 <button className="button button--primary checkout-submit" type="submit" disabled={sending}>
                   {sending ? 'Preparando pago...' : hasPricedItems ? 'Pagar con Wompi' : 'Solicitar cotización'}
