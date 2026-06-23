@@ -1632,7 +1632,8 @@ section {
    ═══════════════════════════════ */
 .page-hero {
   position: relative;
-  min-height: 680px;
+  min-height: calc(100vh - 12px);
+  height: calc(100vh - 12px);
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -3068,7 +3069,8 @@ section {
   }
 
   .page-hero {
-    min-height: 80vh;
+    min-height: calc(100vh - 12px);
+    height: calc(100vh - 12px);
     margin-top: -72px;
     padding-top: 168px;
   }
@@ -4993,6 +4995,13 @@ section {
   .page-hero>.page-hero__content {
     padding-left: var(--page-inline) !important;
     padding-right: var(--page-inline) !important;
+  }
+}
+
+@supports (height: 100svh) {
+  .page-hero {
+    min-height: calc(100svh - 12px);
+    height: calc(100svh - 12px);
   }
 }
 
