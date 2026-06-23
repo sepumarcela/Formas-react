@@ -3,7 +3,7 @@
    ═══════════════════════════════════════════ */
 
 :root {
-  font-family: 'DM Sans', 'Inter', Arial, Helvetica, sans-serif;
+  font-family: 'Corbel', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
 
   /* Paleta FORMAS */
   --color-bg: #F5EFE6;
@@ -39,7 +39,7 @@ body {
   margin: 0;
   background: var(--color-bg);
   color: var(--color-text);
-  font-family: 'DM Sans', 'Inter', Arial, sans-serif;
+  font-family: 'Corbel', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -555,7 +555,7 @@ picture,
 }
 
 .home-hero h1 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Corbel', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
   font-size: clamp(42px, 4.3vw, 62px);
   font-weight: 800;
   line-height: 1.0;
