@@ -491,7 +491,8 @@ picture,
    ═══════════════════════════════ */
 .home-hero {
   position: relative;
-  min-height: 500px;
+  min-height: calc(100vh + 80px);
+  height: calc(100vh + 80px);
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -656,7 +657,8 @@ picture,
 
   .home-hero {
     margin-top: -72px;
-    min-height: 85vh;
+    min-height: calc(100vh + 60px);
+    height: calc(100vh + 60px);
     padding-bottom: 42px;
   }
 
@@ -4999,6 +5001,11 @@ section {
 }
 
 @supports (height: 100svh) {
+  .home-hero {
+    min-height: calc(100svh + 60px);
+    height: calc(100svh + 60px);
+  }
+
   .page-hero {
     min-height: calc(100svh + 60px);
     height: calc(100svh + 60px);
@@ -5511,9 +5518,14 @@ section {
     padding-top: 32px;
   }
 
-  .home-hero,
+  .home-hero {
+    min-height: calc(100vh + 80px);
+    height: calc(100vh + 80px);
+  }
+
   .page-hero {
-    min-height: 980px;
+    min-height: calc(100vh + 76px);
+    height: calc(100vh + 76px);
   }
 
   .home-hero {
