@@ -7,12 +7,13 @@ function Footer() {
   const visibleCategories = categories.filter((category) => category.active !== false)
   const logoImage = pageContent.homeProducts?.logoImage
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
+  const logoPosition = pageContent.homeProducts?.logoPosition || 'center'
 
   return (
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
-          {logoImage ? <img src={optimizeImage(logoImage, { width: 260 })} className="site-footer__brand-logo" alt="Formas Interiores" style={{ '--logo-height': `${Math.min(Number(logoHeight), 90)}px` }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>Formas Interiores</div>}
+          {logoImage ? <img src={optimizeImage(logoImage, { width: 320 })} className="site-footer__brand-logo" alt="Formas Interiores" style={{ '--logo-height': `${Math.min(Number(logoHeight), 120)}px`, '--logo-position': logoPosition }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>Formas Interiores</div>}
           <p>Diseñamos y fabricamos muebles premium para transformar tu hogar con estilo y funcionalidad.</p>
           <div className="site-footer__social">
             <a href="#">Instagram</a>

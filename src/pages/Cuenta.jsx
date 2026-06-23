@@ -1043,7 +1043,7 @@ function Cuenta() {
             </div>
             <div className="admin-editor-card admin-editor-card--hero">
               <div className="admin-image-box admin-image-box--hero">
-                {page.logoImage ? <img src={page.logoImage} alt="Logo Formas Interiores" /> : <Images size={30} />}
+                {page.logoImage ? <img src={page.logoImage} alt="Logo Formas Interiores" style={{ objectPosition: page.logoPosition || 'center' }} /> : <Images size={30} />}
                 <label>
                   Cargar logo
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('homeProducts', 'logoImage', event)} />
@@ -1057,8 +1057,15 @@ function Cuenta() {
                 </p>
               </div>
               <div className="admin-form-grid">
-                <label>Alto del logo (px)<input inputMode="numeric" value={page.logoHeight || '120'} onChange={(event) => updatePageContent('homeProducts', { logoHeight: onlyDigits(event.target.value) })} /></label>
-                <label>Ajuste imagen inicio
+                <label>Alto del logo (px)<input inputMode="numeric" min="60" max="220" value={page.logoHeight || '120'} onChange={(event) => updatePageContent('homeProducts', { logoHeight: onlyDigits(event.target.value) })} /></label>
+                <label>Posición del logo
+                  <select value={page.logoPosition || 'center'} onChange={(event) => updatePageContent('homeProducts', { logoPosition: event.target.value })}>
+                    <option value="left center">Izquierda</option>
+                    <option value="center">Centrado</option>
+                    <option value="right center">Derecha</option>
+                  </select>
+                </label>
+                <label>Ajuste imagen principal
                   <select value={page.heroImageFit || 'cover'} onChange={(event) => updatePageContent('homeProducts', { heroImageFit: event.target.value })}>
                     <option value="cover">Cubrir cuadro</option>
                     <option value="contain">Mostrar completa</option>
