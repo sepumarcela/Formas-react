@@ -1469,7 +1469,7 @@ section {
 }
 
 .final-cta__content {
-  padding: 80px 60px;
+  padding: 80px 60px 80px clamp(24px, 2.6vw, 50px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -3066,7 +3066,7 @@ section {
   }
 
   .final-cta__content {
-    padding: 50px 24px;
+    padding: 50px 18px;
   }
 
   .final-cta__content h2 {
