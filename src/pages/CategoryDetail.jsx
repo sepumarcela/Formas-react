@@ -1,8 +1,9 @@
+import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone, PiToolboxDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { getActiveDiscount } from '../utils/discounts'
-import { optimizeImage } from '../utils/images'
+import { optimizeImage, preloadImage } from '../utils/images'
 
 const badges = [
   { icon: PiRulerDuotone, label: 'Diseños personalizados' },
@@ -15,6 +16,11 @@ function CategoryDetail() {
   const { categoryId } = useParams()
   const [{ categories, products }] = useSiteContent()
   const category = categories.find((item) => item.id === categoryId && item.active !== false)
+  const heroImage = category?.image ? optimizeImage(category.image, { width: 1800 }) : ''
+
+  useEffect(() => {
+    preloadImage(heroImage)
+  }, [heroImage])
 
   if (!category) {
     return (
@@ -29,12 +35,11 @@ function CategoryDetail() {
   }
 
   const categoryProducts = products.filter((product) => product.categoryId === category.id && product.active !== false)
-
   return (
     <main className="page">
       <section className="page-hero">
         {category.image ? (
-          <div className="page-hero__bg"><img src={optimizeImage(category.image, { width: 1800 })} alt={category.name} /></div>
+          <div className="page-hero__bg"><img src={heroImage} alt={category.name} loading="eager" decoding="async" fetchPriority="high" /></div>
         ) : (
           <div className="page-hero__bg-ph" />
         )}

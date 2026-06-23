@@ -26,3 +26,22 @@ export function optimizeImage(url, options = {}) {
 
   return `${base}${CLOUDINARY_UPLOAD_MARKER}${transformation}/${rest}`
 }
+
+export function preloadImage(url) {
+  if (!url || typeof document === 'undefined') return
+
+  const existing = document.head.querySelector(`link[rel="preload"][as="image"][href="${url}"]`)
+  if (existing) return
+
+  const link = document.createElement('link')
+  link.rel = 'preload'
+  link.as = 'image'
+  link.href = url
+  link.fetchPriority = 'high'
+  document.head.appendChild(link)
+
+  const image = new Image()
+  image.decoding = 'async'
+  image.fetchPriority = 'high'
+  image.src = url
+}

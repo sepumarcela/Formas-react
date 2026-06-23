@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
@@ -6,9 +6,23 @@ import { useSiteContent } from '../hooks/useSiteContent'
 import { addCartItem } from '../utils/cart'
 import { getActiveDiscount } from '../utils/discounts'
 import { API_BASE_URL } from '../api/cmsApi'
-import { optimizeImage } from '../utils/images'
+import { optimizeImage, preloadImage } from '../utils/images'
 
 const relatedWindowSize = 3
+
+function ProductMainImage({ product }) {
+  const imageSrc = product.image ? optimizeImage(product.image, { width: 1400 }) : ''
+
+  useEffect(() => {
+    preloadImage(imageSrc)
+  }, [imageSrc])
+
+  return product.image ? (
+    <img src={imageSrc} alt={product.name} loading="eager" decoding="async" fetchPriority="high" />
+  ) : (
+    <div className="product-gallery__placeholder">Foto pendiente</div>
+  )
+}
 
 function technicalSheetUrl(value) {
   if (!value) return ''
@@ -74,11 +88,7 @@ function ProductDetail() {
         <div className="product-hero-detail__inner">
           <div className="product-gallery">
             {discount && <span className="discount-badge discount-badge--detail">{discount.label}</span>}
-            {product.image ? (
-              <img src={optimizeImage(product.image, { width: 1400 })} alt={product.name} />
-            ) : (
-              <div className="product-gallery__placeholder">Foto pendiente</div>
-            )}
+            <ProductMainImage product={product} />
           </div>
 
           <div className="product-summary">

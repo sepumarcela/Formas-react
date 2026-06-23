@@ -1,5 +1,6 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { optimizeImage } from '../../utils/images'
+import { optimizeImage, preloadImage } from '../../utils/images'
 
 function renderTitle(title) {
   return String(title || '').split('\n').map((line, index) => (
@@ -12,11 +13,16 @@ function renderTitle(title) {
 
 function PageHero({ content, fallbackTitle }) {
   const title = content.title || fallbackTitle
+  const heroImage = content.image ? optimizeImage(content.image, { width: 1800 }) : ''
+
+  useEffect(() => {
+    preloadImage(heroImage)
+  }, [heroImage])
 
   return (
     <section className="page-hero">
       {content.image ? (
-        <div className="page-hero__bg"><img src={optimizeImage(content.image, { width: 1800 })} alt={title} /></div>
+        <div className="page-hero__bg"><img src={heroImage} alt={title} loading="eager" decoding="async" fetchPriority="high" /></div>
       ) : (
         <div className="page-hero__bg-ph" />
       )}

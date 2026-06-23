@@ -1,7 +1,22 @@
-﻿import { Link, useParams } from 'react-router-dom'
+﻿import { useEffect } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, CalendarDays, Clock, Eye } from 'lucide-react'
 import { useSiteContent } from '../hooks/useSiteContent'
-import { optimizeImage } from '../utils/images'
+import { optimizeImage, preloadImage } from '../utils/images'
+
+function BlogHeroImage({ post }) {
+  const imageSrc = post.image ? optimizeImage(post.image, { width: 1100 }) : ''
+
+  useEffect(() => {
+    preloadImage(imageSrc)
+  }, [imageSrc])
+
+  return post.image ? (
+    <img src={imageSrc} alt={post.title} loading="eager" decoding="async" fetchPriority="high" />
+  ) : (
+    <div className="blog-ph">Foto pendiente</div>
+  )
+}
 
 function BlogPostLink({ post, className, children }) {
   if (post.originalUrl) {
@@ -79,7 +94,7 @@ function BlogPostDetail() {
           {post.desc && <p>{post.desc}</p>}
         </div>
         <div className="blog-post-hero__media">
-          {post.image ? <img src={optimizeImage(post.image, { width: 1100 })} alt={post.title} /> : <div className="blog-ph">Foto pendiente</div>}
+          <BlogHeroImage post={post} />
         </div>
       </section>
 
@@ -125,3 +140,4 @@ function BlogPostDetail() {
 }
 
 export default BlogPostDetail
+

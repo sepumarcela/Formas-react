@@ -8,7 +8,7 @@ import ProjectHighlights from '../components/sections/ProjectHighlights'
 import TestimonialSection from '../components/sections/TestimonialSection'
 import FinalCta from '../components/sections/FinalCta'
 import { useSiteContent } from '../hooks/useSiteContent'
-import { optimizeImage } from '../utils/images'
+import { optimizeImage, preloadImage } from '../utils/images'
 import heroImage from '../assets/hero.png'
 
 function Home() {
@@ -21,10 +21,15 @@ function Home() {
   const safeSlideIndex = slides.length ? activeSlideIndex % slides.length : 0
   const currentSlide = slides[safeSlideIndex] || {}
   const heroSrc = currentSlide.image || heroImage
+  const optimizedHeroSrc = optimizeImage(heroSrc, { width: 1800 })
   const heroImageFit = pageContent.homeProducts?.heroImageFit || 'cover'
   const descriptionLines = String(currentSlide.description || '')
     .split('\n')
     .filter(Boolean)
+
+  useEffect(() => {
+    preloadImage(optimizedHeroSrc)
+  }, [optimizedHeroSrc])
 
   useEffect(() => {
     if (slides.length < 2) return undefined
@@ -40,7 +45,7 @@ function Home() {
     <main className="page">
       <section className="home-hero">
         <div className="home-hero__bg">
-          <img src={optimizeImage(heroSrc, { width: 1800 })} className={`home-hero__bg-img home-hero__bg-img--${heroImageFit}`} alt="" />
+          <img src={optimizedHeroSrc} className={`home-hero__bg-img home-hero__bg-img--${heroImageFit}`} alt="" loading="eager" decoding="async" fetchPriority="high" />
           <div className="home-hero__overlay" />
         </div>
 
