@@ -20,7 +20,7 @@
   --page-max: 1360px;
   --page-inline: 32px;
 
-  --serif: 'Cormorant Garamond', Georgia, serif;
+  --serif: 'Corbel', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
   --display-serif: 'Corbel', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
 
   color: var(--color-text);
@@ -4787,7 +4787,7 @@ section {
 
 .admin-json-editor {
   min-height: 620px;
-  font-family: Consolas, 'Courier New', monospace;
+  font-family: 'Corbel', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
   line-height: 1.5;
   white-space: pre;
 }

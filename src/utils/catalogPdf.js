@@ -382,7 +382,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             margin: 0;
             color: #3A332D;
             background: #F7F4EF;
-            font-family: Inter, Manrope, "DM Sans", Arial, sans-serif;
+            font-family: Corbel, "Trebuchet MS", "Segoe UI", Arial, sans-serif;
           }
           .catalog {
             max-width: 1120px;
@@ -421,7 +421,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
           h1,
           h2,
           h3 {
-            font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+            font-family: Corbel, "Trebuchet MS", "Segoe UI", Arial, sans-serif;
             font-weight: 400;
             letter-spacing: -0.01em;
           }
@@ -554,7 +554,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
           .catalog-index-card__body strong {
             min-width: 0;
             color: #3A332D;
-            font-family: "Cormorant Garamond", Georgia, serif;
+            font-family: Corbel, "Trebuchet MS", "Segoe UI", Arial, sans-serif;
             font-size: clamp(29px, 2.8vw, 38px);
             line-height: 0.95;
             font-weight: 400;
