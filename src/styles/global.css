@@ -516,8 +516,8 @@ picture,
 }
 
 .home-hero__bg-img--contain {
-  object-fit: contain;
-  background: rgba(0, 0, 0, 0.86);
+  object-fit: cover;
+  background: transparent;
 }
 
 .home-hero__bg-img--cover {
