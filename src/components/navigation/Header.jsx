@@ -36,8 +36,6 @@ function Header({ transparent = false }) {
   const [{ categories, pageContent }] = useSiteContent()
   const logoImage = pageContent.homeProducts?.logoImage
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
-  const logoPosition = pageContent.homeProducts?.logoPosition || 'center'
-  const logoShift = logoPosition === 'left center' ? '-22px' : logoPosition === 'right center' ? '22px' : '0px'
   const productsMenuImage = pageContent.productos?.menuImage
   const visibleCategories = categories.filter((category) => category.active !== false)
   const dropRef = useRef(null)
@@ -95,7 +93,7 @@ function Header({ transparent = false }) {
       <div className="site-header__inner">
         <Link to="/" className="brand">
           {logoImage ? (
-            <img className="brand__logo-img" src={optimizeImage(logoImage, { width: 420 })} alt="Formas Interiores" style={{ '--logo-height': `${logoHeight}px`, '--logo-position': logoPosition, '--logo-shift': logoShift }} />
+            <img className="brand__logo-img" src={optimizeImage(logoImage, { width: 320 })} alt="Formas Interiores" style={{ '--logo-height': `${logoHeight}px` }} />
           ) : (
             <>
               <svg className="brand__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
