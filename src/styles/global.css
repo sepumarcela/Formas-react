@@ -233,6 +233,7 @@ picture,
   max-width: min(360px, 24vw);
   object-fit: contain;
   object-position: var(--logo-position, center);
+  transform: translateX(var(--logo-shift, 0));
 }
 
 .brand__textwrap {
@@ -1566,6 +1567,7 @@ section {
   max-width: 240px;
   object-fit: contain;
   object-position: var(--logo-position, center);
+  transform: translateX(var(--logo-shift, 0));
   margin-bottom: 16px;
 }
 

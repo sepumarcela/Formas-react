@@ -1043,7 +1043,7 @@ function Cuenta() {
             </div>
             <div className="admin-editor-card admin-editor-card--hero">
               <div className="admin-image-box admin-image-box--hero">
-                {page.logoImage ? <img src={page.logoImage} alt="Logo Formas Interiores" style={{ objectPosition: page.logoPosition || 'center' }} /> : <Images size={30} />}
+                {page.logoImage ? <img src={page.logoImage} alt="Logo Formas Interiores" style={{ objectPosition: page.logoPosition || 'center', transform: `translateX(${page.logoPosition === 'left center' ? '-18px' : page.logoPosition === 'right center' ? '18px' : '0px'})` }} /> : <Images size={30} />}
                 <label>
                   Cargar logo
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('homeProducts', 'logoImage', event)} />

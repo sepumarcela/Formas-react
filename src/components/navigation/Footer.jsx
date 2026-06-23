@@ -8,12 +8,13 @@ function Footer() {
   const logoImage = pageContent.homeProducts?.logoImage
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
   const logoPosition = pageContent.homeProducts?.logoPosition || 'center'
+  const logoShift = logoPosition === 'left center' ? '-16px' : logoPosition === 'right center' ? '16px' : '0px'
 
   return (
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
-          {logoImage ? <img src={optimizeImage(logoImage, { width: 320 })} className="site-footer__brand-logo" alt="Formas Interiores" style={{ '--logo-height': `${Math.min(Number(logoHeight), 120)}px`, '--logo-position': logoPosition }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>Formas Interiores</div>}
+          {logoImage ? <img src={optimizeImage(logoImage, { width: 320 })} className="site-footer__brand-logo" alt="Formas Interiores" style={{ '--logo-height': `${Math.min(Number(logoHeight), 120)}px`, '--logo-position': logoPosition, '--logo-shift': logoShift }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>Formas Interiores</div>}
           <p>Diseñamos y fabricamos muebles premium para transformar tu hogar con estilo y funcionalidad.</p>
           <div className="site-footer__social">
             <a href="#">Instagram</a>
