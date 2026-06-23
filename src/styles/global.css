@@ -21,6 +21,7 @@
   --page-inline: 32px;
 
   --serif: 'Cormorant Garamond', Georgia, serif;
+  --display-serif: 'Corbel', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
 
   color: var(--color-text);
   background: var(--color-bg);
@@ -893,7 +894,7 @@ section {
 }
 
 .section-heading h2 {
-  font-family: var(--serif);
+  font-family: var(--display-serif);
   font-size: 52px;
   font-weight: 300;
   line-height: 1.05;
@@ -1723,7 +1724,7 @@ section {
 }
 
 .page-hero h1 {
-  font-family: var(--serif);
+  font-family: var(--display-serif);
   font-size: 56px;
   font-weight: 500;
   line-height: 1.02;
@@ -2309,7 +2310,7 @@ section {
 }
 
 .cat-product-card__body h3 {
-  font-family: var(--serif);
+  font-family: var(--display-serif);
   font-size: 22px;
   font-weight: 500;
   margin: 0 0 6px;
