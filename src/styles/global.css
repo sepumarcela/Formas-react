@@ -1315,15 +1315,29 @@ section {
   background: var(--color-bg);
 }
 
-.project-highlight-grid {
+.project-highlight-carousel {
   max-width: 1280px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  position: relative;
+}
+
+.project-highlight-track {
+  display: flex;
+  gap: 28px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 6px 2px 12px;
+}
+
+.project-highlight-track::-webkit-scrollbar {
+  display: none;
 }
 
 .project-highlight-card {
+  flex: 0 0 calc((100% - 28px) / 2);
+  scroll-snap-align: start;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 16px;
@@ -1340,7 +1354,7 @@ section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px;
-  height: 220px;
+  height: clamp(300px, 30vw, 390px);
 }
 
 .project-highlight-card__media>div {
@@ -1357,13 +1371,13 @@ section {
 .project-highlight-card__media>div::before {
   content: attr(data-label);
   position: absolute;
-  top: 12px;
-  left: 12px;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 4px 12px;
+  top: 14px;
+  left: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 5px 14px;
   border-radius: 50px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.1em;
   color: var(--color-text);
   z-index: 2;
@@ -1376,28 +1390,104 @@ section {
 }
 
 .project-highlight-card__body {
-  padding: 22px 24px;
+  padding: 24px 26px 26px;
 }
 
 .project-highlight-card__body p {
   font-size: 10px;
   letter-spacing: 0.18em;
   color: var(--color-brand);
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
 }
 
 .project-highlight-card__body h3 {
   font-family: var(--serif);
-  font-size: 23px;
+  font-size: clamp(24px, 2vw, 30px);
   font-weight: 500;
   margin: 0;
+}
+
+.project-highlight-carousel__arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(26, 23, 20, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--color-text);
+  display: inline-grid;
+  place-items: center;
+  box-shadow: 0 14px 34px rgba(26, 23, 20, 0.14);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: transform 0.2s, background 0.2s, color 0.2s;
+}
+
+.project-highlight-carousel__arrow:hover {
+  background: var(--color-brand);
+  color: #fff;
+  transform: translateY(-50%) scale(1.04);
+}
+
+.project-highlight-carousel__arrow span {
+  font-size: 36px;
+  line-height: 1;
+  margin-top: -3px;
+}
+
+.project-highlight-carousel__arrow--prev {
+  left: -24px;
+}
+
+.project-highlight-carousel__arrow--next {
+  right: -24px;
 }
 
 /* ═══════════════════════════════
    TESTIMONIOS
    ═══════════════════════════════ */
+
+@media (max-width: 900px) {
+  .project-highlight-track {
+    gap: 20px;
+  }
+
+  .project-highlight-card {
+    flex-basis: 82%;
+  }
+
+  .project-highlight-card__media {
+    height: 300px;
+  }
+
+  .project-highlight-carousel__arrow--prev {
+    left: 8px;
+  }
+
+  .project-highlight-carousel__arrow--next {
+    right: 8px;
+  }
+}
+
+@media (max-width: 620px) {
+  .project-highlight-card {
+    flex-basis: 100%;
+  }
+
+  .project-highlight-card__media {
+    height: 260px;
+  }
+
+  .project-highlight-carousel__arrow {
+    width: 42px;
+    height: 42px;
+  }
+}
+
 .testimonials {
   background: var(--color-surface);
 }
