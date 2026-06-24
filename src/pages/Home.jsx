@@ -69,7 +69,7 @@ function Home() {
           </p>
           <div className="home-hero__actions">
             {currentSlide.primaryLabel && (
-              <Link to={currentSlide.primaryLink || '/proyectos'} className="button button--primary">
+              <Link to={currentSlide.primaryLabel?.toLowerCase() === 'ver colecciones' ? '/productos' : (currentSlide.primaryLink || '/productos')} className="button button--primary">
                 {currentSlide.primaryLabel}
               </Link>
             )}
