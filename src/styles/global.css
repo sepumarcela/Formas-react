@@ -1785,10 +1785,10 @@ section {
 }
 
 .contacto-form-sub {
-  font-size: 14px;
-  color: var(--color-muted);
+  font-size: 15px;
+  color: rgba(43, 39, 36, 0.7);
   margin: 0 0 20px;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .contacto-form {
@@ -1829,10 +1829,11 @@ section {
 }
 
 .contacto-form-note {
-  font-size: 11px;
-  color: var(--color-muted);
+  font-size: 12px;
+  color: rgba(43, 39, 36, 0.64);
   text-align: center;
   margin: 0;
+  font-weight: 500;
 }
 
 .contacto-info-item {
@@ -1861,17 +1862,18 @@ section {
 
 .contacto-info-item strong {
   display: block;
-  font-size: 13px;
+  font-size: 14px;
+  color: var(--color-text);
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 
 .contacto-info-item p {
-  font-size: 14px;
-  color: var(--color-muted);
-  line-height: 1.6;
+  font-size: 15px;
+  color: rgba(43, 39, 36, 0.7);
+  line-height: 1.65;
   margin: 0;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .contacto-social {
@@ -2480,11 +2482,11 @@ section {
 }
 
 .nosotros-historia__text p {
-  font-size: 15px;
-  color: var(--color-muted);
-  line-height: 1.8;
-  margin: 0 0 14px;
-  font-weight: 300;
+  font-size: 16px;
+  color: rgba(43, 39, 36, 0.78);
+  line-height: 1.82;
+  margin: 0 0 16px;
+  font-weight: 500;
 }
 
 .nosotros-pilares {
@@ -2506,17 +2508,18 @@ section {
 }
 
 .nosotros-pilar h4 {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 4px;
+  font-size: 15px;
+  color: var(--color-text);
+  font-weight: 700;
+  margin: 0 0 5px;
 }
 
 .nosotros-pilar p {
-  font-size: 13px;
-  color: var(--color-muted);
-  line-height: 1.5;
+  font-size: 14px;
+  color: rgba(43, 39, 36, 0.74);
+  line-height: 1.58;
   margin: 0;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .nosotros-valores {
@@ -2557,17 +2560,18 @@ section {
 }
 
 .nosotros-valor h4 {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 6px;
+  font-size: 15px;
+  color: var(--color-text);
+  font-weight: 700;
+  margin: 0 0 8px;
 }
 
 .nosotros-valor p {
-  font-size: 12px;
-  color: var(--color-muted);
-  line-height: 1.5;
+  font-size: 14px;
+  color: rgba(43, 39, 36, 0.74);
+  line-height: 1.58;
   margin: 0;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .nosotros-ubicacion {
@@ -2601,9 +2605,10 @@ section {
 }
 
 .nosotros-ubicacion__info .sub {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.74);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
   margin: 0 0 28px;
+  font-weight: 500;
 }
 
 .ubi-row {
@@ -2620,11 +2625,11 @@ section {
 }
 
 .ubi-row p {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.65);
-  line-height: 1.6;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.65;
   margin: 0;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 /* ═══════════════════════════════
@@ -2835,8 +2840,9 @@ section {
 }
 
 .blog-card__date {
-  font-size: 11px;
-  color: var(--color-muted);
+  font-size: 12px;
+  color: rgba(43, 39, 36, 0.68);
+  font-weight: 500;
 }
 
 .blog-card__body h3 {
@@ -2848,11 +2854,11 @@ section {
 }
 
 .blog-card__body p {
-  font-size: 15px;
-  color: var(--color-muted);
-  line-height: 1.7;
+  font-size: 16px;
+  color: rgba(43, 39, 36, 0.74);
+  line-height: 1.72;
   margin: 0 0 18px;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .blog-card__more {
