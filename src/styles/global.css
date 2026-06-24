@@ -5009,8 +5009,8 @@ section {
   }
 
   .page-hero {
-    min-height: calc(100svh + 60px);
-    height: calc(100svh + 60px);
+    min-height: calc(100svh + 80px);
+    height: calc(100svh + 80px);
   }
 }
 
