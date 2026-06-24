@@ -904,12 +904,12 @@ section {
 }
 
 .section-heading>p {
-  font-size: 16px;
-  color: var(--color-muted);
-  max-width: 520px;
+  font-size: 18px;
+  color: rgba(43, 39, 36, 0.84);
+  max-width: 680px;
   margin: 0 auto;
-  line-height: 1.7;
-  font-weight: 300;
+  line-height: 1.72;
+  font-weight: 500;
 }
 
 /* ═══════════════════════════════
@@ -989,7 +989,7 @@ section {
 
 .category-card__body h3 {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 500;
   margin: 0 0 8px;
 }
@@ -1089,9 +1089,9 @@ section {
 
 .product-card__body h3 {
   font-family: var(--serif);
-  font-size: 23px;
+  font-size: 21px;
   font-weight: 500;
-  min-height: 58px;
+  min-height: 54px;
   margin: 0 0 8px;
 }
 
@@ -1206,17 +1206,18 @@ section {
 }
 
 .benefit-card h3 {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 18px;
+  color: var(--color-text);
+  font-weight: 700;
   margin: 0 0 10px;
 }
 
 .benefit-card p {
-  font-size: 14px;
-  color: var(--color-muted);
-  line-height: 1.6;
+  font-size: 16px;
+  color: rgba(43, 39, 36, 0.78);
+  line-height: 1.65;
   margin: 0;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 /* ═══════════════════════════════
@@ -1235,7 +1236,12 @@ section {
 }
 
 .purchase-process .section-heading>p {
-  color: rgba(255, 255, 255, 0.55);
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.72;
+  font-weight: 400;
 }
 
 .process-grid {
@@ -1495,12 +1501,12 @@ section {
 }
 
 .final-cta__content>p {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.7;
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.72;
   margin: 0 0 32px;
-  max-width: 420px;
-  font-weight: 300;
+  max-width: 460px;
+  font-weight: 400;
 }
 
 .final-cta__actions {
