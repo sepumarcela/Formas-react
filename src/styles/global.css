@@ -5557,8 +5557,8 @@ section {
     padding-top: 210px;
   }
   .site-footer {
-    padding-left: clamp(72px, 8vw, 150px);
-    padding-right: clamp(40px, 5vw, 96px);
+    padding-left: clamp(40px, 3vw, 56px);
+    padding-right: clamp(40px, 4vw, 80px);
   }
 
   .site-footer__inner,
