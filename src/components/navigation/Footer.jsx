@@ -28,7 +28,7 @@ function Footer() {
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
-          {logoImage ? <img src={optimizeImage(logoImage, { width: 420 })} className="site-footer__brand-logo" alt="Formas Interiores" style={{ '--logo-height': `${Math.min(Number(logoHeight) + 20, 130)}px` }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>Formas Interiores</div>}
+          {logoImage ? <img src={optimizeImage(logoImage, { width: 420 })} className="site-footer__brand-logo" alt="Formas Interiores" style={{ '--logo-height': Math.min(Number(logoHeight) + 20, 130) + 'px' }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>Formas Interiores</div>}
           <p>Diseñamos y fabricamos muebles premium para transformar tu hogar con estilo y funcionalidad.</p>
           <div className="site-footer__social" aria-label="Redes sociales de Formas Interiores">
             <span className="site-footer__social-label">Síguenos:</span>
@@ -38,20 +38,35 @@ function Footer() {
               </a>
             ))}
           </div>
+
+          <div className="site-footer__trust" aria-label="Compra segura">
+            <h4>Compra segura</h4>
+            <div className="site-footer__trust-grid">
+              {trustBadges.map(({ label, detail, Icon, tone }) => (
+                <span className={'site-footer__trust-badge site-footer__trust-badge--' + tone} key={label}>
+                  <Icon aria-hidden="true" />
+                  <span>
+                    <strong>{label}</strong>
+                    <small>{detail}</small>
+                  </span>
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="site-footer__col">
+        <div className="site-footer__col site-footer__col--products">
           <h4>Productos</h4>
           <ul>
             {visibleCategories.map((cat) => (
               <li key={cat.id}>
-                <Link to={`/categorias/${cat.id}`}>{cat.name}</Link>
+                <Link to={'/categorias/' + cat.id}>{cat.name}</Link>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="site-footer__col">
+        <div className="site-footer__col site-footer__col--company">
           <h4>Empresa</h4>
           <ul>
             <li><Link to="/nosotros">Nosotros</Link></li>
@@ -61,28 +76,13 @@ function Footer() {
           </ul>
         </div>
 
-        <div className="site-footer__col">
+        <div className="site-footer__col site-footer__col--contact">
           <h4>Contacto</h4>
           <ul>
             <li>sac@formasinteriores.com</li>
             <li>+57 300 123 4567</li>
             <li>Medellín, Colombia</li>
           </ul>
-        </div>
-      </div>
-
-      <div className="site-footer__trust" aria-label="Compra segura">
-        <h4>Compra segura</h4>
-        <div className="site-footer__trust-grid">
-          {trustBadges.map(({ label, detail, Icon, tone }) => (
-            <span className={`site-footer__trust-badge site-footer__trust-badge--${tone}`} key={label}>
-              <Icon aria-hidden="true" />
-              <span>
-                <strong>{label}</strong>
-                <small>{detail}</small>
-              </span>
-            </span>
-          ))}
         </div>
       </div>
 
