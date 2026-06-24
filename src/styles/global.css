@@ -5556,6 +5556,22 @@ section {
   .page-hero {
     padding-top: 210px;
   }
+  .site-footer {
+    padding-left: clamp(72px, 8vw, 150px);
+    padding-right: clamp(40px, 5vw, 96px);
+  }
+
+  .site-footer__inner,
+  .site-footer__bottom {
+    max-width: 1540px;
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  .site-footer__inner {
+    grid-template-columns: minmax(360px, 1.55fr) minmax(220px, 1fr) minmax(180px, 0.8fr) minmax(220px, 1fr);
+    gap: clamp(56px, 5.6vw, 110px);
+  }
 }
 
 @media (max-width: 1180px) {
