@@ -1555,17 +1555,17 @@ section {
 .site-footer {
   background: var(--color-dark);
   color: #fff;
-  padding: 54px clamp(32px, 4vw, 72px) 34px;
+  padding: 48px clamp(32px, 4vw, 72px) 28px;
 }
 
 .site-footer__inner {
   max-width: 1320px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(330px, 1.05fr) minmax(220px, 0.78fr) minmax(160px, 0.55fr) minmax(220px, 0.7fr);
-  gap: clamp(40px, 4.8vw, 86px);
+  grid-template-columns: minmax(560px, 1.5fr) minmax(180px, 0.55fr) minmax(140px, 0.42fr) minmax(200px, 0.55fr);
+  gap: clamp(24px, 3vw, 54px);
   align-items: start;
-  padding-bottom: 34px;
+  padding-bottom: 28px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1655,7 +1655,7 @@ section {
 }
 
 .site-footer__trust {
-  max-width: 356px;
+  max-width: 620px;
   margin: 0;
   padding: 0;
   border: 0;
@@ -1669,15 +1669,15 @@ section {
 
 .site-footer__trust-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 6px;
 }
 
 .site-footer__trust-badge {
-  min-height: 38px;
+  min-height: 36px;
   border: 1px solid rgba(255, 255, 255, 0.26);
   border-radius: 5px;
-  padding: 6px 7px;
+  padding: 6px 6px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1736,7 +1736,7 @@ section {
 
 .site-footer__bottom {
   max-width: 1320px;
-  margin: 22px auto 0;
+  margin: 18px auto 0;
   text-align: center;
   color: rgba(255, 255, 255, 0.62);
   font-size: 12px;
@@ -5669,8 +5669,8 @@ section {
   }
 
   .site-footer__inner {
-    grid-template-columns: minmax(380px, 1fr) minmax(250px, 0.8fr) minmax(180px, 0.58fr) minmax(250px, 0.7fr);
-    gap: clamp(86px, 7vw, 150px);
+    grid-template-columns: minmax(620px, 1.45fr) minmax(220px, 0.58fr) minmax(170px, 0.42fr) minmax(240px, 0.55fr);
+    gap: clamp(56px, 5vw, 110px);
   }
 
   .site-footer__col--products,
