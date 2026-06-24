@@ -5004,8 +5004,8 @@ section {
 
 @supports (height: 100svh) {
   .home-hero {
-    min-height: calc(100svh + 60px);
-    height: calc(100svh + 60px);
+    min-height: calc(100svh + 80px);
+    height: calc(100svh + 80px);
   }
 
   .page-hero {
