@@ -1569,8 +1569,13 @@ section {
 }
 
 .site-footer__brand-logo {
-  height: 50px;
-  margin-bottom: 16px;
+  width: auto;
+  height: var(--logo-height, 110px);
+  max-height: 130px;
+  max-width: 260px;
+  object-fit: contain;
+  object-position: left center;
+  margin-bottom: 18px;
 }
 
 .site-footer__brand p {
