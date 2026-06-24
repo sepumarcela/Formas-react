@@ -1275,8 +1275,8 @@ section {
 .process-step__number {
   font-family: var(--serif);
   font-size: 46px;
-  color: rgba(201, 149, 108, 0.3);
-  font-weight: 300;
+  color: rgba(217, 167, 124, 0.82);
+  font-weight: 600;
   display: block;
   margin-bottom: 12px;
 }
