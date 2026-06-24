@@ -13,9 +13,9 @@ const socialLinks = [
 const trustBadges = [
   { label: 'Conexión Segura', detail: 'SSL/HTTPS', Icon: PiShieldCheckDuotone, tone: 'green' },
   { label: 'Empresa Verificada', detail: 'NIT 902039587-2', Icon: PiSealCheckDuotone, tone: 'blue' },
-  { label: 'Datos Protegidos', detail: 'Ley 1581/2012', Icon: PiLockKeyDuotone, tone: 'cyan' },
+  { label: 'Datos Protegidos', detail: 'Ley 1581/2012', Icon: PiLockKeyDuotone, tone: 'cyan', href: 'https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981' },
   { label: 'Pago Seguro', detail: 'Plataforma Wompi', Icon: PiCreditCardDuotone, tone: 'yellow' },
-  { label: 'SIC', detail: 'Industria y Comercio', Icon: PiBankDuotone, tone: 'light' },
+  { label: 'SIC', detail: 'Industria y Comercio', Icon: PiBankDuotone, tone: 'light', href: 'https://sedeelectronica.sic.gov.co/' },
 ]
 
 function Footer() {
@@ -42,15 +42,27 @@ function Footer() {
           <div className="site-footer__trust" aria-label="Compra segura">
             <h4>Compra segura</h4>
             <div className="site-footer__trust-grid">
-              {trustBadges.map(({ label, detail, Icon, tone }) => (
-                <span className={'site-footer__trust-badge site-footer__trust-badge--' + tone} key={label}>
-                  <Icon aria-hidden="true" />
-                  <span>
-                    <strong>{label}</strong>
-                    <small>{detail}</small>
+              {trustBadges.map(({ label, detail, Icon, tone, href }) => {
+                const content = (
+                  <>
+                    <Icon aria-hidden="true" />
+                    <span>
+                      <strong>{label}</strong>
+                      <small>{detail}</small>
+                    </span>
+                  </>
+                )
+
+                return href ? (
+                  <a className={'site-footer__trust-badge site-footer__trust-badge--' + tone} key={label} href={href} target="_blank" rel="noreferrer">
+                    {content}
+                  </a>
+                ) : (
+                  <span className={'site-footer__trust-badge site-footer__trust-badge--' + tone} key={label}>
+                    {content}
                   </span>
-                </span>
-              ))}
+                )
+              })}
             </div>
           </div>
         </div>
