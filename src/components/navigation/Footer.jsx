@@ -1,6 +1,22 @@
-﻿import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { FaFacebookF, FaInstagram, FaTiktok } from 'react-icons/fa6'
+import { PiBankDuotone, PiCreditCardDuotone, PiLockKeyDuotone, PiSealCheckDuotone, PiShieldCheckDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { optimizeImage } from '../../utils/images'
+
+const socialLinks = [
+  { label: 'Facebook', href: 'https://www.facebook.com/formasinteriores', Icon: FaFacebookF },
+  { label: 'Instagram', href: 'https://www.instagram.com/formasinteriores/', Icon: FaInstagram },
+  { label: 'TikTok', href: 'https://www.tiktok.com/@formasinteriores', Icon: FaTiktok },
+]
+
+const trustBadges = [
+  { label: 'Conexión Segura', detail: 'SSL/HTTPS', Icon: PiShieldCheckDuotone, tone: 'green' },
+  { label: 'Empresa Verificada', detail: 'NIT 902039587-2', Icon: PiSealCheckDuotone, tone: 'blue' },
+  { label: 'Datos Protegidos', detail: 'Ley 1581/2012', Icon: PiLockKeyDuotone, tone: 'cyan' },
+  { label: 'Pago Seguro', detail: 'Plataforma Wompi', Icon: PiCreditCardDuotone, tone: 'yellow' },
+  { label: 'SIC', detail: 'Industria y Comercio', Icon: PiBankDuotone, tone: 'light' },
+]
 
 function Footer() {
   const [{ categories, pageContent }] = useSiteContent()
@@ -14,10 +30,13 @@ function Footer() {
         <div className="site-footer__brand">
           {logoImage ? <img src={optimizeImage(logoImage, { width: 420 })} className="site-footer__brand-logo" alt="Formas Interiores" style={{ '--logo-height': `${Math.min(Number(logoHeight) + 20, 130)}px` }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>Formas Interiores</div>}
           <p>Diseñamos y fabricamos muebles premium para transformar tu hogar con estilo y funcionalidad.</p>
-          <div className="site-footer__social">
-            <a href="#">Instagram</a>
-            <a href="#">Pinterest</a>
-            <a href="#">Facebook</a>
+          <div className="site-footer__social" aria-label="Redes sociales de Formas Interiores">
+            <span className="site-footer__social-label">Síguenos:</span>
+            {socialLinks.map(({ label, href, Icon }) => (
+              <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}>
+                <Icon aria-hidden="true" />
+              </a>
+            ))}
           </div>
         </div>
 
@@ -49,6 +68,21 @@ function Footer() {
             <li>+57 300 123 4567</li>
             <li>Medellín, Colombia</li>
           </ul>
+        </div>
+      </div>
+
+      <div className="site-footer__trust" aria-label="Compra segura">
+        <h4>Compra segura</h4>
+        <div className="site-footer__trust-grid">
+          {trustBadges.map(({ label, detail, Icon, tone }) => (
+            <span className={`site-footer__trust-badge site-footer__trust-badge--${tone}`} key={label}>
+              <Icon aria-hidden="true" />
+              <span>
+                <strong>{label}</strong>
+                <small>{detail}</small>
+              </span>
+            </span>
+          ))}
         </div>
       </div>
 

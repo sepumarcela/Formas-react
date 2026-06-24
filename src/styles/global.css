@@ -1589,18 +1589,31 @@ section {
 
 .site-footer__social {
   display: flex;
-  gap: 16px;
+  align-items: center;
+  gap: 14px;
+}
+
+.site-footer__social-label {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  margin-right: 2px;
 }
 
 .site-footer__social a {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
   color: rgba(255, 255, 255, 0.72);
-  font-size: 14px;
-  font-weight: 500;
-  transition: color 0.2s;
+  font-size: 24px;
+  transition: color 0.2s, transform 0.2s;
 }
 
 .site-footer__social a:hover {
-  color: var(--color-brand);
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 .site-footer__col h4 {
@@ -1630,6 +1643,90 @@ section {
 }
 
 .site-footer__col a:hover {
+  color: #fff;
+}
+
+.site-footer__trust {
+  max-width: 1280px;
+  margin: 30px auto 0;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.site-footer__trust h4 {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+
+.site-footer__trust-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 620px;
+}
+
+.site-footer__trust-badge {
+  min-width: 154px;
+  min-height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 5px;
+  padding: 8px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #fff;
+}
+
+.site-footer__trust-badge svg {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+}
+
+.site-footer__trust-badge span {
+  display: grid;
+  gap: 1px;
+  line-height: 1.08;
+}
+
+.site-footer__trust-badge strong {
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.site-footer__trust-badge small {
+  font-size: 11px;
+  font-weight: 800;
+  opacity: 0.86;
+}
+
+.site-footer__trust-badge--green {
+  border-color: #00a75f;
+  color: #10b86c;
+}
+
+.site-footer__trust-badge--blue {
+  border-color: #2977ff;
+  color: #2f83ff;
+}
+
+.site-footer__trust-badge--cyan {
+  border-color: #12c9e8;
+  color: #17d3f0;
+}
+
+.site-footer__trust-badge--yellow {
+  border-color: #f5d000;
+  color: #ffd800;
+}
+
+.site-footer__trust-badge--light {
+  border-color: rgba(255, 255, 255, 0.9);
   color: #fff;
 }
 
@@ -5562,6 +5659,7 @@ section {
   }
 
   .site-footer__inner,
+  .site-footer__trust,
   .site-footer__bottom {
     max-width: 1540px;
     margin-left: 0;
