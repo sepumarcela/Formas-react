@@ -74,7 +74,7 @@ function Home() {
               </Link>
             )}
             {currentSlide.secondaryLabel && (
-              <Link to={currentSlide.secondaryLink || '/contacto'} className="button button--outline">
+              <Link to={currentSlide.secondaryLink || '/contacto'} className="button button--primary button--hero-primary">
                 {currentSlide.secondaryLabel}
               </Link>
             )}
