@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react'
+﻿import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import {
   ChevronDown, Menu, Search, ShoppingCart, User, X,
@@ -7,14 +7,7 @@ import { PiBathtubDuotone, PiBedDuotone, PiBookOpenTextDuotone, PiCookingPotDuot
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { CART_UPDATED_EVENT, loadCartItems } from '../../utils/cart'
 import { optimizeImage } from '../../utils/images'
-
-function normalizeText(value) {
-  return value
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .trim()
-}
+import { normalizeSearchText, searchSiteContent } from '../../utils/searchIndex'
 
 const categoryIcons = {
   tv: PiTelevisionDuotone,
@@ -33,7 +26,8 @@ function Header({ transparent = false }) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [cartCount, setCartCount] = useState(() => loadCartItems().reduce((sum, item) => sum + item.quantity, 0))
-  const [{ categories, pageContent }] = useSiteContent()
+  const [siteContent] = useSiteContent()
+  const { categories, pageContent } = siteContent
   const logoImage = pageContent.homeProducts?.logoImage
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
   const productsMenuImage = pageContent.productos?.menuImage
@@ -41,7 +35,8 @@ function Header({ transparent = false }) {
   const dropRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
-  const usesDarkHeader = location.pathname.startsWith('/cuenta') || location.pathname.startsWith('/carrito')
+  const usesDarkHeader = location.pathname.startsWith('/cuenta') || location.pathname.startsWith('/carrito') || location.pathname.startsWith('/buscar')
+  const searchResults = useMemo(() => searchSiteContent(siteContent, searchValue, 5), [siteContent, searchValue])
 
   useEffect(() => {
     function handleClick(event) {
@@ -73,18 +68,18 @@ function Header({ transparent = false }) {
     }
   }, [])
 
+  function closeSearch() {
+    setSearchOpen(false)
+    setSearchValue('')
+  }
+
   function handleSearch(event) {
     event.preventDefault()
-    const query = normalizeText(searchValue)
+    const query = normalizeSearchText(searchValue)
 
     if (query) {
-      const match = visibleCategories.find((category) => (
-        normalizeText(category.id).includes(query) || normalizeText(category.name).includes(query)
-      ))
-
-      navigate(match ? `/categorias/${match.id}` : '/')
-      setSearchOpen(false)
-      setSearchValue('')
+      navigate('/buscar?q=' + encodeURIComponent(searchValue.trim()))
+      closeSearch()
     }
   }
 
@@ -204,19 +199,48 @@ function Header({ transparent = false }) {
 
       {searchOpen && (
         <div className="search-bar">
-          <form onSubmit={handleSearch} className="search-bar__form">
+          <form id="site-search-form" onSubmit={handleSearch} className="search-bar__form">
             <Search size={20} />
             <input
               type="text"
-              placeholder="Busca productos o categorías..."
+              placeholder="Busca productos, proyectos, blog..."
               value={searchValue}
               onChange={(event) => setSearchValue(event.target.value)}
               autoFocus
             />
-            <button type="button" className="search-bar__close" onClick={() => setSearchOpen(false)}>
+            <button type="button" className="search-bar__close" onClick={closeSearch}>
               <X size={20} />
             </button>
           </form>
+          {normalizeSearchText(searchValue) && (
+            <div className="search-suggestions">
+              {searchResults.length > 0 ? (
+                searchResults.map((item) => (
+                  item.external ? (
+                    <a className="search-suggestion" href={item.url} key={item.url} target="_blank" rel="noreferrer" onClick={closeSearch}>
+                      <span>{item.type}</span>
+                      <strong>{item.title}</strong>
+                      <small>{item.description}</small>
+                    </a>
+                  ) : (
+                    <Link className="search-suggestion" to={item.url} key={item.url} onClick={closeSearch}>
+                      <span>{item.type}</span>
+                      <strong>{item.title}</strong>
+                      <small>{item.description}</small>
+                    </Link>
+                  )
+                ))
+              ) : (
+                <div className="search-suggestion search-suggestion--empty">
+                  <strong>Sin resultados rapidos</strong>
+                  <small>Presiona Enter para ver una busqueda mas amplia.</small>
+                </div>
+              )}
+              <button type="submit" form="site-search-form" className="search-suggestions__all">
+                Ver todos los resultados
+              </button>
+            </div>
+          )}
         </div>
       )}
     </header>

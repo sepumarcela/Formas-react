@@ -18,7 +18,7 @@ function ProjectHighlights() {
   }
 
   return (
-    <section className="project-highlights">
+    <section id="proyectos-realizados" className="project-highlights">
       <div className="section-heading">
         <p className="eyebrow">Proyectos realizados</p>
         <h2>Transformamos espacios, creamos experiencias</h2>

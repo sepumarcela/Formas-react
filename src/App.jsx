@@ -14,6 +14,7 @@ import TechnicalSheetViewer from './pages/TechnicalSheetViewer'
 import Cuenta from './pages/Cuenta'
 import Carrito from './pages/Carrito'
 import PaymentResult from './pages/PaymentResult'
+import SearchResults from './pages/SearchResults'
 import './styles/global.css'
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
           <Route path="/cuenta" element={<Cuenta />} />
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/pago/resultado" element={<PaymentResult />} />
+          <Route path="/buscar" element={<SearchResults />} />
         </Route>
       </Routes>
     </BrowserRouter>
