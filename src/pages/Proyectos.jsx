@@ -1,5 +1,4 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
 import { PiCameraDuotone, PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone } from 'react-icons/pi'
 import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
@@ -10,21 +9,24 @@ const filtrosBase = [
   { id: 'hogar', label: 'Hogares' },
   { id: 'cocina', label: 'Cocinas' },
   { id: 'closet', label: 'Closets' },
-  { id: 'bano', label: 'Baños' },
+  { id: 'bano', label: 'Ba\u00f1os' },
   { id: 'oficina', label: 'Oficinas' },
   { id: 'comercial', label: 'Comerciales' },
 ]
 
 const ventajas = [
-  { icon: PiRulerDuotone, title: 'Proyectos a la medida', text: 'Diseñamos cada espacio según tus necesidades.' },
+  { icon: PiRulerDuotone, title: 'Proyectos a la medida', text: 'Dise\u00f1amos cada espacio seg\u00fan tus necesidades.' },
   { icon: PiDiamondDuotone, title: 'Calidad garantizada', text: 'Materiales de primera y acabados que perduran.' },
-  { icon: PiHandshakeDuotone, title: 'Asesoría personalizada', text: 'Te acompañamos en cada etapa de tu proyecto.' },
-  { icon: PiCameraDuotone, title: 'Inspiración real', text: 'Proyectos reales que reflejan nuestro compromiso.' },
+  { icon: PiHandshakeDuotone, title: 'Asesor\u00eda personalizada', text: 'Te acompa\u00f1amos en cada etapa de tu proyecto.' },
+  { icon: PiCameraDuotone, title: 'Inspiraci\u00f3n real', text: 'Proyectos reales que reflejan nuestro compromiso.' },
 ]
+
+const PROJECTS_BATCH_SIZE = 6
 
 function Proyectos() {
   const [{ pageContent, projects }] = useSiteContent()
   const [filtro, setFiltro] = useState('all')
+  const [visibleCount, setVisibleCount] = useState(PROJECTS_BATCH_SIZE)
   const activeProjects = useMemo(() => projects.filter((project) => project.active !== false), [projects])
   const filtros = useMemo(() => {
     const known = new Set(filtrosBase.map((item) => item.id))
@@ -35,7 +37,13 @@ function Proyectos() {
     return [...filtrosBase, ...custom]
   }, [activeProjects])
   const visibles = filtro === 'all' ? activeProjects : activeProjects.filter((project) => project.cat === filtro)
+  const visibleProjects = visibles.slice(0, visibleCount)
+  const hasMoreProjects = visibleCount < visibles.length
   const hero = pageContent.proyectos
+
+  useEffect(() => {
+    setVisibleCount(PROJECTS_BATCH_SIZE)
+  }, [filtro])
 
   return (
     <main className="page">
@@ -46,6 +54,7 @@ function Proyectos() {
           {filtros.map((item) => (
             <button
               key={item.id}
+              type="button"
               className={`proyectos-filtro ${filtro === item.id ? 'active' : ''}`}
               onClick={() => setFiltro(item.id)}
             >
@@ -55,7 +64,7 @@ function Proyectos() {
         </div>
 
         <div className="proyectos-grid">
-          {visibles.map((project) => (
+          {visibleProjects.map((project) => (
             <article className="proyecto-item" key={project.id}>
               <div className="proyecto-item__img">
                 <span className="proyecto-item__tag">{project.label}</span>
@@ -69,9 +78,17 @@ function Proyectos() {
           ))}
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: 48 }}>
-          <Link to={hero.ctaLink || '/contacto'} className="button button--primary">{hero.ctaLabel || 'Ver más proyectos'} &rarr;</Link>
-        </div>
+        {hasMoreProjects && (
+          <div style={{ textAlign: 'center', marginTop: 48 }}>
+            <button
+              type="button"
+              className="button button--primary"
+              onClick={() => setVisibleCount((current) => current + PROJECTS_BATCH_SIZE)}
+            >
+              {hero.ctaLabel || 'Ver m\u00e1s proyectos'} &rarr;
+            </button>
+          </div>
+        )}
       </section>
 
       <div className="cat-bottom-bar">
