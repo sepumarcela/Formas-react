@@ -2996,6 +2996,14 @@ section {
   transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
 
+
+.blog-card {
+  display: block;
+  color: var(--color-text);
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .blog-card:hover {
   transform: none;
   box-shadow: 0 12px 30px rgba(26, 23, 20, 0.08);
@@ -6208,7 +6216,7 @@ section {
 .blog-post-hero h1 {
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(44px, 5.2vw, 74px);
+  font-size: clamp(40px, 4.6vw, 66px);
   font-weight: 500;
   line-height: 1.03;
   letter-spacing: 0;
@@ -6406,7 +6414,7 @@ section {
   }
 
   .blog-post-hero h1 {
-    font-size: clamp(38px, 12vw, 54px);
+    font-size: clamp(34px, 10vw, 48px);
   }
 
   .blog-post-hero__content > p,

@@ -53,7 +53,7 @@ function Blog() {
         <div className="blog-layout">
           <div className="blog-grid">
             {activePosts.map((post) => (
-              <article className="blog-card" key={post.id}>
+              <BlogPostLink className="blog-card" post={post} key={post.id}>
                 <div className="blog-card__img">
                   {post.trending && <span className="blog-card__tag">Tendencia</span>}
                   {post.image ? <img src={optimizeImage(post.image, { width: 1000 })} alt={post.title} loading="lazy" /> : <div className="blog-ph">Foto pendiente</div>}
@@ -62,9 +62,9 @@ function Blog() {
                   <span className="blog-card__date">{post.date}</span>
                   <h3>{post.title}</h3>
                   <p>{post.desc}</p>
-                  <BlogPostLink post={post} className="blog-card__more">Leer más &rarr;</BlogPostLink>
+                  <span className="blog-card__more">Leer mas &rarr;</span>
                 </div>
-              </article>
+              </BlogPostLink>
             ))}
           </div>
 
