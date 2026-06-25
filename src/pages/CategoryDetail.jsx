@@ -6,10 +6,10 @@ import { getActiveDiscount } from '../utils/discounts'
 import { optimizeImage, preloadImage } from '../utils/images'
 
 const badges = [
-  { icon: PiRulerDuotone, label: 'Diseños personalizados' },
+  { icon: PiRulerDuotone, label: 'Dise\u00f1os personalizados' },
   { icon: PiDiamondDuotone, label: 'Materiales de calidad' },
-  { icon: PiToolboxDuotone, label: 'Instalación profesional' },
-  { icon: PiHandshakeDuotone, label: 'Acompañamiento total' },
+  { icon: PiToolboxDuotone, label: 'Instalaci\u00f3n profesional' },
+  { icon: PiHandshakeDuotone, label: 'Acompa\u00f1amiento total' },
 ]
 
 function CategoryDetail() {
@@ -25,8 +25,8 @@ function CategoryDetail() {
   if (!category) {
     return (
       <main className="page section-page" style={{ padding: '120px 60px', textAlign: 'center' }}>
-        <h1>Categoría no encontrada</h1>
-        <p>La categoría que buscas no existe o fue movida.</p>
+        <h1>Categor\u00eda no encontrada</h1>
+        <p>La categor\u00eda que buscas no existe o fue movida.</p>
         <Link className="button button--primary" to="/" style={{ marginTop: 20 }}>
           Volver al inicio
         </Link>
@@ -35,6 +35,7 @@ function CategoryDetail() {
   }
 
   const categoryProducts = products.filter((product) => product.categoryId === category.id && product.active !== false)
+
   return (
     <main className="page">
       <section className="page-hero">
@@ -45,34 +46,24 @@ function CategoryDetail() {
         )}
         <div className="page-hero__overlay" />
         <div className="page-hero__content">
-          <div className="breadcrumb"><Link to="/">Inicio</Link> › <span>Productos</span> › {category.name}</div>
+          <div className="breadcrumb"><Link to="/">Inicio</Link> {'>'} <span>Productos</span> {'>'} {category.name}</div>
           <h1>{category.name}</h1>
           <div className="page-hero__line" />
           <p>{category.description}</p>
-          <div className="cat-badges">
-            {badges.map((badge) => {
-              const Icon = badge.icon
-              return (
-                <div className="cat-badge" key={badge.label}>
-                  <Icon size={16} />
-                  {badge.label}
-                </div>
-              )
-            })}
-          </div>
         </div>
       </section>
 
-      <div className="cat-filtros">
+      <div className="cat-filtros cat-filtros--badges">
         <div className="cat-filtros__inner">
-          <span className="cat-filtros__label">Filtrar por:</span>
-          <select className="cat-filtro-select"><option>Estilo</option><option>Minimalista</option><option>Moderno</option><option>Clásico</option></select>
-          <select className="cat-filtro-select"><option>Material</option><option>Madera natural</option><option>MDF</option><option>Melamina</option></select>
-          <select className="cat-filtro-select"><option>Color</option><option>Madera clara</option><option>Blanco</option><option>Negro</option></select>
-          <select className="cat-filtro-select"><option>Tamaño</option><option>Pequeño</option><option>Mediano</option><option>Grande</option></select>
-          <div className="cat-filtros__orden">
-            Ordenar por: <select className="cat-filtro-select"><option>Más recientes</option><option>Precio menor</option><option>Precio mayor</option></select>
-          </div>
+          {badges.map((badge) => {
+            const Icon = badge.icon
+            return (
+              <div className="cat-badge cat-badge--bar" key={badge.label}>
+                <Icon size={18} />
+                {badge.label}
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -110,23 +101,6 @@ function CategoryDetail() {
           })}
         </div>
       </section>
-
-      <div className="cat-bottom-bar">
-        <div className="cat-bottom-bar__inner">
-          {badges.map((badge) => {
-            const Icon = badge.icon
-            return (
-              <div className="cat-bottom-item" key={badge.label}>
-                <Icon size={30} />
-                <div>
-                  <h5>{badge.label}</h5>
-                  <p>Calidad y compromiso en cada proyecto.</p>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
     </main>
   )
 }
