@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   BadgePlus,
   Download,
@@ -115,6 +115,15 @@ const iconOptions = [
   ['shelf', 'Repisa'],
   ['bed', 'Alcoba'],
   ['book', 'Biblioteca'],
+]
+
+const projectCategoryOptions = [
+  { id: 'hogar', label: 'Hogares' },
+  { id: 'cocina', label: 'Cocinas' },
+  { id: 'closet', label: 'Closets' },
+  { id: 'bano', label: 'Baños' },
+  { id: 'oficina', label: 'Oficinas' },
+  { id: 'comercial', label: 'Comerciales' },
 ]
 
 function parseCsvLine(line, delimiter = ',') {
@@ -765,6 +774,11 @@ function Cuenta() {
     updateCollection('products', product.id, { categoryId, category: category?.name || product.category })
   }
 
+  function handleProjectCategory(project, categoryId) {
+    const category = projectCategoryOptions.find((item) => item.id === categoryId) || projectCategoryOptions[0]
+    updateCollection('projects', project.id, { cat: category.id, label: category.label })
+  }
+
   function openSection(sectionId) {
     if (sectionId === 'bulk') {
       setCsvPreview(toCsv(content[bulkType], csvConfig[bulkType].headers))
@@ -1149,8 +1163,12 @@ function Cuenta() {
                 </div>
                 <div className="admin-form-grid">
                   <label>ID<input value={project.id} onChange={(event) => updateCollection('projects', project.id, { id: createSlug(event.target.value) })} /></label>
-                  <label>Categoría filtro<input value={project.cat} onChange={(event) => updateCollection('projects', project.id, { cat: createSlug(event.target.value) })} /></label>
-                  <label>Etiqueta<input value={project.label} onChange={(event) => updateCollection('projects', project.id, { label: event.target.value })} /></label>
+                  <label>Categoría
+                    <select value={project.cat || 'hogar'} onChange={(event) => handleProjectCategory(project, event.target.value)}>
+                      {projectCategoryOptions.map((category) => <option key={category.id} value={category.id}>{category.label}</option>)}
+                    </select>
+                  </label>
+                  <label>Etiqueta<input value={project.label} readOnly title="Se actualiza automáticamente con la categoría seleccionada." /></label>
                   <label>Título<input value={project.title} onChange={(event) => updateCollection('projects', project.id, { title: event.target.value })} /></label>
                   <label>Ubicación<input value={project.location} onChange={(event) => updateCollection('projects', project.id, { location: event.target.value })} /></label>
                 </div>
