@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import Header from '../components/navigation/Header'
 import Footer from '../components/navigation/Footer'
+import WhatsAppFloating from '../components/navigation/WhatsAppFloating'
 
 function MainLayout() {
   const { pathname } = useLocation()
@@ -11,6 +12,7 @@ function MainLayout() {
       <Header transparent={!needsSolidHeader} />
       <Outlet />
       <Footer />
+      <WhatsAppFloating />
     </>
   )
 }
