@@ -1,4 +1,4 @@
-﻿export const SITE_CONTENT_KEY = 'formas-site-content-v1'
+export const SITE_CONTENT_KEY = 'formas-site-content-v1'
 export const SITE_CONTENT_EVENT = 'formas-site-content-updated'
 
 const legacyDemoProductIds = new Set([
