@@ -117,6 +117,7 @@ export const defaultSiteContent = {
       visitTitle: 'Sala de diseño',
       visitText: 'Agenda tu visita y conoce nuestros espacios de inspiración.',
       whatsappLink: 'https://wa.me/573001234567',
+      
     },
   },
   projects: [
