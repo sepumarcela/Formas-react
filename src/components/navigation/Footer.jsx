@@ -91,7 +91,7 @@ function Footer() {
         <div className="site-footer__col site-footer__col--contact">
           <h4>Contacto</h4>
           <ul>
-            <li>sac@formasinteriores.com</li>
+            <li>contacto@formasinteriores.com</li>
             <li>+57 300 123 4567</li>
             <li>Medellín, Colombia</li>
           </ul>
