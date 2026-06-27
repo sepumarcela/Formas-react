@@ -6807,3 +6807,26 @@ section {
   }
 }
 
+@media (max-width: 720px) {
+  .home-hero__bg,
+  .page-hero__bg {
+    background: #171310;
+  }
+
+  .home-hero__bg-img,
+  .home-hero__bg-img--contain,
+  .home-hero__bg-img--cover,
+  .page-hero__bg img {
+    object-fit: contain !important;
+    object-position: center center !important;
+    transform: none !important;
+  }
+
+  .home-hero__overlay,
+  .page-hero__overlay {
+    background:
+      linear-gradient(to right, rgba(18, 15, 13, 0.74), rgba(18, 15, 13, 0.28) 64%, rgba(18, 15, 13, 0.16)),
+      linear-gradient(to bottom, rgba(18, 15, 13, 0.20), rgba(18, 15, 13, 0.10));
+  }
+}
+
