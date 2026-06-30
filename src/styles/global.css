@@ -6833,10 +6833,10 @@ section {
 @media (max-width: 720px) {
   .home-hero,
   .page-hero {
-    min-height: 68svh !important;
-    height: 68svh !important;
-    padding-top: 136px !important;
-    padding-bottom: 28px !important;
+    min-height: 60svh !important;
+    height: 60svh !important;
+    padding-top: 124px !important;
+    padding-bottom: 24px !important;
   }
 
   .home-hero__bg,
