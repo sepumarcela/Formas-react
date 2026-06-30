@@ -7046,3 +7046,18 @@ section {
     letter-spacing: 0.08em !important;
   }
 }
+
+/* Detalle de producto: nombres largos mas proporcionados. */
+.product-summary h1 {
+  font-size: clamp(42px, 4.4vw, 54px) !important;
+  line-height: 1.04 !important;
+  max-width: 660px !important;
+}
+
+@media (max-width: 720px) {
+  .product-summary h1 {
+    font-size: clamp(30px, 9vw, 38px) !important;
+    line-height: 1.05 !important;
+    max-width: 100% !important;
+  }
+}
