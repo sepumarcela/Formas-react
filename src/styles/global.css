@@ -6965,3 +6965,84 @@ section {
     max-width: 82vw !important;
   }
 }
+
+/* Inicio movil: texto y botones compactos para que el hero no se sienta gigante. */
+@media (max-width: 720px) {
+  .home-hero {
+    align-items: flex-end !important;
+    padding-top: 150px !important;
+    padding-bottom: 22px !important;
+  }
+
+  .home-hero__content {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(21px, 6.2vw, 27px) !important;
+    line-height: 1 !important;
+    margin-bottom: 8px !important;
+    max-width: 62vw !important;
+  }
+
+  .home-hero__line {
+    width: 42px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .home-hero p {
+    font-size: 11.5px !important;
+    line-height: 1.34 !important;
+    max-width: 62vw !important;
+    margin-bottom: 12px !important;
+  }
+
+  .home-hero__actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    max-width: 100% !important;
+  }
+
+  .home-hero__actions .button {
+    width: 100% !important;
+    min-height: 38px !important;
+    min-width: 0 !important;
+    padding: 9px 8px !important;
+    border-radius: 7px !important;
+    font-size: 8.8px !important;
+    letter-spacing: 0.1em !important;
+    white-space: nowrap !important;
+  }
+
+  .home-hero__dots {
+    margin-top: 12px !important;
+  }
+
+  .home-hero__dots button {
+    width: 34px !important;
+    height: 3px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .home-hero {
+    padding-top: 142px !important;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(20px, 6vw, 25px) !important;
+    max-width: 64vw !important;
+  }
+
+  .home-hero p {
+    font-size: 11px !important;
+    max-width: 70vw !important;
+  }
+
+  .home-hero__actions .button {
+    font-size: 8px !important;
+    letter-spacing: 0.08em !important;
+  }
+}
