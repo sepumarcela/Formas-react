@@ -7061,3 +7061,29 @@ section {
     max-width: 100% !important;
   }
 }
+
+/* Nosotros: igualar la foto y el panel negro de la sede. */
+.nosotros-ubicacion {
+  align-items: stretch !important;
+}
+
+.nosotros-ubicacion__img {
+  min-height: 100% !important;
+  height: auto !important;
+}
+
+.nosotros-ubicacion__img img,
+.nosotros-ubicacion__img .nosotros-ph {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 365px !important;
+  object-fit: cover !important;
+}
+
+@media (max-width: 900px) {
+  .nosotros-ubicacion__img,
+  .nosotros-ubicacion__img img,
+  .nosotros-ubicacion__img .nosotros-ph {
+    min-height: 300px !important;
+  }
+}
