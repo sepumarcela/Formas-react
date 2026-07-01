@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Trash2 } from 'lucide-react'
 import {
@@ -330,7 +330,7 @@ function Carrito() {
 
                 <div className="checkout-form-grid">
                   <label>Nombre completo<input name="name" required placeholder="Tu nombre" /></label>
-                  <label>Teléfono / WhatsApp<input name="phone" required placeholder="300 000 0000" /></label>
+                  <label>Teléfono / WhatsApp<input name="phone" type="tel" inputMode="numeric" pattern="[0-9]*" required placeholder="3000000000" onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/\D/g, '') }} /></label>
                   <label>Correo electrónico<input name="email" type="email" required placeholder="correo@ejemplo.com" /></label>
                   <label>Ciudad<input name="city" placeholder="Medellín, Bogotá..." /></label>
                   <label className="checkout-colspan">Dirección o sector<input name="address" placeholder="Opcional para estimar entrega e instalación" /></label>

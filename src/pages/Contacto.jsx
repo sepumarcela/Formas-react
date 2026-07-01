@@ -54,7 +54,7 @@ function Contacto() {
             <form onSubmit={handleSubmit} className="contacto-form">
               <div className="contacto-form-row">
                 <input name="name" type="text" placeholder="Nombre completo" required />
-                <input name="phone" type="tel" placeholder="Teléfono" />
+                <input name="phone" type="tel" inputMode="numeric" pattern="[0-9]*" placeholder="Teléfono" onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/\D/g, '') }} />
               </div>
               <input name="email" type="email" placeholder="Correo electrónico" required />
               <select name="interest">
