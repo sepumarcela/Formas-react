@@ -96,7 +96,17 @@ export const defaultSiteContent = {
       ctaTitle: '¿Tienes un proyecto en mente?',
       ctaText: 'Te ayudamos a diseñar y hacer realidad el espacio que sueñas.',
     },
-    contacto: {
+    footerPolicies: {
+      title: 'Políticas',
+      policies: [
+        { id: 'devoluciones', label: 'Políticas de devoluciones', slug: 'devoluciones', title: 'Políticas de devoluciones', content: 'En Formas Interiores cada producto se fabrica o coordina con atención personalizada. Las solicitudes de devolución se revisan caso por caso, teniendo en cuenta el estado del producto, las condiciones de entrega y la naturaleza personalizada del mobiliario.', active: true },
+        { id: 'envio', label: 'Políticas de envío', slug: 'envio', title: 'Políticas de envío', content: 'Los tiempos y condiciones de envío se confirman de acuerdo con la ciudad, el tipo de producto y las necesidades de instalación. Antes de despachar, nuestro equipo valida los datos de entrega y coordina la fecha disponible.', active: true },
+        { id: 'privacidad', label: 'Políticas de privacidad', slug: 'privacidad', title: 'Políticas de privacidad', content: 'Tratamos los datos personales con responsabilidad y los usamos únicamente para atender solicitudes, coordinar compras, responder cotizaciones y mejorar la experiencia de nuestros clientes, conforme a la normativa aplicable en Colombia.', active: true },
+        { id: 'terminos-condiciones', label: 'Términos y condiciones', slug: 'terminos-condiciones', title: 'Términos y condiciones', content: 'El uso de este sitio y la solicitud de productos o servicios implica la aceptación de las condiciones comerciales informadas por Formas Interiores. Las cotizaciones, tiempos y valores pueden variar según medidas, materiales, disponibilidad y alcance del proyecto.', active: true },
+        { id: 'cookies', label: 'Políticas de Cookies', slug: 'cookies', title: 'Políticas de Cookies', content: 'Este sitio puede usar cookies o tecnologías similares para recordar preferencias, analizar navegación y mejorar la experiencia del usuario. Puedes gestionar las cookies desde la configuración de tu navegador.', active: true },
+      ],
+    },
+      contacto: {
       breadcrumb: 'Contacto',
       eyebrow: 'Contacto',
       title: 'Hablemos de tu proyecto',
@@ -278,6 +288,13 @@ export function mergeSiteContent(content) {
       blog: {
         ...defaultSiteContent.pageContent.blog,
         ...(content?.pageContent?.blog || {}),
+      },
+      footerPolicies: {
+        ...defaultSiteContent.pageContent.footerPolicies,
+        ...(content?.pageContent?.footerPolicies || {}),
+        policies: Array.isArray(content?.pageContent?.footerPolicies?.policies)
+          ? content.pageContent.footerPolicies.policies
+          : defaultSiteContent.pageContent.footerPolicies.policies,
       },
       contacto: {
         ...defaultSiteContent.pageContent.contacto,

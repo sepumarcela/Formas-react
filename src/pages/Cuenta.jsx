@@ -63,6 +63,7 @@ const pageOptions = [
   { id: 'nosotros', label: 'Nosotros' },
   { id: 'blog', label: 'Blog' },
   { id: 'contacto', label: 'Contacto' },
+  { id: 'footerPolicies', label: 'Políticas del footer' },
 ]
 
 const ADMIN_SESSION_KEY = 'formas-admin-authenticated'
@@ -985,10 +986,35 @@ function Cuenta() {
     )
   }
 
+  function updateFooterPolicy(index, patch) {
+    const policies = [...(content.pageContent.footerPolicies?.policies || [])]
+    policies[index] = { ...policies[index], ...patch }
+    updatePageContent('footerPolicies', { policies })
+  }
+
+  function addFooterPolicy() {
+    const policies = [...(content.pageContent.footerPolicies?.policies || [])]
+    const nextNumber = policies.length + 1
+    policies.push({
+      id: `politica-${nextNumber}`,
+      label: 'Nueva política',
+      slug: `politica-${nextNumber}`,
+      title: 'Nueva política',
+      content: 'Escribe aquí el contenido de esta política.',
+      active: true,
+    })
+    updatePageContent('footerPolicies', { policies })
+  }
+
+  function removeFooterPolicy(index) {
+    const policies = [...(content.pageContent.footerPolicies?.policies || [])]
+    policies.splice(index, 1)
+    updatePageContent('footerPolicies', { policies })
+  }
   function renderPages() {
     const page = content.pageContent[pageKey]
     const selectedPage = pageOptions.find((item) => item.id === pageKey)
-    const isHeroPage = pageKey !== 'homeProducts'
+    const isHeroPage = pageKey !== 'homeProducts' && pageKey !== 'footerPolicies'
 
     return (
       <div className="admin-panel">
@@ -1141,6 +1167,40 @@ function Cuenta() {
           </article>
         )}
 
+        {pageKey === 'footerPolicies' && (
+          <article className="admin-create-card">
+            <div className="admin-create-card__header">
+              <div>
+                <p className="admin-kicker">Footer</p>
+                <h2>Políticas del footer</h2>
+                <p>Estos enlaces aparecen en el pie de página y abren una página interna con el contenido de cada política.</p>
+              </div>
+              <button className="button button--primary" onClick={addFooterPolicy}><BadgePlus size={16} /> Agregar política</button>
+            </div>
+
+            <div className="admin-form-grid admin-form-grid--wide">
+              <label>Título del bloque<input value={page.title || ''} onChange={(event) => updatePageContent('footerPolicies', { title: event.target.value })} /></label>
+            </div>
+
+            <div className="admin-editor-list">
+              {(page.policies || []).map((policy, index) => (
+                <article className="admin-editor-card admin-editor-card--policy" key={policy.id || index}>
+                  <div className="admin-form-grid admin-form-grid--wide">
+                    <label>Texto del botón<input value={policy.label || ''} onChange={(event) => updateFooterPolicy(index, { label: event.target.value })} /></label>
+                    <label>URL interna<input value={policy.slug || ''} onChange={(event) => updateFooterPolicy(index, { slug: createSlug(event.target.value) })} /></label>
+                    <label className="admin-colspan">Título de la página<input value={policy.title || ''} onChange={(event) => updateFooterPolicy(index, { title: event.target.value })} /></label>
+                    <label className="admin-colspan">Contenido<textarea value={policy.content || ''} onChange={(event) => updateFooterPolicy(index, { content: event.target.value })} /></label>
+                    <label className="admin-check-row"><input type="checkbox" checked={policy.active !== false} onChange={(event) => updateFooterPolicy(index, { active: event.target.checked })} /> Visible en el footer</label>
+                  </div>
+                  <div className="admin-card-actions">
+                    <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> Guardar política</button>
+                    <button className="admin-delete" onClick={() => removeFooterPolicy(index)}><Trash2 size={16} /> Eliminar</button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </article>
+        )}
         {pageKey === 'proyectos' && (
           <div className="admin-editor-list">
             <div className="admin-list-heading">

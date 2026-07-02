@@ -11,7 +11,7 @@ const socialLinks = [
 ]
 
 const trustBadges = [
-  { label: 'Conexión Segura', detail: 'SSL/HTTPS', Icon: PiShieldCheckDuotone, tone: 'green' },
+  { label: 'Conexi\u00f3n Segura', detail: 'SSL/HTTPS', Icon: PiShieldCheckDuotone, tone: 'green' },
   { label: 'Empresa Verificada', detail: 'NIT 902039587-2', Icon: PiSealCheckDuotone, tone: 'blue' },
   { label: 'Datos Protegidos', detail: 'Ley 1581/2012', Icon: PiLockKeyDuotone, tone: 'cyan', href: 'https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981' },
   { label: 'Pago Seguro', detail: 'Plataforma Wompi', Icon: PiCreditCardDuotone, tone: 'yellow' },
@@ -23,15 +23,16 @@ function Footer() {
   const visibleCategories = categories.filter((category) => category.active !== false)
   const logoImage = pageContent.homeProducts?.logoImage
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
+  const footerPolicies = (pageContent.footerPolicies?.policies || []).filter((policy) => policy.active !== false)
 
   return (
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
           {logoImage ? <img src={optimizeImage(logoImage, { width: 420 })} className="site-footer__brand-logo" alt="Formas Interiores" style={{ '--logo-height': Math.min(Number(logoHeight) + 20, 130) + 'px' }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>Formas Interiores</div>}
-          <p>Diseñamos y fabricamos muebles premium para transformar tu hogar con estilo y funcionalidad.</p>
+          <p>{'Dise\u00f1amos y fabricamos muebles premium para transformar tu hogar con estilo y funcionalidad.'}</p>
           <div className="site-footer__social" aria-label="Redes sociales de Formas Interiores">
-            <span className="site-footer__social-label">Síguenos:</span>
+            <span className="site-footer__social-label">{'S\u00edguenos:'}</span>
             {socialLinks.map(({ label, href, Icon }) => (
               <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}>
                 <Icon aria-hidden="true" />
@@ -65,6 +66,19 @@ function Footer() {
               })}
             </div>
           </div>
+
+          {footerPolicies.length > 0 && (
+            <div className="site-footer__policies" aria-label="Politicas de Formas Interiores">
+              <h4>{pageContent.footerPolicies?.title || 'Pol\u00edticas'}</h4>
+              <div className="site-footer__policy-list">
+                {footerPolicies.map((policy) => (
+                  <Link key={policy.id || policy.slug || policy.label} to={'/politicas/' + (policy.slug || policy.id)}>
+                    {policy.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="site-footer__col site-footer__col--products">
@@ -93,13 +107,13 @@ function Footer() {
           <ul>
             <li>contacto@formasinteriores.com</li>
             <li>+57 300 123 4567</li>
-            <li>Medellín, Colombia</li>
+            <li>{'Medell\u00edn, Colombia'}</li>
           </ul>
         </div>
       </div>
 
       <div className="site-footer__bottom">
-        © 2026 Formas Interiores · Diseña tu estilo · Medellín, Colombia
+        {'\u00a9 2026 Formas Interiores \u00b7 Dise\u00f1a tu estilo \u00b7 Medell\u00edn, Colombia'}
       </div>
     </footer>
   )

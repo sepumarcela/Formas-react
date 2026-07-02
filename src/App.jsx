@@ -15,6 +15,7 @@ import Cuenta from './pages/Cuenta'
 import Carrito from './pages/Carrito'
 import PaymentResult from './pages/PaymentResult'
 import SearchResults from './pages/SearchResults'
+import PolicyPage from './pages/PolicyPage'
 import './styles/global.css'
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/pago/resultado" element={<PaymentResult />} />
           <Route path="/buscar" element={<SearchResults />} />
+          <Route path="/politicas/:policySlug" element={<PolicyPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
