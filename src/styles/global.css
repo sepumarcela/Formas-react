@@ -7270,3 +7270,85 @@ section {
     min-height: 300px !important;
   }
 }
+
+
+/* POLICY ADMIN FINAL OVERRIDE */
+.admin-editor-card.admin-editor-card--policy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px;
+  gap: 18px;
+  align-items: start;
+  padding: 18px;
+}
+
+.admin-editor-card--policy .admin-form-grid--policy {
+  display: grid !important;
+  grid-template-columns: minmax(140px, 0.8fr) minmax(180px, 1fr) minmax(320px, 1.8fr) !important;
+  grid-template-areas:
+    "label slug title"
+    "content content content"
+    "visible visible visible";
+  gap: 14px 16px;
+  align-items: start;
+  width: 100%;
+}
+
+.admin-editor-card--policy .admin-policy-label {
+  grid-area: label;
+}
+
+.admin-editor-card--policy .admin-policy-slug {
+  grid-area: slug;
+}
+
+.admin-editor-card--policy .admin-policy-title {
+  grid-area: title;
+}
+
+.admin-editor-card--policy .admin-policy-content {
+  grid-area: content;
+  grid-column: auto !important;
+}
+
+.admin-editor-card--policy .admin-check-row {
+  grid-area: visible;
+}
+
+.admin-editor-card--policy .admin-policy-content textarea {
+  min-height: 280px;
+  width: 100%;
+}
+
+.admin-editor-card--policy .admin-card-actions {
+  width: 150px;
+  min-width: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.admin-editor-card--policy .admin-card-actions .button,
+.admin-editor-card--policy .admin-card-actions .admin-delete {
+  min-height: 34px;
+  padding: 7px 8px;
+  font-size: 10px;
+}
+
+@media (max-width: 920px) {
+  .admin-editor-card.admin-editor-card--policy {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-editor-card--policy .admin-form-grid--policy {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "label"
+      "slug"
+      "title"
+      "content"
+      "visible";
+  }
+
+  .admin-editor-card--policy .admin-card-actions {
+    width: 100%;
+  }
+}
