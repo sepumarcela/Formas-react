@@ -1871,11 +1871,12 @@ section {
 
 .policy-page {
   min-height: 100vh;
-  background: var(--color-cream);
+  background:
+    linear-gradient(180deg, rgba(91, 80, 70, 0.88) 0, rgba(187, 173, 158, 0.72) 108px, #f0e8dd 260px);
 }
 
 .policy-article {
-  width: min(900px, calc(100% - 40px));
+  width: min(980px, calc(100% - 40px));
   margin: 0 auto;
   padding: 150px 0 90px;
 }
@@ -1891,22 +1892,45 @@ section {
 }
 
 .policy-article h1 {
+  max-width: 900px;
   margin: 0 0 24px;
   color: var(--color-text);
-  font-size: clamp(38px, 5vw, 70px);
-  line-height: 0.98;
-  font-weight: 400;
+  font-size: clamp(38px, 5vw, 64px);
+  line-height: 1.02;
+  font-weight: 500;
 }
 
 .policy-article p {
-  color: #3A3029;
+  max-width: 980px;
+  color: #2f2823;
   font-size: 18px;
-  line-height: 1.8;
-  font-weight: 600;
+  line-height: 1.85;
+  font-weight: 650;
 }
 
+.admin-editor-card--policy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px;
+  gap: 14px;
+  padding: 16px;
+  align-items: start;
+}
+
+.admin-form-grid--policy {
+  grid-template-columns: minmax(110px, 0.8fr) minmax(140px, 1fr) minmax(220px, 1.4fr);
+}
+
+.admin-form-grid label small {
+  color: rgba(52, 38, 29, 0.58);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.admin-policy-content textarea,
 .admin-editor-card--policy textarea {
-  min-height: 150px;
+  min-height: 240px;
+  max-height: none;
 }
 
 .admin-check-row {
@@ -1919,6 +1943,33 @@ section {
 .admin-check-row input {
   width: 18px;
   height: 18px;
+}
+
+.admin-editor-card--policy .admin-card-actions {
+  min-width: 0;
+  width: 150px;
+}
+
+.admin-editor-card--policy .admin-card-actions .button,
+.admin-editor-card--policy .admin-card-actions .admin-delete {
+  min-height: 34px;
+  padding: 7px 9px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 860px) {
+  .admin-editor-card--policy {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-form-grid--policy {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-editor-card--policy .admin-card-actions {
+    width: 100%;
+  }
 }
 
 .site-footer__bottom {

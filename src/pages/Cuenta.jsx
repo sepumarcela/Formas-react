@@ -1185,11 +1185,11 @@ function Cuenta() {
             <div className="admin-editor-list">
               {(page.policies || []).map((policy, index) => (
                 <article className="admin-editor-card admin-editor-card--policy" key={policy.id || index}>
-                  <div className="admin-form-grid admin-form-grid--wide">
+                  <div className="admin-form-grid admin-form-grid--wide admin-form-grid--policy">
                     <label>Texto del botón<input value={policy.label || ''} onChange={(event) => updateFooterPolicy(index, { label: event.target.value })} /></label>
-                    <label>URL interna<input value={policy.slug || ''} onChange={(event) => updateFooterPolicy(index, { slug: createSlug(event.target.value) })} /></label>
+                    <label>Enlace interno<input value={policy.slug || ''} onChange={(event) => updateFooterPolicy(index, { slug: createSlug(event.target.value) })} /><small>Ej: devoluciones crea /politicas/devoluciones</small></label>
                     <label className="admin-colspan">Título de la página<input value={policy.title || ''} onChange={(event) => updateFooterPolicy(index, { title: event.target.value })} /></label>
-                    <label className="admin-colspan">Contenido<textarea value={policy.content || ''} onChange={(event) => updateFooterPolicy(index, { content: event.target.value })} /></label>
+                    <label className="admin-colspan admin-policy-content">Contenido<textarea value={policy.content || ''} onChange={(event) => updateFooterPolicy(index, { content: event.target.value })} /></label>
                     <label className="admin-check-row"><input type="checkbox" checked={policy.active !== false} onChange={(event) => updateFooterPolicy(index, { active: event.target.checked })} /> Visible en el footer</label>
                   </div>
                   <div className="admin-card-actions">
