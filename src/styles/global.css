@@ -1910,14 +1910,41 @@ section {
 
 .admin-editor-card--policy {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 150px;
-  gap: 14px;
-  padding: 16px;
+  grid-template-columns: minmax(0, 1fr) 156px;
+  gap: 18px;
+  padding: 18px;
   align-items: start;
 }
 
 .admin-form-grid--policy {
-  grid-template-columns: minmax(110px, 0.8fr) minmax(140px, 1fr) minmax(220px, 1.4fr);
+  display: grid;
+  grid-template-columns: minmax(120px, 0.85fr) minmax(170px, 1fr) minmax(260px, 1.7fr);
+  grid-template-areas:
+    "label slug title"
+    "content content content"
+    "visible visible visible";
+  align-items: start;
+  gap: 14px 16px;
+}
+
+.admin-policy-label {
+  grid-area: label;
+}
+
+.admin-policy-slug {
+  grid-area: slug;
+}
+
+.admin-policy-title {
+  grid-area: title;
+}
+
+.admin-policy-content {
+  grid-area: content;
+}
+
+.admin-check-row {
+  grid-area: visible;
 }
 
 .admin-form-grid label small {
@@ -1929,8 +1956,9 @@ section {
 
 .admin-policy-content textarea,
 .admin-editor-card--policy textarea {
-  min-height: 240px;
+  min-height: 260px;
   max-height: none;
+  line-height: 1.55;
 }
 
 .admin-check-row {
@@ -1947,15 +1975,17 @@ section {
 
 .admin-editor-card--policy .admin-card-actions {
   min-width: 0;
-  width: 150px;
+  width: 156px;
+  position: sticky;
+  top: 16px;
 }
 
 .admin-editor-card--policy .admin-card-actions .button,
 .admin-editor-card--policy .admin-card-actions .admin-delete {
   min-height: 34px;
-  padding: 7px 9px;
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  padding: 7px 8px;
+  font-size: 10px;
+  letter-spacing: 0.035em;
 }
 
 @media (max-width: 860px) {
@@ -1965,6 +1995,12 @@ section {
 
   .admin-form-grid--policy {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "label"
+      "slug"
+      "title"
+      "content"
+      "visible";
   }
 
   .admin-editor-card--policy .admin-card-actions {

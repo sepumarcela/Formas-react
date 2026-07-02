@@ -1186,14 +1186,14 @@ function Cuenta() {
               {(page.policies || []).map((policy, index) => (
                 <article className="admin-editor-card admin-editor-card--policy" key={policy.id || index}>
                   <div className="admin-form-grid admin-form-grid--wide admin-form-grid--policy">
-                    <label>Texto del botón<input value={policy.label || ''} onChange={(event) => updateFooterPolicy(index, { label: event.target.value })} /></label>
-                    <label>Enlace interno<input value={policy.slug || ''} onChange={(event) => updateFooterPolicy(index, { slug: createSlug(event.target.value) })} /><small>Ej: devoluciones crea /politicas/devoluciones</small></label>
-                    <label className="admin-colspan">Título de la página<input value={policy.title || ''} onChange={(event) => updateFooterPolicy(index, { title: event.target.value })} /></label>
+                    <label className="admin-policy-label"><span>{'Texto del bot\u00f3n'}</span><input value={policy.label || ''} onChange={(event) => updateFooterPolicy(index, { label: event.target.value })} /></label>
+                    <label className="admin-policy-slug">Enlace interno<input value={policy.slug || ''} onChange={(event) => updateFooterPolicy(index, { slug: createSlug(event.target.value) })} /><small>Ej: devoluciones crea /politicas/devoluciones</small></label>
+                    <label className="admin-policy-title"><span>{'T\u00edtulo de la p\u00e1gina'}</span><input value={policy.title || ''} onChange={(event) => updateFooterPolicy(index, { title: event.target.value })} /></label>
                     <label className="admin-colspan admin-policy-content">Contenido<textarea value={policy.content || ''} onChange={(event) => updateFooterPolicy(index, { content: event.target.value })} /></label>
                     <label className="admin-check-row"><input type="checkbox" checked={policy.active !== false} onChange={(event) => updateFooterPolicy(index, { active: event.target.checked })} /> Visible en el footer</label>
                   </div>
                   <div className="admin-card-actions">
-                    <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> Guardar política</button>
+                    <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> {'Guardar pol\u00edtica'}</button>
                     <button className="admin-delete" onClick={() => removeFooterPolicy(index)}><Trash2 size={16} /> Eliminar</button>
                   </div>
                 </article>
