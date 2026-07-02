@@ -7352,3 +7352,23 @@ section {
     width: 100%;
   }
 }
+
+
+/* POLICY ADMIN CONTENT WIDE OVERRIDE */
+.admin-editor-card--policy .admin-policy-content {
+  display: grid;
+  width: 100%;
+  max-width: none;
+}
+
+.admin-editor-card--policy .admin-policy-content textarea {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 180px;
+  resize: vertical;
+  white-space: pre-wrap;
+}
+
+.admin-editor-card--policy .admin-form-grid--policy > .admin-policy-content {
+  grid-column: 1 / -1 !important;
+}
