@@ -5183,7 +5183,31 @@ section {
 
 .admin-editor-card--hero {
   position: relative;
-  grid-template-columns: 260px minmax(0, 1fr) auto;
+  grid-template-columns: 260px minmax(220px, 0.85fr) minmax(340px, 1.15fr);
+}
+
+.admin-editor-card--hero .admin-logo-copy {
+  min-width: 220px;
+  max-width: 320px;
+}
+
+.admin-editor-card--hero .admin-logo-copy h3 {
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+
+.admin-editor-card--hero .admin-logo-copy p {
+  max-width: 280px;
+  color: rgba(43, 39, 36, 0.82);
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 650;
+}
+
+.admin-editor-card--hero > .admin-form-grid {
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  align-items: start;
 }
 
 .admin-editor-card--story {
@@ -5491,7 +5515,12 @@ section {
   }
 
   .admin-editor-card--hero {
-    grid-template-columns: 220px minmax(0, 1fr);
+    grid-template-columns: 220px minmax(240px, 1fr);
+  }
+
+  .admin-editor-card--hero > .admin-form-grid {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
   }
 
   .admin-editor-card--story {
