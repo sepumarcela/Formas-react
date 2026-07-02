@@ -23,7 +23,7 @@ function WhatsAppFloating() {
 
   if (pathname.startsWith('/cuenta')) return null
 
-  const whatsappLink = pageContent.homeProducts?.finalWhatsappLink || pageContent.contacto?.whatsappLink || 'https://wa.me/573001234567'
+  const whatsappLink = pageContent.homeProducts?.finalWhatsappLink || pageContent.contacto?.whatsappLink || 'https://wa.me/573146975752'
 
   return (
     <div className="whatsapp-float" aria-label="Contacto por WhatsApp">

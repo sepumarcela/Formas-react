@@ -39,7 +39,7 @@ function FinalCta() {
 
           <a
             className="whatsapp-button"
-            href={section.finalWhatsappLink || 'https://wa.me/573001234567'}
+            href={section.finalWhatsappLink || 'https://wa.me/573146975752'}
             target="_blank"
             rel="noreferrer"
           >

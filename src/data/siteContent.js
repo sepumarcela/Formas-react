@@ -14,6 +14,32 @@ const legacyDemoProductIds = new Set([
   'alcoba-sueno',
 ])
 
+const FORMS_PHONE = '+57 314 697 5752'
+const FORMS_WHATSAPP = 'https://wa.me/573146975752'
+
+const oldPhoneValues = new Set([
+  '+57 300 123 4567',
+  '+57 604 444 7890',
+  '300 123 4567',
+  '604 444 7890',
+  '3001234567',
+  '6044447890',
+])
+
+const oldWhatsappValues = new Set([
+  'https://wa.me/573001234567',
+  'https://api.whatsapp.com/send?phone=573001234567',
+])
+
+function normalizeFormsPhone(value) {
+  const normalized = String(value || '').trim()
+  return oldPhoneValues.has(normalized) ? FORMS_PHONE : value
+}
+
+function normalizeFormsWhatsapp(value) {
+  const normalized = String(value || '').trim()
+  return oldWhatsappValues.has(normalized) ? FORMS_WHATSAPP : value
+}
 export const defaultSiteContent = {
   heroSlides: [
     {
@@ -53,7 +79,7 @@ export const defaultSiteContent = {
       finalPrimaryLabel: 'Solicitar cotización',
       finalPrimaryLink: '/contacto',
       finalWhatsappLabel: 'Hablar por WhatsApp',
-      finalWhatsappLink: 'https://wa.me/573001234567',
+      finalWhatsappLink: 'https://wa.me/573146975752',
       finalImage: '',
     },
     proyectos: {
@@ -117,7 +143,7 @@ export const defaultSiteContent = {
       addressTitle: 'Visítanos',
       address: 'Medellín, Colombia',
       phoneTitle: 'Llámanos',
-      phone: '+57 300 123 4567',
+      phone: '+57 314 697 5752',
       emailTitle: 'Escríbenos',
       email: 'contacto@formasinteriores.com',
       hoursTitle: 'Horario de atención',
@@ -126,7 +152,7 @@ export const defaultSiteContent = {
       mapEmbedUrl: '',
       visitTitle: 'Sala de diseño',
       visitText: 'Agenda tu visita y conoce nuestros espacios de inspiración.',
-      whatsappLink: 'https://wa.me/573001234567',
+      whatsappLink: 'https://wa.me/573146975752',
       
     },
   },
@@ -272,6 +298,9 @@ export function mergeSiteContent(content) {
       homeProducts: {
         ...defaultSiteContent.pageContent.homeProducts,
         ...(content?.pageContent?.homeProducts || {}),
+        finalWhatsappLink: normalizeFormsWhatsapp(
+          content?.pageContent?.homeProducts?.finalWhatsappLink || defaultSiteContent.pageContent.homeProducts.finalWhatsappLink,
+        ),
       },
       proyectos: {
         ...defaultSiteContent.pageContent.proyectos,
@@ -299,6 +328,10 @@ export function mergeSiteContent(content) {
       contacto: {
         ...defaultSiteContent.pageContent.contacto,
         ...(content?.pageContent?.contacto || {}),
+        phone: normalizeFormsPhone(content?.pageContent?.contacto?.phone || defaultSiteContent.pageContent.contacto.phone),
+        whatsappLink: normalizeFormsWhatsapp(
+          content?.pageContent?.contacto?.whatsappLink || defaultSiteContent.pageContent.contacto.whatsappLink,
+        ),
       },
     },
   }
