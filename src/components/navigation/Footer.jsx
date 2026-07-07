@@ -106,7 +106,7 @@ function Footer() {
           <h4>Contacto</h4>
           <ul>
             <li>contacto@formasinteriores.com</li>
-            <li>+57 314 697 5752</li>
+            <li>+57 316 973 3417</li>
             <li>{'Medell\u00edn, Colombia'}</li>
           </ul>
         </div>

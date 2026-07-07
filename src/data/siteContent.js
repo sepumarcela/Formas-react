@@ -14,21 +14,26 @@ const legacyDemoProductIds = new Set([
   'alcoba-sueno',
 ])
 
-const FORMS_PHONE = '+57 314 697 5752'
-const FORMS_WHATSAPP = 'https://wa.me/573146975752'
+const FORMS_PHONE = '+57 316 973 3417'
+const FORMS_WHATSAPP = 'https://wa.me/573169733417'
 
 const oldPhoneValues = new Set([
   '+57 300 123 4567',
   '+57 604 444 7890',
+  '+57 314 697 5752',
   '300 123 4567',
   '604 444 7890',
+  '314 697 5752',
   '3001234567',
   '6044447890',
+  '3146975752',
 ])
 
 const oldWhatsappValues = new Set([
   'https://wa.me/573001234567',
+  'https://wa.me/573146975752',
   'https://api.whatsapp.com/send?phone=573001234567',
+  'https://api.whatsapp.com/send?phone=573146975752',
 ])
 
 function normalizeFormsPhone(value) {
@@ -79,7 +84,7 @@ export const defaultSiteContent = {
       finalPrimaryLabel: 'Solicitar cotización',
       finalPrimaryLink: '/contacto',
       finalWhatsappLabel: 'Hablar por WhatsApp',
-      finalWhatsappLink: 'https://wa.me/573146975752',
+      finalWhatsappLink: 'https://wa.me/573169733417',
       finalImage: '',
     },
     proyectos: {
@@ -143,7 +148,7 @@ export const defaultSiteContent = {
       addressTitle: 'Visítanos',
       address: 'Medellín, Colombia',
       phoneTitle: 'Llámanos',
-      phone: '+57 314 697 5752',
+      phone: '+57 316 973 3417',
       emailTitle: 'Escríbenos',
       email: 'contacto@formasinteriores.com',
       hoursTitle: 'Horario de atención',
@@ -152,7 +157,7 @@ export const defaultSiteContent = {
       mapEmbedUrl: '',
       visitTitle: 'Sala de diseño',
       visitText: 'Agenda tu visita y conoce nuestros espacios de inspiración.',
-      whatsappLink: 'https://wa.me/573146975752',
+      whatsappLink: 'https://wa.me/573169733417',
       
     },
   },
