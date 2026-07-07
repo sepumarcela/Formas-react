@@ -1,6 +1,42 @@
 import { useEffect, useState } from 'react'
 import { fetchCatalogContent } from '../api/cmsApi'
 import { defaultSiteContent, loadSiteContent, saveSiteContent, SITE_CONTENT_EVENT } from '../data/siteContent'
+import { optimizeImage, preloadImage } from '../utils/images'
+
+
+function collectImagesFromPageContent(pageContent = {}) {
+  const images = []
+  Object.values(pageContent).forEach((section) => {
+    if (!section || typeof section !== 'object') return
+    ;['image', 'menuImage', 'historyImage', 'locationImage', 'finalImage', 'logoImage'].forEach((key) => {
+      if (section[key]) images.push(section[key])
+    })
+    if (Array.isArray(section.whyBenefits)) {
+      section.whyBenefits.forEach((benefit) => benefit?.image && images.push(benefit.image))
+    }
+  })
+  return images
+}
+
+function preloadCatalogImages(catalog) {
+  if (typeof window === 'undefined' || !catalog) return
+
+  const criticalImages = [
+    catalog.heroSlides?.find((slide) => slide?.active !== false)?.image,
+    catalog.pageContent?.productos?.image,
+    catalog.pageContent?.proyectos?.image,
+    catalog.pageContent?.nosotros?.image,
+    catalog.pageContent?.blog?.image,
+    catalog.pageContent?.contacto?.image,
+    ...collectImagesFromPageContent(catalog.pageContent),
+    ...(catalog.categories || []).slice(0, 4).map((category) => category.image),
+    ...(catalog.products || []).slice(0, 4).map((product) => product.image),
+  ].filter(Boolean)
+
+  Array.from(new Set(criticalImages)).slice(0, 12).forEach((image) => {
+    preloadImage(optimizeImage(image, { width: 1400 }))
+  })
+}
 
 function mergeById(baseItems, apiItems) {
   const items = new Map()
@@ -19,6 +55,8 @@ export function useSiteContent() {
       try {
         const catalog = await fetchCatalogContent()
         if (cancelled) return
+
+        preloadCatalogImages(catalog)
 
         setContent((current) => saveSiteContent({
           ...current,
