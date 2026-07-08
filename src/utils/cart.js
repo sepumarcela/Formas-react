@@ -23,6 +23,19 @@ function saveCart(items) {
   return items
 }
 
+function toCartItem(product, quantity = 1) {
+  return {
+    id: product.id,
+    name: product.name,
+    category: product.category,
+    categoryId: product.categoryId,
+    price: product.price || 'Cotizar',
+    size: product.size || 'A medida',
+    image: product.image || '',
+    quantity,
+  }
+}
+
 export function loadCartItems() {
   if (typeof window === 'undefined') return []
   return safeReadCart()
@@ -34,23 +47,25 @@ export function addCartItem(product) {
 
   if (existing) {
     return saveCart(items.map((item) => (
-      item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      item.id === product.id ? toCartItem(product, (Number(item.quantity) || 1) + 1) : item
     )))
   }
 
   return saveCart([
     ...items,
-    {
-      id: product.id,
-      name: product.name,
-      category: product.category,
-      categoryId: product.categoryId,
-      price: product.price || 'Cotizar',
-      size: product.size || 'A medida',
-      image: product.image || '',
-      quantity: 1,
-    },
+    toCartItem(product),
   ])
+}
+
+export function refreshCartItems(products = []) {
+  const items = safeReadCart()
+  const productsById = new Map(products.map((product) => [product.id, product]))
+  const nextItems = items.map((item) => {
+    const product = productsById.get(item.id)
+    return product ? toCartItem(product, Number(item.quantity) || 1) : item
+  })
+
+  return JSON.stringify(nextItems) === JSON.stringify(items) ? items : saveCart(nextItems)
 }
 
 export function updateCartItemQuantity(id, quantity) {

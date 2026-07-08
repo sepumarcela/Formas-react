@@ -16,6 +16,7 @@ import {
   PiTruckDuotone,
 } from 'react-icons/pi'
 import { createCustomerOrder, createWompiCheckout } from '../api/cmsApi'
+import { useSiteContent } from '../hooks/useSiteContent'
 import {
   CART_UPDATED_EVENT,
   clearCart,
@@ -23,6 +24,7 @@ import {
   loadCartItems,
   parseMoney,
   removeCartItem,
+  refreshCartItems,
   updateCartItemQuantity,
 } from '../utils/cart'
 import { optimizeImage } from '../utils/images'
@@ -75,6 +77,7 @@ function splitIncludedIva(total) {
 }
 
 function Carrito() {
+  const [{ products }] = useSiteContent()
   const [items, setItems] = useState(loadCartItems)
   const [quantityInputs, setQuantityInputs] = useState(() => Object.fromEntries(loadCartItems().map((item) => [item.id, String(item.quantity)])))
   const [paymentMethod, setPaymentMethod] = useState(paymentOptions[0].id)
@@ -95,6 +98,12 @@ function Carrito() {
     setItems(nextItems)
     setQuantityInputs(quantityMap(nextItems))
   }, [quantityMap])
+
+  useEffect(() => {
+    if (products.length) {
+      syncCartItems(refreshCartItems(products))
+    }
+  }, [products, syncCartItems])
 
   useEffect(() => {
     function syncCart(event) {
