@@ -226,7 +226,7 @@ function Carrito() {
           </div>
           <div className="carrito-hero__badge">
             <PiShoppingCartSimpleDuotone size={22} />
-            <span>{productCount} productos</span>
+            <span>{productCount} unidades</span>
           </div>
         </div>
 
@@ -309,7 +309,18 @@ function Carrito() {
                         </button>
                       </span>
                       <div className="cart-line__price">
-                        <strong>{parseMoney(item.price) ? formatMoney(getItemTotal(item)) : 'Cotizar'}</strong>
+                        <span className="cart-line__price-text">
+                          <strong>{parseMoney(item.price) ? formatMoney(getItemTotal(item)) : 'Cotizar'}</strong>
+                          {parseMoney(item.price) ? (
+                            <small>
+                              {item.quantity > 1
+                                ? `${item.quantity} unidades x ${formatMoney(parseMoney(item.price))} c/u`
+                                : `${formatMoney(parseMoney(item.price))} c/u`}
+                            </small>
+                          ) : (
+                            <small>Cotización personalizada</small>
+                          )}
+                        </span>
                         <button type="button" onClick={() => handleRemove(item.id)} aria-label={`Quitar ${item.name}`}>
                           <Trash2 size={16} />
                         </button>
@@ -373,7 +384,7 @@ function Carrito() {
             <aside className="carrito-summary checkout-summary">
               <h3>Resumen</h3>
               <div className="carrito-summary__row">
-                <span>Productos</span>
+                <span>Unidades</span>
                 <strong>{productCount}</strong>
               </div>
               <div className="carrito-summary__row">
