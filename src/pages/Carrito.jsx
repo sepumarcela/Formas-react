@@ -183,6 +183,7 @@ function Carrito() {
         })
 
         if (checkout.configured && checkout.checkoutUrl && checkout.checkoutParams) {
+          syncCartItems(clearCart())
           submitCheckoutForm(checkout.checkoutUrl, checkout.checkoutParams)
           return
         }

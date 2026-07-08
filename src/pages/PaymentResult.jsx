@@ -1,5 +1,7 @@
-﻿import { Link, useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { PiCheckCircleDuotone, PiClockDuotone, PiWarningCircleDuotone } from 'react-icons/pi'
+import { clearCart } from '../utils/cart'
 
 const statusCopy = {
   APPROVED: {
@@ -30,6 +32,10 @@ function PaymentResult() {
   const reference = params.get('reference') || ''
   const copy = statusCopy[status] || statusCopy.PENDING
   const Icon = copy.icon
+
+  useEffect(() => {
+    clearCart()
+  }, [])
 
   return (
     <main className="page payment-result-page">
