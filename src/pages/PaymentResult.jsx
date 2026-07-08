@@ -24,13 +24,21 @@ const statusCopy = {
     title: 'Pago en validacion',
     text: 'El pago esta pendiente de confirmacion. Esto puede pasar con PSE u otros metodos bancarios.',
   },
+  RECEIVED: {
+    icon: PiCheckCircleDuotone,
+    title: 'Pago recibido',
+    text: 'Gracias. Recibimos el regreso de Wompi y validaremos la transaccion con la confirmacion enviada por la pasarela.',
+  },
 }
 
 function PaymentResult() {
   const [params] = useSearchParams()
-  const status = params.get('status') || params.get('transaction_status') || 'PENDING'
-  const reference = params.get('reference') || ''
-  const copy = statusCopy[status] || statusCopy.PENDING
+  const rawStatus = params.get('status') || params.get('transaction_status') || params.get('transaction.status') || ''
+  const normalizedStatus = rawStatus.toUpperCase()
+  const hasWompiTransaction = Boolean(params.get('id') || params.get('transaction_id') || params.get('reference'))
+  const status = normalizedStatus || (hasWompiTransaction ? 'RECEIVED' : 'PENDING')
+  const reference = params.get('reference') || params.get('id') || params.get('transaction_id') || ''
+  const copy = statusCopy[status] || statusCopy.RECEIVED
   const Icon = copy.icon
 
   useEffect(() => {
