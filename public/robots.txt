@@ -8,3 +8,4 @@ Disallow: /buscar
 Disallow: /ficha-tecnica
 
 Sitemap: https://formasinteriores.com/sitemap.xml
+# AI-readable site guide: https://formasinteriores.com/llms.txt
