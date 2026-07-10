@@ -235,6 +235,10 @@ picture,
   object-position: left center;
 }
 
+.brand__logo-img--fallback {
+  max-width: 110px;
+}
+
 .brand__textwrap {
   display: flex;
   flex-direction: column;
@@ -513,6 +517,14 @@ picture,
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.home-hero__fallback {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 78% 22%, rgba(176, 122, 86, 0.24), transparent 34%),
+    linear-gradient(135deg, #2b241f 0%, #171310 52%, #3a3029 100%);
 }
 
 .home-hero__bg-img--contain {
@@ -1667,6 +1679,10 @@ section {
   object-fit: contain;
   object-position: left center;
   margin-bottom: 14px;
+}
+
+.site-footer__brand-logo--fallback {
+  max-width: 150px;
 }
 
 .site-footer__brand p {

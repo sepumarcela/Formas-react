@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import {
   ChevronDown, Menu, Search, ShoppingCart, User, X,
@@ -30,6 +30,7 @@ function Header({ transparent = false }) {
   const { categories, pageContent } = siteContent
   const logoImage = pageContent.homeProducts?.logoImage
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
+  const fallbackLogo = '/favicon-formas.png?v=11'
   const productsMenuImage = pageContent.productos?.menuImage
   const visibleCategories = categories.filter((category) => category.active !== false)
   const dropRef = useRef(null)
@@ -90,18 +91,7 @@ function Header({ transparent = false }) {
           {logoImage ? (
             <img className="brand__logo-img" src={optimizeImage(logoImage, { width: 320 })} alt="Formas Interiores" style={{ '--logo-height': `${logoHeight}px` }} />
           ) : (
-            <>
-              <svg className="brand__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="14" y="14" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
-                <rect x="22" y="22" width="12" height="12" stroke="currentColor" strokeWidth="1.5" fill="none" />
-                <path d="M14 20 L7 26 L17 30 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
-                <path d="M34 28 L41 22 L31 18 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
-              </svg>
-              <span className="brand__textwrap">
-                <span className="brand__text">Formas Interiores</span>
-                <span className="brand__tagline">DISEÑA TU ESTILO</span>
-              </span>
-            </>
+            <img className="brand__logo-img brand__logo-img--fallback" src={fallbackLogo} alt="Formas Interiores" style={{ '--logo-height': `${Math.min(Number(logoHeight) || 92, 92)}px` }} />
           )}
         </Link>
 

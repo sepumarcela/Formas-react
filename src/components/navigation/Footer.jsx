@@ -29,7 +29,7 @@ function Footer() {
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
-          {logoImage ? <img src={optimizeImage(logoImage, { width: 420 })} className="site-footer__brand-logo" alt="Formas Interiores" style={{ '--logo-height': Math.min(Number(logoHeight) + 20, 130) + 'px' }} /> : <div className="brand__text" style={{ color: '#fff', marginBottom: 16 }}>Formas Interiores</div>}
+          {logoImage ? <img src={optimizeImage(logoImage, { width: 420 })} className="site-footer__brand-logo" alt="Formas Interiores" style={{ '--logo-height': Math.min(Number(logoHeight) + 20, 130) + 'px' }} /> : <img src="/favicon-formas.png?v=11" className="site-footer__brand-logo site-footer__brand-logo--fallback" alt="Formas Interiores" style={{ '--logo-height': '118px' }} />}
           <p>{'Dise\u00f1amos y fabricamos muebles premium para transformar tu hogar con estilo y funcionalidad.'}</p>
           <div className="site-footer__social" aria-label="Redes sociales de Formas Interiores">
             <span className="site-footer__social-label">{'S\u00edguenos:'}</span>
