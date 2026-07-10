@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import Header from '../components/navigation/Header'
 import Footer from '../components/navigation/Footer'
 import WhatsAppFloating from '../components/navigation/WhatsAppFloating'
+import CookieConsent from '../components/CookieConsent'
 
 function MainLayout() {
   const { pathname } = useLocation()
@@ -13,8 +14,10 @@ function MainLayout() {
       <Outlet />
       <Footer />
       <WhatsAppFloating />
+      <CookieConsent />
     </>
   )
 }
 
 export default MainLayout
+
