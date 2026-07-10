@@ -10,6 +10,8 @@ import FinalCta from '../components/sections/FinalCta'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage, preloadImage } from '../utils/images'
 
+const HOME_HERO_FALLBACK = 'https://res.cloudinary.com/dokodfzmu/image/upload/v1781298433/formas/inicio/inicio01.png'
+
 function Home() {
   const [{ heroSlides, pageContent }] = useSiteContent()
   const [activeSlideIndex, setActiveSlideIndex] = useState(0)
@@ -19,7 +21,7 @@ function Home() {
   const slides = activeSlides.length ? activeSlides : heroSlides
   const safeSlideIndex = slides.length ? activeSlideIndex % slides.length : 0
   const currentSlide = slides[safeSlideIndex] || {}
-  const heroSrc = currentSlide.image || ''
+  const heroSrc = currentSlide.image || HOME_HERO_FALLBACK
   const optimizedHeroSrc = heroSrc ? optimizeImage(heroSrc, { width: 1800 }) : ''
   const heroImageFit = pageContent.homeProducts?.heroImageFit || 'cover'
   const descriptionLines = String(currentSlide.description || '')

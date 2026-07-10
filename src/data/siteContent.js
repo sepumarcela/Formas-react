@@ -286,6 +286,16 @@ export function createSlug(value) {
     .replace(/(^-|-$)/g, '')
 }
 
+
+function normalizeHeroSlides(slides) {
+  const fallbackSlide = defaultSiteContent.heroSlides[0]
+  const source = Array.isArray(slides) && slides.length ? slides : defaultSiteContent.heroSlides
+
+  return source.map((slide, index) => ({
+    ...slide,
+    image: slide.image || (index === 0 ? fallbackSlide.image : ''),
+  }))
+}
 export function mergeSiteContent(content) {
   return {
     ...defaultSiteContent,
@@ -293,7 +303,7 @@ export function mergeSiteContent(content) {
     categories: Array.isArray(content?.categories) ? content.categories : defaultSiteContent.categories,
     products: removeLegacyDemoProducts(Array.isArray(content?.products) ? content.products : defaultSiteContent.products),
     blogPosts: Array.isArray(content?.blogPosts) ? content.blogPosts : defaultSiteContent.blogPosts,
-    heroSlides: Array.isArray(content?.heroSlides) ? content.heroSlides : defaultSiteContent.heroSlides,
+    heroSlides: normalizeHeroSlides(content?.heroSlides),
     projects: Array.isArray(content?.projects) ? content.projects : defaultSiteContent.projects,
     projectHighlights: Array.isArray(content?.projectHighlights) ? content.projectHighlights : defaultSiteContent.projectHighlights,
     testimonials: Array.isArray(content?.testimonials) ? content.testimonials : defaultSiteContent.testimonials,
