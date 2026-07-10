@@ -21,20 +21,29 @@ function collectImagesFromPageContent(pageContent = {}) {
 function preloadCatalogImages(catalog) {
   if (typeof window === 'undefined' || !catalog) return
 
-  const criticalImages = [
-    catalog.heroSlides?.find((slide) => slide?.active !== false)?.image,
+  const heroImages = [
+    ...(catalog.heroSlides || []).filter((slide) => slide?.active !== false).map((slide) => slide.image),
     catalog.pageContent?.productos?.image,
     catalog.pageContent?.proyectos?.image,
     catalog.pageContent?.nosotros?.image,
     catalog.pageContent?.blog?.image,
     catalog.pageContent?.contacto?.image,
-    ...collectImagesFromPageContent(catalog.pageContent),
-    ...(catalog.categories || []).slice(0, 4).map((category) => category.image),
-    ...(catalog.products || []).slice(0, 4).map((product) => product.image),
+    ...(catalog.categories || []).map((category) => category.image),
   ].filter(Boolean)
 
-  Array.from(new Set(criticalImages)).slice(0, 12).forEach((image) => {
-    preloadImage(optimizeImage(image, { width: 1400 }))
+  const supportingImages = [
+    ...collectImagesFromPageContent(catalog.pageContent),
+    ...(catalog.products || []).slice(0, 8).map((product) => product.image),
+    ...(catalog.projects || []).slice(0, 6).map((project) => project.image),
+    ...(catalog.blogPosts || []).slice(0, 4).map((post) => post.image),
+  ].filter(Boolean)
+
+  Array.from(new Set(heroImages)).slice(0, 18).forEach((image) => {
+    preloadImage(optimizeImage(image, { width: 1800 }))
+  })
+
+  Array.from(new Set(supportingImages)).slice(0, 16).forEach((image) => {
+    preloadImage(optimizeImage(image, { width: 900 }))
   })
 }
 
