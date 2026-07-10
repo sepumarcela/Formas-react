@@ -9,6 +9,7 @@ import TestimonialSection from '../components/sections/TestimonialSection'
 import FinalCta from '../components/sections/FinalCta'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage, preloadImage } from '../utils/images'
+import { SHOW_PROJECTS_PAGE } from '../config/features'
 
 const HOME_HERO_FALLBACK = 'https://res.cloudinary.com/dokodfzmu/image/upload/v1781298433/formas/inicio/inicio01.png'
 
@@ -104,7 +105,7 @@ function Home() {
       <FeaturedProducts />
       <WhyFormas />
       <PurchaseProcess />
-      <ProjectHighlights />
+      {SHOW_PROJECTS_PAGE && <ProjectHighlights />}
       <TestimonialSection />
       <FinalCta />
     </main>

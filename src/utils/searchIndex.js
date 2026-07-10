@@ -1,3 +1,5 @@
+import { SHOW_PROJECTS_PAGE } from '../config/features'
+
 export function normalizeSearchText(value) {
   return String(value || '')
     .toLowerCase()
@@ -27,8 +29,8 @@ function uniqueByUrl(items) {
 export function buildSearchIndex(content) {
   const categories = (content.categories || []).filter((item) => item.active !== false)
   const products = (content.products || []).filter((item) => item.active !== false)
-  const projects = (content.projects || []).filter((item) => item.active !== false)
-  const projectHighlights = (content.projectHighlights || []).filter((item) => item.active !== false)
+  const projects = SHOW_PROJECTS_PAGE ? (content.projects || []).filter((item) => item.active !== false) : []
+  const projectHighlights = SHOW_PROJECTS_PAGE ? (content.projectHighlights || []).filter((item) => item.active !== false) : []
   const blogPosts = (content.blogPosts || []).filter((item) => item.active !== false)
   const pageContent = content.pageContent || {}
 
@@ -52,13 +54,13 @@ export function buildSearchIndex(content) {
       keywords: 'productos catalogo categorias muebles cotizar comprar',
       url: '/productos',
     },
-    {
+    ...(SHOW_PROJECTS_PAGE ? [{
       type: 'Pagina',
       title: pageContent.proyectos?.title || 'Proyectos',
       description: pageContent.proyectos?.description,
       keywords: 'proyectos realizados antes despues trabajos portafolio',
       url: '/proyectos',
-    },
+    }] : []),
     {
       type: 'Pagina',
       title: pageContent.nosotros?.title || 'Nosotros',

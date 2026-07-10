@@ -3,6 +3,7 @@ import { FaFacebookF, FaInstagram, FaTiktok } from 'react-icons/fa6'
 import { PiBankDuotone, PiCreditCardDuotone, PiLockKeyDuotone, PiSealCheckDuotone, PiShieldCheckDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { optimizeImage } from '../../utils/images'
+import { SHOW_PROJECTS_PAGE } from '../../config/features'
 
 const socialLinks = [
   { label: 'Facebook', href: 'https://www.facebook.com/formasinteriores', Icon: FaFacebookF },
@@ -96,7 +97,7 @@ function Footer() {
           <h4>Empresa</h4>
           <ul>
             <li><Link to="/nosotros">Nosotros</Link></li>
-            <li><Link to="/proyectos">Proyectos</Link></li>
+            {SHOW_PROJECTS_PAGE && <li><Link to="/proyectos">Proyectos</Link></li>}
             <li><Link to="/blog">Blog</Link></li>
             <li><Link to="/contacto">Contacto</Link></li>
           </ul>

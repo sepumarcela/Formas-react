@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop'
 import SeoManager from './components/SeoManager'
 import MainLayout from './layouts/MainLayout'
@@ -17,6 +17,7 @@ import Carrito from './pages/Carrito'
 import PaymentResult from './pages/PaymentResult'
 import SearchResults from './pages/SearchResults'
 import PolicyPage from './pages/PolicyPage'
+import { SHOW_PROJECTS_PAGE } from './config/features'
 import './styles/global.css'
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/nosotros" element={<Nosotros />} />
-          <Route path="/proyectos" element={<Proyectos />} />
+          <Route path="/proyectos" element={SHOW_PROJECTS_PAGE ? <Proyectos /> : <Navigate to="/" replace />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:postId" element={<BlogPostDetail />} />
           <Route path="/contacto" element={<Contacto />} />

@@ -8,6 +8,7 @@ import { useSiteContent } from '../../hooks/useSiteContent'
 import { CART_UPDATED_EVENT, loadCartItems } from '../../utils/cart'
 import { optimizeImage } from '../../utils/images'
 import { normalizeSearchText, searchSiteContent } from '../../utils/searchIndex'
+import { SHOW_PROJECTS_PAGE } from '../../config/features'
 
 const categoryIcons = {
   tv: PiTelevisionDuotone,
@@ -159,7 +160,7 @@ function Header({ transparent = false }) {
             </div>
           </div>
 
-          <NavLink to="/proyectos" onClick={() => setMenuOpen(false)}>Proyectos</NavLink>
+          {SHOW_PROJECTS_PAGE && <NavLink to="/proyectos" onClick={() => setMenuOpen(false)}>Proyectos</NavLink>}
           <NavLink to="/nosotros" onClick={() => setMenuOpen(false)}>Nosotros</NavLink>
           <NavLink to="/blog" onClick={() => setMenuOpen(false)}>Blog</NavLink>
           <NavLink to="/contacto" onClick={() => setMenuOpen(false)}>Contacto</NavLink>
@@ -193,7 +194,7 @@ function Header({ transparent = false }) {
             <Search size={20} />
             <input
               type="text"
-              placeholder="Busca productos, proyectos, blog..."
+              placeholder="Busca productos, categorias, blog..."
               value={searchValue}
               onChange={(event) => setSearchValue(event.target.value)}
               autoFocus
