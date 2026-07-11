@@ -620,6 +620,19 @@ picture,
   padding: 18px 34px;
 }
 
+.home-hero__actions .button--primary {
+  background: #8a4f31;
+  border-color: #8a4f31;
+  color: #fff;
+  text-shadow: none;
+}
+
+.home-hero__actions .button--primary:hover {
+  background: #733f27;
+  border-color: #733f27;
+  color: #fff;
+}
+
 .home-hero__dots {
   margin-top: 30px;
   display: flex;
