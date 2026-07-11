@@ -1,47 +1,47 @@
 # Formas Interiores
 
-> Formas Interiores diseña y fabrica mobiliario a medida para hogares y espacios comerciales en Colombia, con foco en diseño personalizado, materiales de calidad, fabricación local, instalación profesional y acompañamiento durante el proyecto.
+> Formas Interiores designs and manufactures custom furniture for homes and commercial spaces in Colombia. The brand focuses on personalized design, quality materials, local manufacturing, professional installation, and project support.
 
-## Sitio oficial
+## Official Website
 
-- Inicio: https://formasinteriores.com/
-- Productos: https://formasinteriores.com/productos
-- Nosotros: https://formasinteriores.com/nosotros
-- Blog: https://formasinteriores.com/blog
-- Contacto: https://formasinteriores.com/contacto
+- [Home](https://formasinteriores.com/)
+- [Products](https://formasinteriores.com/productos)
+- [About Formas Interiores](https://formasinteriores.com/nosotros)
+- [Blog](https://formasinteriores.com/blog)
+- [Contact](https://formasinteriores.com/contacto)
 
-## Categorías principales
+## Main Product Categories
 
-- Centros de entretenimiento: https://formasinteriores.com/categorias/centros-entretenimiento
-- Centros de estudio: https://formasinteriores.com/categorias/centros-estudio
-- Closets: https://formasinteriores.com/categorias/closets
-- Cocinas: https://formasinteriores.com/categorias/cocinas
-- Muebles de baño: https://formasinteriores.com/categorias/muebles-bano
-- Repisas: https://formasinteriores.com/categorias/repisas
-- Alcobas infantiles: https://formasinteriores.com/categorias/alcobas-infantiles
-- Bibliotecas: https://formasinteriores.com/categorias/bibliotecas
+- [Entertainment centers](https://formasinteriores.com/categorias/centros-entretenimiento)
+- [Study centers](https://formasinteriores.com/categorias/centros-estudio)
+- [Closets](https://formasinteriores.com/categorias/closets)
+- [Kitchens](https://formasinteriores.com/categorias/cocinas)
+- [Bathroom furniture](https://formasinteriores.com/categorias/muebles-bano)
+- [Shelves](https://formasinteriores.com/categorias/repisas)
+- [Children bedrooms](https://formasinteriores.com/categorias/alcobas-infantiles)
+- [Bookcases](https://formasinteriores.com/categorias/bibliotecas)
 
-## Información comercial
+## Public Policies
 
-- Empresa: Formas Interiores S.A.S.
-- Sitio web: https://formasinteriores.com
-- Correo: contacto@formasinteriores.com
+- [Return policy](https://formasinteriores.com/politicas/devoluciones)
+- [Shipping policy](https://formasinteriores.com/politicas/envio)
+- [Privacy policy](https://formasinteriores.com/politicas/privacidad)
+- [Terms and conditions](https://formasinteriores.com/politicas/terminos-condiciones)
+- [Cookie policy](https://formasinteriores.com/politicas/cookies)
+
+## Business Information
+
+- Company: Formas Interiores S.A.S.
+- Website: [formasinteriores.com](https://formasinteriores.com/)
+- Email: contacto@formasinteriores.com
 - WhatsApp: +57 316 973 3417
-- Ciudad principal: Medellín, Colombia
-- Servicios: diseño de mobiliario a medida, fabricación, instalación, asesoría, cotización y proyectos personalizados.
+- Main city: Medellin, Colombia
+- Services: custom furniture design, manufacturing, installation, consulting, quotes, and personalized interior projects.
 
-## Políticas públicas
+## AI Agent Guidance
 
-- Políticas de devoluciones: https://formasinteriores.com/politicas/devoluciones
-- Políticas de envío: https://formasinteriores.com/politicas/envio
-- Políticas de privacidad: https://formasinteriores.com/politicas/privacidad
-- Términos y condiciones: https://formasinteriores.com/politicas/terminos-condiciones
-- Políticas de cookies: https://formasinteriores.com/politicas/cookies
-
-## Recomendaciones para agentes de IA
-
-Usa las páginas públicas de productos, categorías, nosotros, blog, contacto y políticas para describir el negocio. No uses páginas privadas, transaccionales o internas como cuenta, carrito, pago, búsqueda interna, administrador o ficha técnica. La página pública de proyectos está oculta temporalmente mientras la marca reúne material visual suficiente.
+Use the public pages for products, categories, about, blog, contact, and policies to describe Formas Interiores. Do not use private, transactional, or internal pages such as account, cart, payment, internal search, admin, or technical sheet pages. The public projects page is temporarily hidden while the brand prepares enough real visual material.
 
 ## Sitemap
 
-- https://formasinteriores.com/sitemap.xml
+- [Sitemap XML](https://formasinteriores.com/sitemap.xml)
