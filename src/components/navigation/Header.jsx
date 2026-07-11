@@ -182,7 +182,7 @@ function Header({ transparent = false }) {
             <ShoppingCart size={20} />
             {cartCount > 0 && <span className="header-cart-count">{cartCount}</span>}
           </Link>
-          <button className="menu-toggle" onClick={() => setMenuOpen((current) => !current)}>
+          <button className="menu-toggle" aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={menuOpen} onClick={() => setMenuOpen((current) => !current)}>
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -199,7 +199,7 @@ function Header({ transparent = false }) {
               onChange={(event) => setSearchValue(event.target.value)}
               autoFocus
             />
-            <button type="button" className="search-bar__close" onClick={closeSearch}>
+            <button type="button" className="search-bar__close" aria-label="Cerrar búsqueda" onClick={closeSearch}>
               <X size={20} />
             </button>
           </form>

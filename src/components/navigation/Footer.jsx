@@ -42,7 +42,7 @@ function Footer() {
           </div>
 
           <div className="site-footer__trust" aria-label="Compra segura">
-            <h4>Compra segura</h4>
+            <p className="site-footer__heading">Compra segura</p>
             <div className="site-footer__trust-grid">
               {trustBadges.map(({ label, detail, Icon, tone, href }) => {
                 const content = (
@@ -70,7 +70,7 @@ function Footer() {
 
           {footerPolicies.length > 0 && (
             <div className="site-footer__policies" aria-label="Politicas de Formas Interiores">
-              <h4>{pageContent.footerPolicies?.title || 'Pol\u00edticas'}</h4>
+              <p className="site-footer__heading">{pageContent.footerPolicies?.title || 'Pol\u00edticas'}</p>
               <div className="site-footer__policy-list">
                 {footerPolicies.map((policy) => (
                   <Link key={policy.id || policy.slug || policy.label} to={'/politicas/' + (policy.slug || policy.id)}>
@@ -83,7 +83,7 @@ function Footer() {
         </div>
 
         <div className="site-footer__col site-footer__col--products">
-          <h4>Productos</h4>
+          <p className="site-footer__heading">Productos</p>
           <ul>
             {visibleCategories.map((cat) => (
               <li key={cat.id}>
@@ -94,7 +94,7 @@ function Footer() {
         </div>
 
         <div className="site-footer__col site-footer__col--company">
-          <h4>Empresa</h4>
+          <p className="site-footer__heading">Empresa</p>
           <ul>
             <li><Link to="/nosotros">Nosotros</Link></li>
             {SHOW_PROJECTS_PAGE && <li><Link to="/proyectos">Proyectos</Link></li>}
@@ -104,7 +104,7 @@ function Footer() {
         </div>
 
         <div className="site-footer__col site-footer__col--contact">
-          <h4>Contacto</h4>
+          <p className="site-footer__heading">Contacto</p>
           <ul>
             <li>contacto@formasinteriores.com</li>
             <li>+57 316 973 3417</li>

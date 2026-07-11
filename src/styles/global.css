@@ -281,7 +281,13 @@ picture,
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 0;
+  min-height: 44px;
+  padding: 10px 0;
+}
+
+.nav-dropdown__trigger {
+  min-width: 44px;
+  justify-content: center;
 }
 
 .main-nav a:hover,
@@ -1709,12 +1715,12 @@ section {
 }
 
 .site-footer__social a {
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: inline-grid;
   place-items: center;
-  color: rgba(255, 255, 255, 0.76);
+  color: rgba(255, 255, 255, 0.92);
   font-size: 24px;
   transition: color 0.2s, transform 0.2s;
 }
@@ -1724,8 +1730,7 @@ section {
   transform: translateY(-1px);
 }
 
-.site-footer__col h4,
-.site-footer__trust h4 {
+.site-footer__heading {
   font-size: 11px;
   letter-spacing: 0.3em;
   color: #D9A77C;
@@ -1745,7 +1750,7 @@ section {
 
 .site-footer__col a,
 .site-footer__col li {
-  color: rgba(255, 255, 255, 0.84);
+  color: rgba(255, 255, 255, 0.94);
   font-size: 15px;
   font-weight: 600;
   transition: color 0.2s;
@@ -1767,7 +1772,7 @@ section {
   border: 0;
 }
 
-.site-footer__trust h4 {
+.site-footer__trust .site-footer__heading {
   color: #fff;
   letter-spacing: 0.02em;
   margin-bottom: 10px;
@@ -1780,7 +1785,7 @@ section {
 }
 
 .site-footer__trust-badge {
-  min-height: 36px;
+  min-height: 44px;
   border: 1px solid rgba(255, 255, 255, 0.26);
   border-radius: 5px;
   padding: 6px 6px;
@@ -1818,17 +1823,17 @@ section {
 
 .site-footer__trust-badge--green {
   border-color: #00a75f;
-  color: #10b86c;
+  color: #24d184;
 }
 
 .site-footer__trust-badge--blue {
   border-color: #2977ff;
-  color: #2f83ff;
+  color: #6aa7ff;
 }
 
 .site-footer__trust-badge--cyan {
   border-color: #12c9e8;
-  color: #17d3f0;
+  color: #46e6ff;
 }
 
 .site-footer__trust-badge--yellow {
@@ -1847,7 +1852,7 @@ section {
   margin-top: 14px;
 }
 
-.site-footer__policies h4 {
+.site-footer__policies .site-footer__heading {
   color: #fff;
   font-size: 11px;
   font-weight: 900;
@@ -1866,12 +1871,12 @@ section {
 .site-footer__policy-list a {
   display: inline-flex;
   align-items: center;
-  min-height: 28px;
+  min-height: 44px;
   padding: 5px 10px;
   border: 1px solid rgba(217, 167, 124, 0.45);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.035);
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.96);
   font-size: 12px;
   font-weight: 800;
   line-height: 1.15;
@@ -3768,8 +3773,8 @@ section {
 }
 
 .search-bar__close {
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 50%;
   background: var(--color-bg);
@@ -5802,7 +5807,7 @@ section {
   padding: 9px 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  color: rgba(255, 255, 255, 0.76);
+  color: rgba(255, 255, 255, 0.92);
   font-size: 12px;
   font-weight: 700;
 }

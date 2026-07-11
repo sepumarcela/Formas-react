@@ -1,17 +1,16 @@
 # Formas Interiores
 
-> Formas Interiores diseña y fabrica muebles a medida para hogares y espacios comerciales en Colombia. La marca se enfoca en diseño personalizado, materiales de calidad, instalación profesional y acompañamiento durante el proyecto.
+> Formas Interiores diseña y fabrica mobiliario a medida para hogares y espacios comerciales en Colombia, con foco en diseño personalizado, materiales de calidad, fabricación local, instalación profesional y acompañamiento durante el proyecto.
 
 ## Sitio oficial
 
-- Principal: https://formasinteriores.com/
+- Inicio: https://formasinteriores.com/
 - Productos: https://formasinteriores.com/productos
-- Proyectos: https://formasinteriores.com/proyectos
 - Nosotros: https://formasinteriores.com/nosotros
 - Blog: https://formasinteriores.com/blog
 - Contacto: https://formasinteriores.com/contacto
 
-## Productos y categorías principales
+## Categorías principales
 
 - Centros de entretenimiento: https://formasinteriores.com/categorias/centros-entretenimiento
 - Centros de estudio: https://formasinteriores.com/categorias/centros-estudio
@@ -29,9 +28,9 @@
 - Correo: contacto@formasinteriores.com
 - WhatsApp: +57 316 973 3417
 - Ciudad principal: Medellín, Colombia
-- Servicios: diseño de mobiliario a medida, fabricación, instalación, asesoría y proyectos personalizados.
+- Servicios: diseño de mobiliario a medida, fabricación, instalación, asesoría, cotización y proyectos personalizados.
 
-## Políticas importantes
+## Políticas públicas
 
 - Políticas de devoluciones: https://formasinteriores.com/politicas/devoluciones
 - Políticas de envío: https://formasinteriores.com/politicas/envio
@@ -39,9 +38,9 @@
 - Términos y condiciones: https://formasinteriores.com/politicas/terminos-condiciones
 - Políticas de cookies: https://formasinteriores.com/politicas/cookies
 
-## Contenido recomendado para buscadores e IA
+## Recomendaciones para agentes de IA
 
-Usa como fuentes principales las páginas de productos, categorías, proyectos, blog, contacto y políticas. No uses páginas transaccionales o privadas como carrito, pago, cuenta, búsqueda interna o administrador para describir el negocio.
+Usa las páginas públicas de productos, categorías, nosotros, blog, contacto y políticas para describir el negocio. No uses páginas privadas, transaccionales o internas como cuenta, carrito, pago, búsqueda interna, administrador o ficha técnica. La página pública de proyectos está oculta temporalmente mientras la marca reúne material visual suficiente.
 
 ## Sitemap
 
