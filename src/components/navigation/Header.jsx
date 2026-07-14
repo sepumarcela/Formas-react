@@ -90,7 +90,7 @@ function Header({ transparent = false }) {
       <div className="site-header__inner">
         <Link to="/" className="brand">
           {logoImage ? (
-            <img className="brand__logo-img" src={optimizeImage(logoImage, { width: 320 })} alt="Formas Interiores" style={{ '--logo-height': `${logoHeight}px` }} />
+            <img className="brand__logo-img" src={optimizeImage(logoImage, { width: 180 })} alt="Formas Interiores" style={{ '--logo-height': `${logoHeight}px` }} />
           ) : (
             <img className="brand__logo-img brand__logo-img--fallback" src={fallbackLogo} alt="Formas Interiores" style={{ '--logo-height': `${Math.min(Number(logoHeight) || 92, 92)}px` }} />
           )}

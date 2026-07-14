@@ -4,6 +4,27 @@ import { defaultSiteContent, loadSiteContent, saveSiteContent, SITE_CONTENT_EVEN
 import { optimizeImage, preloadImage } from '../utils/images'
 
 
+let sharedCatalogPromise = null
+let sharedCatalogContent = null
+
+function getSharedCatalogContent() {
+  if (sharedCatalogContent) return Promise.resolve(sharedCatalogContent)
+
+  if (!sharedCatalogPromise) {
+    sharedCatalogPromise = fetchCatalogContent()
+      .then((catalog) => {
+        sharedCatalogContent = catalog
+        return catalog
+      })
+      .catch((error) => {
+        sharedCatalogPromise = null
+        throw error
+      })
+  }
+
+  return sharedCatalogPromise
+}
+
 function collectImagesFromPageContent(pageContent = {}) {
   const images = []
   Object.values(pageContent).forEach((section) => {
@@ -21,14 +42,15 @@ function collectImagesFromPageContent(pageContent = {}) {
 function preloadCatalogImages(catalog) {
   if (typeof window === 'undefined' || !catalog) return
 
+  const isMobile = window.matchMedia?.('(max-width: 767px)').matches
   const heroImages = [
-    ...(catalog.heroSlides || []).filter((slide) => slide?.active !== false).map((slide) => slide.image),
-    catalog.pageContent?.productos?.image,
-    catalog.pageContent?.proyectos?.image,
-    catalog.pageContent?.nosotros?.image,
-    catalog.pageContent?.blog?.image,
-    catalog.pageContent?.contacto?.image,
-    ...(catalog.categories || []).map((category) => category.image),
+    ...(catalog.heroSlides || []).filter((slide) => slide?.active !== false).slice(0, 1).map((slide) => slide.image),
+    ...(isMobile ? [] : [
+      catalog.pageContent?.productos?.image,
+      catalog.pageContent?.nosotros?.image,
+      catalog.pageContent?.blog?.image,
+      catalog.pageContent?.contacto?.image,
+    ]),
   ].filter(Boolean)
 
   const supportingImages = [
@@ -38,12 +60,14 @@ function preloadCatalogImages(catalog) {
     ...(catalog.blogPosts || []).slice(0, 4).map((post) => post.image),
   ].filter(Boolean)
 
-  Array.from(new Set(heroImages)).slice(0, 18).forEach((image) => {
-    preloadImage(optimizeImage(image, { width: 1800 }))
+  Array.from(new Set(heroImages)).slice(0, isMobile ? 1 : 5).forEach((image) => {
+    preloadImage(optimizeImage(image, { width: isMobile ? 900 : 1400 }))
   })
 
-  Array.from(new Set(supportingImages)).slice(0, 16).forEach((image) => {
-    preloadImage(optimizeImage(image, { width: 900 }))
+  if (isMobile) return
+
+  Array.from(new Set(supportingImages)).slice(0, 8).forEach((image) => {
+    preloadImage(optimizeImage(image, { width: 700 }))
   })
 }
 
@@ -62,7 +86,7 @@ export function useSiteContent() {
 
     async function loadFromApi() {
       try {
-        const catalog = await fetchCatalogContent()
+        const catalog = await getSharedCatalogContent()
         if (cancelled) return
 
         preloadCatalogImages(catalog)

@@ -476,16 +476,28 @@ export async function subscribeNewsletter(email) {
 }
 
 export async function fetchCatalogContent() {
-  const categoriesResponse = await optional('/api/categories')
+  const [
+    categoriesResponse,
+    productsResponse,
+    heroSlides,
+    projects,
+    projectHighlights,
+    testimonials,
+    blogPosts,
+    pages,
+  ] = await Promise.all([
+    optional('/api/categories'),
+    optional('/api/products'),
+    optional('/api/hero-slides', (items) => items.map(toFrontendHeroSlide)),
+    optional('/api/project-gallery', (items) => items.map(toFrontendProject)),
+    optional('/api/projects', (items) => items.map(toFrontendProjectHighlight)),
+    optional('/api/testimonials', (items) => items.map(toFrontendTestimonial)),
+    optional('/api/blog-posts', (items) => items.map(toFrontendBlogPost)),
+    optional('/api/pages', (items) => Object.fromEntries(items.map((page) => [page.pageKey, toFrontendPage(page)]))),
+  ])
+
   const categories = categoriesResponse?.map(toFrontendCategory) || []
-  const productsResponse = await optional('/api/products')
   const products = productsResponse?.map((product) => toFrontendProduct(product, categories)) || []
-  const heroSlides = await optional('/api/hero-slides', (items) => items.map(toFrontendHeroSlide))
-  const projects = await optional('/api/project-gallery', (items) => items.map(toFrontendProject))
-  const projectHighlights = await optional('/api/projects', (items) => items.map(toFrontendProjectHighlight))
-  const testimonials = await optional('/api/testimonials', (items) => items.map(toFrontendTestimonial))
-  const blogPosts = await optional('/api/blog-posts', (items) => items.map(toFrontendBlogPost))
-  const pages = await optional('/api/pages', (items) => Object.fromEntries(items.map((page) => [page.pageKey, toFrontendPage(page)])))
 
   return {
     categories,
@@ -498,7 +510,6 @@ export async function fetchCatalogContent() {
     pageContent: pages || {},
   }
 }
-
 async function saveEntity(entity, endpoint, mapperToBackend, mapperToFrontend, displayOrder) {
   const persisted = entity.persisted
   const path = persisted ? `${endpoint}/${encodeURIComponent(entity.id)}` : endpoint

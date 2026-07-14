@@ -23,7 +23,7 @@ function Home() {
   const safeSlideIndex = slides.length ? activeSlideIndex % slides.length : 0
   const currentSlide = slides[safeSlideIndex] || {}
   const heroSrc = currentSlide.image || HOME_HERO_FALLBACK
-  const optimizedHeroSrc = heroSrc ? optimizeImage(heroSrc, { width: 1800 }) : ''
+  const optimizedHeroSrc = heroSrc ? optimizeImage(heroSrc, { width: 1200 }) : ''
   const heroImageFit = pageContent.homeProducts?.heroImageFit || 'cover'
   const descriptionLines = String(currentSlide.description || '')
     .split('\n')
