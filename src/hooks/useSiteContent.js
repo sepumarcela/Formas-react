@@ -77,6 +77,50 @@ function mergeById(baseItems, apiItems) {
   apiItems.forEach((item) => items.set(item.id, { ...items.get(item.id), ...item }))
   return Array.from(items.values())
 }
+function scheduleCatalogSync(callback) {
+  if (typeof window === 'undefined') return () => {}
+
+  const pathname = window.location.pathname || ''
+  const isAdminRoute = pathname.startsWith('/cuenta')
+
+  if (isAdminRoute) {
+    callback()
+    return () => {}
+  }
+
+  const isMobile = window.matchMedia?.('(max-width: 767px)').matches
+  const delay = isMobile ? 1800 : 500
+  let timeoutId = null
+  let idleId = null
+  let cancelled = false
+
+  const start = () => {
+    timeoutId = window.setTimeout(() => {
+      if (cancelled) return
+
+      if ('requestIdleCallback' in window) {
+        idleId = window.requestIdleCallback(() => {
+          if (!cancelled) callback()
+        }, { timeout: 1600 })
+      } else {
+        callback()
+      }
+    }, delay)
+  }
+
+  if (document.readyState === 'complete') {
+    start()
+  } else {
+    window.addEventListener('load', start, { once: true })
+  }
+
+  return () => {
+    cancelled = true
+    window.removeEventListener('load', start)
+    if (timeoutId) window.clearTimeout(timeoutId)
+    if (idleId && 'cancelIdleCallback' in window) window.cancelIdleCallback(idleId)
+  }
+}
 
 export function useSiteContent() {
   const [content, setContent] = useState(() => loadSiteContent())
@@ -106,11 +150,11 @@ export function useSiteContent() {
           },
         }))
       } catch {
-        // Si el backend no está prendido, la web usa el contenido local.
+        // Si el backend no estÃ¡ prendido, la web usa el contenido local.
       }
     }
 
-    loadFromApi()
+    const cancelCatalogSync = scheduleCatalogSync(loadFromApi)
 
     function handleContentUpdate(event) {
       setContent(event.detail || loadSiteContent())
@@ -127,6 +171,7 @@ export function useSiteContent() {
 
     return () => {
       cancelled = true
+      cancelCatalogSync()
       window.removeEventListener(SITE_CONTENT_EVENT, handleContentUpdate)
       window.removeEventListener('storage', handleStorage)
     }
