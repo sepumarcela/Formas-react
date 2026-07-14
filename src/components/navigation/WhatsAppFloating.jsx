@@ -27,7 +27,8 @@ function WhatsAppFloating() {
     if (pathname.startsWith('/cuenta')) return undefined
 
     const isMobile = window.matchMedia?.('(max-width: 767px)').matches
-    const delay = isMobile ? 5200 : 1200
+    const isHome = pathname === '/'
+    const delay = isMobile ? (isHome ? 9500 : 5200) : 1200
     const timer = window.setTimeout(() => setReady(true), delay)
 
     return () => window.clearTimeout(timer)
