@@ -18,7 +18,7 @@ function CookieConsent() {
     const savedConsent = window.localStorage.getItem(COOKIE_CONSENT_KEY)
     if (savedConsent) return undefined
 
-    const timer = window.setTimeout(() => setVisible(true), 1800)
+    const timer = window.setTimeout(() => setVisible(true), 3600)
     return () => window.clearTimeout(timer)
   }, [])
 
