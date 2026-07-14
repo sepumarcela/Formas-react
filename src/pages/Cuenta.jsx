@@ -49,7 +49,7 @@ const sections = [
   { id: 'overview', label: 'Resumen', icon: LayoutDashboard },
   { id: 'hero', label: 'Inicio', icon: Images },
   { id: 'pages', label: 'Páginas', icon: LayoutDashboard },
-  { id: 'stories', label: 'Historias', icon: Images },
+  { id: 'stories', label: 'Antes y después', icon: Images },
   { id: 'products', label: 'Productos', icon: Package },
   { id: 'blog', label: 'Blog', icon: Newspaper },
   { id: 'categories', label: 'Categorías', icon: Tags },
@@ -1322,8 +1322,8 @@ function Cuenta() {
       <div className="admin-panel">
         <div className="admin-panel__header">
           <div>
-            <p className="admin-kicker">Historias</p>
-            <h1>Proyectos realizados y testimonios</h1>
+            <p className="admin-kicker">Antes y después</p>
+            <h1>Antes y después y testimonios</h1>
             <p>Administra el antes/después de trabajos terminados y los testimonios reales que aparecen en el inicio.</p>
           </div>
           <div className="admin-header-actions">
