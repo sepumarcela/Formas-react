@@ -30,7 +30,7 @@ function Footer() {
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
-          {logoImage ? <img src={optimizeImage(logoImage, { width: 240 })} className="site-footer__brand-logo" alt="Formas Interiores" style={{ '--logo-height': Math.min(Number(logoHeight) + 20, 130) + 'px' }} /> : <img src="/favicon-formas.png?v=11" className="site-footer__brand-logo site-footer__brand-logo--fallback" alt="Formas Interiores" style={{ '--logo-height': '118px' }} />}
+          {logoImage ? <img src={optimizeImage(logoImage, { width: 240 })} className="site-footer__brand-logo" alt="Formas Interiores" width="156" height="130" style={{ '--logo-height': Math.min(Number(logoHeight) + 20, 130) + 'px' }} /> : <img src="/favicon-formas-128.png?v=1" className="site-footer__brand-logo site-footer__brand-logo--fallback" alt="Formas Interiores" width="118" height="118" style={{ '--logo-height': '118px' }} />}
           <p>{'Dise\u00f1amos y fabricamos muebles premium para transformar tu hogar con estilo y funcionalidad.'}</p>
           <div className="site-footer__social" aria-label="Redes sociales de Formas Interiores">
             <span className="site-footer__social-label">{'S\u00edguenos:'}</span>

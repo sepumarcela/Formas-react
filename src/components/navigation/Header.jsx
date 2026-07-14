@@ -31,7 +31,7 @@ function Header({ transparent = false }) {
   const { categories, pageContent } = siteContent
   const logoImage = pageContent.homeProducts?.logoImage
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
-  const fallbackLogo = '/favicon-formas.png?v=11'
+  const fallbackLogo = '/favicon-formas-128.png?v=1'
   const productsMenuImage = pageContent.productos?.menuImage
   const visibleCategories = categories.filter((category) => category.active !== false)
   const dropRef = useRef(null)
@@ -90,9 +90,9 @@ function Header({ transparent = false }) {
       <div className="site-header__inner">
         <Link to="/" className="brand">
           {logoImage ? (
-            <img className="brand__logo-img" src={optimizeImage(logoImage, { width: 180 })} alt="Formas Interiores" style={{ '--logo-height': `${logoHeight}px` }} />
+            <img className="brand__logo-img" src={optimizeImage(logoImage, { width: 180 })} alt="Formas Interiores" width="132" height="110" style={{ '--logo-height': `${logoHeight}px` }} />
           ) : (
-            <img className="brand__logo-img brand__logo-img--fallback" src={fallbackLogo} alt="Formas Interiores" style={{ '--logo-height': `${Math.min(Number(logoHeight) || 92, 92)}px` }} />
+            <img className="brand__logo-img brand__logo-img--fallback" src={fallbackLogo} alt="Formas Interiores" width="92" height="92" style={{ '--logo-height': `${Math.min(Number(logoHeight) || 92, 92)}px` }} />
           )}
         </Link>
 
