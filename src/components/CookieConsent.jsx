@@ -16,7 +16,10 @@ function CookieConsent() {
 
   useEffect(() => {
     const savedConsent = window.localStorage.getItem(COOKIE_CONSENT_KEY)
-    setVisible(!savedConsent)
+    if (savedConsent) return undefined
+
+    const timer = window.setTimeout(() => setVisible(true), 1800)
+    return () => window.clearTimeout(timer)
   }, [])
 
   function saveConsent(value, customPreferences = preferences) {

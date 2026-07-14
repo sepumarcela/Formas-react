@@ -34,21 +34,26 @@ function Home() {
   }, [optimizedHeroSrc])
 
   useEffect(() => {
-    if (slides.length < 2) return undefined
-
-    const timer = window.setInterval(() => {
-      setActiveSlideIndex((current) => (current + 1) % slides.length)
-    }, 6000)
-
-    return () => window.clearInterval(timer)
-  }, [slides.length])
+    if (slides.length && activeSlideIndex >= slides.length) {
+      setActiveSlideIndex(0)
+    }
+  }, [activeSlideIndex, slides.length])
 
   return (
     <main className="page">
       <section className="home-hero">
         <div className="home-hero__bg">
           {optimizedHeroSrc ? (
-            <img src={optimizedHeroSrc} className={`home-hero__bg-img home-hero__bg-img--${heroImageFit}`} alt="" loading="eager" decoding="async" fetchPriority="high" />
+            <img
+              src={optimizedHeroSrc}
+              className={`home-hero__bg-img home-hero__bg-img--${heroImageFit}`}
+              alt="Sala moderna con mobiliario a medida de Formas Interiores"
+              width="1200"
+              height="760"
+              loading="eager"
+              decoding="sync"
+              fetchPriority="high"
+            />
           ) : (
             <div className="home-hero__fallback" aria-hidden="true" />
           )}
