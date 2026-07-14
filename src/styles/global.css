@@ -581,8 +581,11 @@ picture,
   line-height: 1.0;
   letter-spacing: -0.04em;
   margin: 0 0 30px;
-  display: flex;
-  flex-direction: column;
+  display: block;
+}
+
+.home-hero h1 span {
+  display: block;
 }
 
 .home-hero__accent {
