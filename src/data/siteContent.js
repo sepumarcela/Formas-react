@@ -60,13 +60,39 @@ export const defaultSiteContent = {
       image: 'https://res.cloudinary.com/dokodfzmu/image/upload/v1781298433/formas/inicio/inicio01.png',
       active: true,
     },
+    {
+      id: 'inicio-secundario',
+      eyebrow: '',
+      titleAccent: 'Diseña',
+      title: 'tu estilo',
+      description: 'Muebles modernos y funcionales\npara transformar cada espacio\nde tu hogar.',
+      primaryLabel: 'Ver colecciones',
+      primaryLink: '/proyectos',
+      secondaryLabel: 'Solicitar diseño',
+      secondaryLink: '/contacto',
+      image: 'https://res.cloudinary.com/dokodfzmu/image/upload/v1781298486/formas/inicio/inicio02.png',
+      active: true,
+    },
+    {
+      id: 'inicio-tercero',
+      eyebrow: '',
+      titleAccent: 'Diseña',
+      title: 'tu estilo',
+      description: 'Muebles modernos y funcionales\npara transformar cada espacio\nde tu hogar.',
+      primaryLabel: 'Ver colecciones',
+      primaryLink: '/proyectos',
+      secondaryLabel: 'Solicitar diseño',
+      secondaryLink: '/contacto',
+      image: 'https://res.cloudinary.com/dokodfzmu/image/upload/v1781298533/formas/inicio/inicio03.png',
+      active: true,
+    },
   ],
   pageContent: {
     homeProducts: {
       categoriesEyebrow: 'Nuestras líneas',
-      logoImage: '',
-      logoHeight: '120',
-      heroImageFit: 'cover',
+      logoImage: 'https://res.cloudinary.com/dokodfzmu/image/upload/v1782160045/formas/paginas/logo-formas-blanco-xl.png',
+      logoHeight: '110',
+      heroImageFit: 'contain',
       categoriesTitle: 'Soluciones que transforman',
       categoriesDescription: 'Muebles modernos y funcionales diseñados para cada espacio de tu hogar.',
       featuredEyebrow: 'Destacados de la semana',
@@ -375,3 +401,4 @@ export function saveSiteContent(content) {
   })
   return nextContent
 }
+
