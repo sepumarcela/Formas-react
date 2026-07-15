@@ -16,7 +16,38 @@ function CookieConsent() {
 
   useEffect(() => {
     const savedConsent = window.localStorage.getItem(COOKIE_CONSENT_KEY)
-    setVisible(!savedConsent)
+    if (savedConsent) return undefined
+
+    let timeoutId = null
+    let idleId = null
+    let cancelled = false
+
+    const showNotice = () => {
+      if (!cancelled) setVisible(true)
+    }
+
+    const scheduleNotice = () => {
+      timeoutId = window.setTimeout(() => {
+        if ('requestIdleCallback' in window) {
+          idleId = window.requestIdleCallback(showNotice, { timeout: 2500 })
+        } else {
+          showNotice()
+        }
+      }, 12000)
+    }
+
+    if (document.readyState === 'complete') {
+      scheduleNotice()
+    } else {
+      window.addEventListener('load', scheduleNotice, { once: true })
+    }
+
+    return () => {
+      cancelled = true
+      window.removeEventListener('load', scheduleNotice)
+      if (timeoutId) window.clearTimeout(timeoutId)
+      if (idleId && 'cancelIdleCallback' in window) window.cancelIdleCallback(idleId)
+    }
   }, [])
 
   function saveConsent(value, customPreferences = preferences) {
@@ -104,3 +135,4 @@ function CookieConsent() {
 }
 
 export default CookieConsent
+

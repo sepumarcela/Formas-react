@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useSiteContent } from '../../hooks/useSiteContent'
 
@@ -16,13 +16,9 @@ function WhatsAppIcon() {
   )
 }
 
-function WhatsAppFloating() {
+function WhatsAppFloatingContent() {
   const [{ pageContent }] = useSiteContent()
-  const { pathname } = useLocation()
   const [visible, setVisible] = useState(true)
-
-  if (pathname.startsWith('/cuenta')) return null
-
   const whatsappLink = pageContent.homeProducts?.finalWhatsappLink || pageContent.contacto?.whatsappLink || 'https://wa.me/573169733417'
 
   return (
@@ -39,6 +35,25 @@ function WhatsAppFloating() {
       </a>
     </div>
   )
+}
+
+function WhatsAppFloating() {
+  const { pathname } = useLocation()
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    setReady(false)
+    if (pathname.startsWith('/cuenta')) return undefined
+
+    const isMobile = window.matchMedia?.('(max-width: 767px)').matches
+    const timer = window.setTimeout(() => setReady(true), isMobile ? 10000 : 5000)
+
+    return () => window.clearTimeout(timer)
+  }, [pathname])
+
+  if (pathname.startsWith('/cuenta') || !ready) return null
+
+  return <WhatsAppFloatingContent />
 }
 
 export default WhatsAppFloating
