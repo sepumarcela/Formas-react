@@ -18,29 +18,8 @@ function CookieConsent() {
     const savedConsent = window.localStorage.getItem(COOKIE_CONSENT_KEY)
     if (savedConsent) return undefined
 
-    const isMobile = window.matchMedia?.('(max-width: 767px)').matches
-    const isHome = window.location.pathname === '/'
-    const delay = isHome && isMobile ? 9000 : isMobile ? 5200 : 3600
-    let timer = null
-    let cancelled = false
-
-    const showNotice = () => {
-      timer = window.setTimeout(() => {
-        if (!cancelled) setVisible(true)
-      }, delay)
-    }
-
-    if (document.readyState === 'complete') {
-      showNotice()
-    } else {
-      window.addEventListener('load', showNotice, { once: true })
-    }
-
-    return () => {
-      cancelled = true
-      window.removeEventListener('load', showNotice)
-      if (timer) window.clearTimeout(timer)
-    }
+    const timer = window.setTimeout(() => setVisible(true), 3600)
+    return () => window.clearTimeout(timer)
   }, [])
 
   function saveConsent(value, customPreferences = preferences) {

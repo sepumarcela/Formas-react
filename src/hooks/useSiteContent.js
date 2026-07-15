@@ -90,7 +90,7 @@ function scheduleCatalogSync(callback) {
 
   const isMobile = window.matchMedia?.('(max-width: 767px)').matches
   const isHomeRoute = pathname === '/'
-  const delay = isHomeRoute ? (isMobile ? 11000 : 1800) : (isMobile ? 2600 : 700)
+  const delay = isHomeRoute ? (isMobile ? 6200 : 1800) : (isMobile ? 2600 : 700)
   let timeoutId = null
   let idleId = null
   let cancelled = false
