@@ -6,6 +6,10 @@ import { optimizeImage, preloadImage } from '../utils/images'
 
 let sharedCatalogPromise = null
 let sharedCatalogContent = null
+let sharedSiteContent = null
+let catalogSyncStarted = false
+let externalListenersStarted = false
+const siteContentSubscribers = new Set()
 
 function getSharedCatalogContent() {
   if (sharedCatalogContent) return Promise.resolve(sharedCatalogContent)
@@ -23,6 +27,36 @@ function getSharedCatalogContent() {
   }
 
   return sharedCatalogPromise
+}
+
+function getCurrentSiteContent() {
+  if (!sharedSiteContent) sharedSiteContent = loadSiteContent()
+  return sharedSiteContent
+}
+
+function publishSiteContent(content) {
+  sharedSiteContent = content
+  siteContentSubscribers.forEach((listener) => listener(content))
+}
+
+function subscribeSiteContent(listener) {
+  siteContentSubscribers.add(listener)
+  return () => siteContentSubscribers.delete(listener)
+}
+
+function ensureExternalContentListeners() {
+  if (externalListenersStarted || typeof window === 'undefined') return
+  externalListenersStarted = true
+
+  window.addEventListener(SITE_CONTENT_EVENT, (event) => {
+    publishSiteContent(event.detail || loadSiteContent())
+  })
+
+  window.addEventListener('storage', (event) => {
+    if (!event.key || event.key.includes('formas-site-content')) {
+      publishSiteContent(loadSiteContent())
+    }
+  })
 }
 
 function collectImagesFromPageContent(pageContent = {}) {
@@ -77,6 +111,23 @@ function mergeById(baseItems, apiItems) {
   apiItems.forEach((item) => items.set(item.id, { ...items.get(item.id), ...item }))
   return Array.from(items.values())
 }
+function mergeCatalogContent(current, catalog) {
+  return {
+    ...current,
+    categories: catalog.categories.length ? mergeById(defaultSiteContent.categories, catalog.categories) : current.categories,
+    products: catalog.products.length ? catalog.products : current.products,
+    heroSlides: catalog.heroSlides.length ? catalog.heroSlides : current.heroSlides,
+    projects: catalog.projects.length ? catalog.projects : current.projects,
+    projectHighlights: catalog.projectHighlights.length ? catalog.projectHighlights : current.projectHighlights,
+    testimonials: catalog.testimonials.length ? catalog.testimonials : current.testimonials,
+    blogPosts: catalog.blogPosts.length ? catalog.blogPosts : current.blogPosts,
+    pageContent: {
+      ...current.pageContent,
+      ...catalog.pageContent,
+    },
+  }
+}
+
 function scheduleCatalogSync(callback) {
   if (typeof window === 'undefined') return () => {}
 
@@ -124,66 +175,37 @@ function scheduleCatalogSync(callback) {
 }
 
 export function useSiteContent() {
-  const [content, setContent] = useState(() => loadSiteContent())
+  const [content, setContent] = useState(() => getCurrentSiteContent())
 
   useEffect(() => {
-    let cancelled = false
+    ensureExternalContentListeners()
+    const unsubscribe = subscribeSiteContent(setContent)
 
-    async function loadFromApi() {
-      try {
-        const catalog = await getSharedCatalogContent()
-        if (cancelled) return
-
-        preloadCatalogImages(catalog)
-
-        setContent((current) => saveSiteContent({
-          ...current,
-          categories: catalog.categories.length ? mergeById(defaultSiteContent.categories, catalog.categories) : current.categories,
-          products: catalog.products.length ? catalog.products : current.products,
-          heroSlides: catalog.heroSlides.length ? catalog.heroSlides : current.heroSlides,
-          projects: catalog.projects.length ? catalog.projects : current.projects,
-          projectHighlights: catalog.projectHighlights.length ? catalog.projectHighlights : current.projectHighlights,
-          testimonials: catalog.testimonials.length ? catalog.testimonials : current.testimonials,
-          blogPosts: catalog.blogPosts.length ? catalog.blogPosts : current.blogPosts,
-          pageContent: {
-            ...current.pageContent,
-            ...catalog.pageContent,
-          },
-        }))
-      } catch {
-        // Si el backend no estÃ¡ prendido, la web usa el contenido local.
-      }
+    if (!catalogSyncStarted) {
+      catalogSyncStarted = true
+      scheduleCatalogSync(async () => {
+        try {
+          const catalog = await getSharedCatalogContent()
+          preloadCatalogImages(catalog)
+          const nextContent = saveSiteContent(mergeCatalogContent(getCurrentSiteContent(), catalog))
+          publishSiteContent(nextContent)
+        } catch {
+          // Si el backend no esta disponible, la web usa el contenido local.
+        }
+      })
     }
 
-    const cancelCatalogSync = scheduleCatalogSync(loadFromApi)
-
-    function handleContentUpdate(event) {
-      setContent(event.detail || loadSiteContent())
-    }
-
-    function handleStorage(event) {
-      if (!event.key || event.key.includes('formas-site-content')) {
-        setContent(loadSiteContent())
-      }
-    }
-
-    window.addEventListener(SITE_CONTENT_EVENT, handleContentUpdate)
-    window.addEventListener('storage', handleStorage)
-
-    return () => {
-      cancelled = true
-      cancelCatalogSync()
-      window.removeEventListener(SITE_CONTENT_EVENT, handleContentUpdate)
-      window.removeEventListener('storage', handleStorage)
-    }
+    return unsubscribe
   }, [])
 
   function updateContent(updater) {
-    setContent((current) => {
-      const next = typeof updater === 'function' ? updater(current) : updater
-      return saveSiteContent(next)
-    })
+    const current = getCurrentSiteContent()
+    const next = typeof updater === 'function' ? updater(current) : updater
+    const nextContent = saveSiteContent(next)
+    publishSiteContent(nextContent)
   }
 
   return [content, updateContent]
 }
+
+
