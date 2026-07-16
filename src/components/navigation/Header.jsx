@@ -122,7 +122,8 @@ function Header({ transparent = false }) {
               </button>
             </div>
 
-            <div className={`nav-dropdown__menu ${dropOpen ? 'open' : ''}`}>
+            {dropOpen && (
+              <div className="nav-dropdown__menu open">
               <div className="nav-dropdown__col">
                 <div className="nav-dropdown__title">Categorías</div>
                 <Link
@@ -151,13 +152,14 @@ function Header({ transparent = false }) {
               </div>
               <div className="nav-dropdown__promo">
                 <div className="nav-dropdown__promo-ph">
-                  {productsMenuImage ? <img src={optimizeImage(productsMenuImage, { width: 500 })} alt="Productos Formas Interiores" /> : 'Foto pendiente'}
+                  {productsMenuImage ? <img src={optimizeImage(productsMenuImage, { width: 500 })} alt="Productos Formas Interiores" loading="lazy" decoding="async" /> : 'Foto pendiente'}
                 </div>
                 <strong>Diseñamos muebles</strong>
                 <span>que se adaptan a tu <em>estilo de vida.</em></span>
                 <p>Funcionalidad, diseño y calidad en cada detalle.</p>
               </div>
-            </div>
+              </div>
+            )}
           </div>
 
           {SHOW_PROJECTS_PAGE && <NavLink to="/proyectos" onClick={() => setMenuOpen(false)}>Proyectos</NavLink>}
