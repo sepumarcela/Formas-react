@@ -48,7 +48,17 @@ function Home() {
       <section className="home-hero">
         <div className="home-hero__bg">
           {optimizedHeroSrc ? (
-            <img src={optimizedHeroSrc} className={`home-hero__bg-img home-hero__bg-img--${heroImageFit}`} alt="" loading="eager" decoding="async" fetchPriority="high" />
+            <img
+              src={optimizedHeroSrc}
+              className={`home-hero__bg-img home-hero__bg-img--${heroImageFit}`}
+              alt="Sala con mueble a medida de Formas Interiores"
+              width="1200"
+              height="675"
+              sizes="100vw"
+              loading="eager"
+              decoding="sync"
+              fetchPriority="high"
+            />
           ) : (
             <div className="home-hero__fallback" aria-hidden="true" />
           )}
