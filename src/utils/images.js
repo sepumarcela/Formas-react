@@ -7,7 +7,8 @@ export function optimizeImage(url, options = {}) {
   }
 
   const width = Number(options.width)
-  const parts = ['f_auto', 'q_auto']
+  const quality = typeof options.quality === 'string' && options.quality ? options.quality : 'q_auto'
+  const parts = ['f_auto', quality]
 
   if (Number.isFinite(width) && width > 0) {
     parts.push('c_limit', `w_${Math.round(width)}`)

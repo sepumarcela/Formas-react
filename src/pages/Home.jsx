@@ -8,7 +8,7 @@ import ProjectHighlights from '../components/sections/ProjectHighlights'
 import TestimonialSection from '../components/sections/TestimonialSection'
 import FinalCta from '../components/sections/FinalCta'
 import { useSiteContent } from '../hooks/useSiteContent'
-import { optimizeImage, preloadImage } from '../utils/images'
+import { optimizeImage } from '../utils/images'
 import { SHOW_PROJECT_HIGHLIGHTS } from '../config/features'
 
 const HOME_HERO_FALLBACK = 'https://res.cloudinary.com/dokodfzmu/image/upload/v1781298433/formas/inicio/inicio01.png'
@@ -23,15 +23,15 @@ function Home() {
   const safeSlideIndex = slides.length ? activeSlideIndex % slides.length : 0
   const currentSlide = slides[safeSlideIndex] || {}
   const heroSrc = currentSlide.image || HOME_HERO_FALLBACK
-  const optimizedHeroSrc = heroSrc ? optimizeImage(heroSrc, { width: 1200 }) : ''
+  const heroImageQuality = 'q_auto:good'
+  const optimizedHeroSrc = heroSrc ? optimizeImage(heroSrc, { width: 1200, quality: heroImageQuality }) : ''
+  const heroSrcSet = heroSrc ? [720, 1200, 1800]
+    .map((width) => `${optimizeImage(heroSrc, { width, quality: heroImageQuality })} ${width}w`)
+    .join(', ') : ''
   const heroImageFit = pageContent.homeProducts?.heroImageFit || 'cover'
   const descriptionLines = String(currentSlide.description || '')
     .split('\n')
     .filter(Boolean)
-
-  useEffect(() => {
-    if (optimizedHeroSrc) preloadImage(optimizedHeroSrc)
-  }, [optimizedHeroSrc])
 
   useEffect(() => {
     if (slides.length < 2) return undefined
@@ -50,6 +50,7 @@ function Home() {
           {optimizedHeroSrc ? (
             <img
               src={optimizedHeroSrc}
+              srcSet={heroSrcSet}
               className={`home-hero__bg-img home-hero__bg-img--${heroImageFit}`}
               alt="Sala con mueble a medida de Formas Interiores"
               width="1200"
