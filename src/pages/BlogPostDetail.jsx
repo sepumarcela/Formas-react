@@ -49,6 +49,21 @@ function sidebarHeadingText(text) {
   return text.replace(/^\d+\.\s*/, '')
 }
 
+function sourceUrlsFrom(post) {
+  return (post.originalUrl || '')
+    .split(/\r?\n/)
+    .map((url) => url.trim())
+    .filter(Boolean)
+}
+
+function sourceLinkLabel(url, index) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return `Fuente ${index + 1}`
+  }
+}
+
 function BlogPostDetail() {
   const { postId } = useParams()
   const [{ blogPosts }] = useSiteContent()
@@ -69,7 +84,7 @@ function BlogPostDetail() {
 
   const blocks = articleBlocks(post)
   const headings = blocks.filter((block) => block.type === 'heading').slice(0, 6)
-  const sourceUrl = post.originalUrl?.trim()
+  const sourceUrls = sourceUrlsFrom(post)
 
   return (
     <main className="page blog-post-page">
@@ -101,10 +116,16 @@ function BlogPostDetail() {
             <p>Muy pronto ampliaremos este artículo con más inspiración, recomendaciones y detalles para tu proyecto.</p>
           )}
 
-          {sourceUrl && (
+          {sourceUrls.length > 0 && (
             <div className="blog-post-source">
-              <span>Fuente original</span>
-              <a href={sourceUrl} target="_blank" rel="noreferrer">Abrir fuente del artículo</a>
+              <span>{sourceUrls.length === 1 ? 'Fuente original' : 'Fuentes originales'}</span>
+              <div className="blog-post-source__links">
+                {sourceUrls.map((url, index) => (
+                  <a href={url} target="_blank" rel="noreferrer" key={`${url}-${index}`}>
+                    {sourceLinkLabel(url, index)}
+                  </a>
+                ))}
+              </div>
             </div>
           )}
         </article>

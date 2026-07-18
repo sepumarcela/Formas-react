@@ -1584,7 +1584,10 @@ function Cuenta() {
                 <label>Etiqueta opcional<input value={post.tag || ''} onChange={(event) => updateCollection('blogPosts', post.id, { tag: event.target.value })} placeholder="Ej: Consejos, Inspiración" /></label>
                 <label>Fecha<input value={post.date} onChange={(event) => updateCollection('blogPosts', post.id, { date: event.target.value })} /></label>
                 <label>Título<input value={post.title} onChange={(event) => updateCollection('blogPosts', post.id, { title: event.target.value })} /></label>
-                <label className="admin-colspan">Fuente original del artículo<input value={post.originalUrl || ''} onChange={(event) => updateCollection('blogPosts', post.id, { originalUrl: event.target.value })} placeholder="https://pagina-fuente.com/articulo" /></label>
+                <div className="admin-colspan admin-source-list">
+                  <label>Fuentes originales del artículo<textarea value={post.originalUrl || ''} onChange={(event) => updateCollection('blogPosts', post.id, { originalUrl: event.target.value })} placeholder="Una URL por línea" /></label>
+                  <button type="button" className="admin-inline-action" onClick={() => updateCollection('blogPosts', post.id, { originalUrl: post.originalUrl ? `${post.originalUrl.trimEnd()}\n` : '' })}>+ Agregar otra fuente</button>
+                </div>
                 <label className="admin-check"><input type="checkbox" checked={post.trending === true} onChange={(event) => updateCollection('blogPosts', post.id, { trending: event.target.checked })} /> Marcar como tendencia</label>
                 <label className="admin-check"><input type="checkbox" checked={post.active !== false} onChange={(event) => updateCollection('blogPosts', post.id, { active: event.target.checked })} /> Visible en página</label>
                 <label className="admin-colspan">Descripción<textarea value={post.desc} onChange={(event) => updateCollection('blogPosts', post.id, { desc: event.target.value })} /></label>
