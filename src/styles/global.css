@@ -5400,13 +5400,29 @@ section {
 
 .admin-source-list {
   display: grid;
+  gap: 10px;
+}
+
+.admin-source-list__header,
+.admin-source-row {
+  display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px;
   align-items: end;
 }
 
-.admin-source-list textarea {
-  min-height: 68px;
+.admin-source-list__header {
+  align-items: center;
+}
+
+.admin-source-list__header span {
+  color: rgba(55, 45, 38, 0.78);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-source-row label {
+  gap: 6px;
 }
 
 .admin-inline-action {
@@ -5426,8 +5442,25 @@ section {
   background: rgba(201, 149, 108, 0.2);
 }
 
+.admin-source-remove {
+  min-height: 40px;
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 12px;
+  background: rgba(173, 55, 39, 0.08);
+  color: #9b2f24;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.admin-source-remove:hover {
+  background: rgba(173, 55, 39, 0.14);
+}
+
 @media (max-width: 760px) {
-  .admin-source-list {
+  .admin-source-list__header,
+  .admin-source-row {
     grid-template-columns: 1fr;
   }
 }

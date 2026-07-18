@@ -1585,8 +1585,41 @@ function Cuenta() {
                 <label>Fecha<input value={post.date} onChange={(event) => updateCollection('blogPosts', post.id, { date: event.target.value })} /></label>
                 <label>Título<input value={post.title} onChange={(event) => updateCollection('blogPosts', post.id, { title: event.target.value })} /></label>
                 <div className="admin-colspan admin-source-list">
-                  <label>Fuentes originales del artículo<textarea value={post.originalUrl || ''} onChange={(event) => updateCollection('blogPosts', post.id, { originalUrl: event.target.value })} placeholder="Una URL por línea" /></label>
-                  <button type="button" className="admin-inline-action" onClick={() => updateCollection('blogPosts', post.id, { originalUrl: post.originalUrl ? `${post.originalUrl.trimEnd()}\n` : '' })}>+ Agregar otra fuente</button>
+                  <div className="admin-source-list__header">
+                    <span>Fuentes originales del artículo</span>
+                    <button
+                      type="button"
+                      className="admin-inline-action"
+                      onClick={() => updateCollection('blogPosts', post.id, { originalUrl: post.originalUrl ? post.originalUrl.trimEnd() + '\n' : '\n' })}
+                    >
+                      + Agregar otra fuente
+                    </button>
+                  </div>
+                  {(post.originalUrl ? post.originalUrl.split(/\r?\n/) : ['']).map((sourceUrl, sourceIndex, sourceUrls) => (
+                    <div className="admin-source-row" key={`blog-source-${post.id}-${sourceIndex}`}>
+                      <label>
+                        Fuente {sourceIndex + 1}
+                        <input
+                          value={sourceUrl}
+                          onChange={(event) => {
+                            const nextSources = [...sourceUrls]
+                            nextSources[sourceIndex] = event.target.value
+                            updateCollection('blogPosts', post.id, { originalUrl: nextSources.join('\n') })
+                          }}
+                          placeholder="https://pagina-fuente.com/articulo"
+                        />
+                      </label>
+                      {sourceUrls.length > 1 && (
+                        <button
+                          type="button"
+                          className="admin-source-remove"
+                      onClick={() => updateCollection('blogPosts', post.id, { originalUrl: post.originalUrl ? post.originalUrl.trimEnd() + '\n' : '\n' })}
+                        >
+                          Quitar
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 </div>
                 <label className="admin-check"><input type="checkbox" checked={post.trending === true} onChange={(event) => updateCollection('blogPosts', post.id, { trending: event.target.checked })} /> Marcar como tendencia</label>
                 <label className="admin-check"><input type="checkbox" checked={post.active !== false} onChange={(event) => updateCollection('blogPosts', post.id, { active: event.target.checked })} /> Visible en página</label>
