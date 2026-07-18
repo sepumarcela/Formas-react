@@ -6728,6 +6728,36 @@ section {
   line-height: 1.95;
 }
 
+
+.blog-post-source {
+  margin-top: 38px;
+  padding: 20px 22px;
+  border-left: 3px solid var(--color-brand);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--color-text);
+}
+
+.blog-post-source span {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(52, 38, 29, 0.58);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.blog-post-source a {
+  color: var(--color-brand);
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.blog-post-source a:hover {
+  color: var(--color-dark);
+}
 .blog-post-article h2 {
   margin: 42px 0 14px;
   color: var(--color-brand);

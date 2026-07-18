@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageHero from '../components/sections/PageHero'
 import { subscribeNewsletter } from '../api/cmsApi'
@@ -6,14 +6,6 @@ import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
 
 function BlogPostLink({ post, className, children }) {
-  if (post.originalUrl) {
-    return (
-      <a className={className} href={post.originalUrl}>
-        {children}
-      </a>
-    )
-  }
-
   return (
     <Link className={className} to={`/blog/${post.id}`}>
       {children}

@@ -1,4 +1,4 @@
-﻿import { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, CalendarDays, Clock, Eye } from 'lucide-react'
 import { useSiteContent } from '../hooks/useSiteContent'
@@ -19,14 +19,6 @@ function BlogHeroImage({ post }) {
 }
 
 function BlogPostLink({ post, className, children }) {
-  if (post.originalUrl) {
-    return (
-      <a className={className} href={post.originalUrl}>
-        {children}
-      </a>
-    )
-  }
-
   return (
     <Link className={className} to={`/blog/${post.id}`}>
       {children}
@@ -77,6 +69,7 @@ function BlogPostDetail() {
 
   const blocks = articleBlocks(post)
   const headings = blocks.filter((block) => block.type === 'heading').slice(0, 6)
+  const sourceUrl = post.originalUrl?.trim()
 
   return (
     <main className="page blog-post-page">
@@ -106,6 +99,13 @@ function BlogPostDetail() {
               : <p key={block.id}>{block.text}</p>
           )) : (
             <p>Muy pronto ampliaremos este artículo con más inspiración, recomendaciones y detalles para tu proyecto.</p>
+          )}
+
+          {sourceUrl && (
+            <div className="blog-post-source">
+              <span>Fuente original</span>
+              <a href={sourceUrl} target="_blank" rel="noreferrer">Abrir fuente del artículo</a>
+            </div>
           )}
         </article>
 
