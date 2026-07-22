@@ -48,11 +48,11 @@ import { useSiteContent } from '../hooks/useSiteContent'
 const sections = [
   { id: 'overview', label: 'Resumen', icon: LayoutDashboard },
   { id: 'hero', label: 'Inicio', icon: Images },
-  { id: 'pages', label: 'PÃƒÂ¡ginas', icon: LayoutDashboard },
-  { id: 'stories', label: 'Antes y despuÃƒÂ©s', icon: Images },
+  { id: 'pages', label: 'Páginas', icon: LayoutDashboard },
+  { id: 'stories', label: 'Antes y después', icon: Images },
   { id: 'products', label: 'Productos', icon: Package },
   { id: 'blog', label: 'Blog', icon: Newspaper },
-  { id: 'categories', label: 'CategorÃƒÂ­as', icon: Tags },
+  { id: 'categories', label: 'Categorías', icon: Tags },
   { id: 'bulk', label: 'Carga masiva', icon: FileJson },
 ]
 
@@ -63,7 +63,7 @@ const pageOptions = [
   { id: 'nosotros', label: 'Nosotros' },
   { id: 'blog', label: 'Blog' },
   { id: 'contacto', label: 'Contacto' },
-  { id: 'footerPolicies', label: 'PolÃƒÂ­ticas del footer' },
+  { id: 'footerPolicies', label: 'Políticas del footer' },
 ]
 
 const ADMIN_SESSION_KEY = 'formas-admin-authenticated'
@@ -95,12 +95,12 @@ function getEmptyHeroSlide(index) {
   return {
     id: `inicio-${index}`,
     eyebrow: '',
-    titleAccent: 'DiseÃƒÂ±a',
+    titleAccent: 'Diseña',
     title: 'tu estilo',
     description: 'Muebles modernos y funcionales\npara transformar cada espacio\nde tu hogar.',
     primaryLabel: 'Ver colecciones',
     primaryLink: '/proyectos',
-    secondaryLabel: 'Solicitar diseÃƒÂ±o',
+    secondaryLabel: 'Solicitar diseño',
     secondaryLink: '/contacto',
     image: '',
     active: true,
@@ -112,7 +112,7 @@ const iconOptions = [
   ['desk', 'Estudio'],
   ['closet', 'Closet'],
   ['kitchen', 'Cocina'],
-  ['bath', 'BaÃƒÂ±o'],
+  ['bath', 'Baño'],
   ['shelf', 'Repisa'],
   ['bed', 'Alcoba'],
   ['book', 'Biblioteca'],
@@ -122,7 +122,7 @@ const projectCategoryOptions = [
   { id: 'hogar', label: 'Hogares' },
   { id: 'cocina', label: 'Cocinas' },
   { id: 'closet', label: 'Closets' },
-  { id: 'bano', label: 'BaÃƒÂ±os' },
+  { id: 'bano', label: 'Baños' },
   { id: 'oficina', label: 'Oficinas' },
   { id: 'comercial', label: 'Comerciales' },
 ]
@@ -299,7 +299,7 @@ const csvConfig = {
     requiredHint: 'Obligatorias: id, categoryId y name. Opcionales: category, price, netPrice, size, description, material, color, leadTime, discountPercent, discountLabel, discountStart, discountEnd, image, technicalSheet y featured. Puedes dejar vacios precio, descuentos y fechas.',
   },
   categories: {
-    label: 'CategorÃƒÂ­as',
+    label: 'Categorías',
     filename: 'categorias-formas.csv',
     headers: ['id', 'name', 'description', 'image', 'icon'],
   },
@@ -337,7 +337,7 @@ function Cuenta() {
   const stats = useMemo(() => ([
     { label: 'Productos', value: content.products.length },
     { label: 'Destacados', value: content.products.filter((product) => product.featured).length },
-    { label: 'CategorÃƒÂ­as', value: content.categories.length },
+    { label: 'Categorías', value: content.categories.length },
     { label: 'Fotos inicio', value: content.heroSlides.length },
   ]), [content])
 
@@ -354,9 +354,9 @@ function Cuenta() {
       sessionStorage.setItem(ADMIN_SESSION_KEY, 'true')
       setIsAuthenticated(true)
       setLoginError('')
-      flash('SesiÃƒÂ³n iniciada.')
+      flash('Sesión iniciada.')
     } catch (error) {
-      setLoginError(error?.message || 'No se pudo iniciar sesiÃƒÂ³n con el backend. Verifica que Spring Boot estÃƒÂ© encendido.')
+      setLoginError(error?.message || 'No se pudo iniciar sesión con el backend. Verifica que Spring Boot esté encendido.')
     }
   }
 
@@ -374,8 +374,8 @@ function Cuenta() {
 
     sessionStorage.removeItem(ADMIN_SESSION_KEY)
     setIsAuthenticated(false)
-    setLoginError('Inicia sesiÃƒÂ³n otra vez para guardar cambios.')
-    flash('Inicia sesiÃƒÂ³n otra vez para guardar cambios.')
+    setLoginError('Inicia sesión otra vez para guardar cambios.')
+    flash('Inicia sesión otra vez para guardar cambios.')
     return false
   }
 
@@ -383,7 +383,7 @@ function Cuenta() {
     if (!hasAdminToken()) {
       sessionStorage.removeItem(ADMIN_SESSION_KEY)
       setIsAuthenticated(false)
-      setLoginError('Inicia sesiÃƒÂ³n otra vez para guardar cambios.')
+      setLoginError('Inicia sesión otra vez para guardar cambios.')
     }
 
     flash(error?.message || defaultMessage)
@@ -422,7 +422,7 @@ function Cuenta() {
         flash('Imagen subida y guardada.')
       }
     } catch (error) {
-      reportBackendError('La imagen se subiÃƒÂ³, pero no se pudo guardar la informaciÃƒÂ³n asociada.', error)
+      reportBackendError('La imagen se subió, pero no se pudo guardar la información asociada.', error)
     }
   }
 
@@ -454,14 +454,14 @@ function Cuenta() {
   }
 
   async function addCategory() {
-    const baseName = `Nueva categorÃƒÂ­a ${content.categories.length + 1}`
-    const category = { id: createSlug(baseName), name: baseName, description: 'DescripciÃƒÂ³n de la categorÃƒÂ­a.', image: '', icon: 'shelf' }
+    const baseName = `Nueva categoría ${content.categories.length + 1}`
+    const category = { id: createSlug(baseName), name: baseName, description: 'Descripción de la categoría.', image: '', icon: 'shelf' }
 
     let savedCategory
     try {
       savedCategory = await saveCategory(category)
     } catch {
-      flash('No se pudo guardar la categorÃƒÂ­a en el backend.')
+      flash('No se pudo guardar la categoría en el backend.')
       return
     }
 
@@ -470,7 +470,7 @@ function Cuenta() {
       categories: [...current.categories, savedCategory],
     }))
     setActiveSection('categories')
-    flash('CategorÃƒÂ­a creada.')
+    flash('Categoría creada.')
   }
 
   function goToProducts() {
@@ -549,7 +549,7 @@ function Cuenta() {
     }
 
     if (!newProduct.categoryId) {
-      flash('Selecciona una categorÃƒÂ­a.')
+      flash('Selecciona una categoría.')
       return
     }
 
@@ -597,9 +597,9 @@ function Cuenta() {
     try {
       const savedCategory = await saveCategory(category)
       updateCollection('categories', category.id, savedCategory)
-      flash('Cambios de la categorÃƒÂ­a guardados.')
+      flash('Cambios de la categoría guardados.')
     } catch {
-      flash('No se pudo guardar la categorÃƒÂ­a en el backend.')
+      flash('No se pudo guardar la categoría en el backend.')
     }
   }
 
@@ -619,9 +619,9 @@ function Cuenta() {
     try {
       const savedPost = await saveBlogPost(post)
       updateCollection('blogPosts', post.id, savedPost)
-      flash('ArtÃƒÂ­culo guardado.')
+      flash('Artículo guardado.')
     } catch {
-      flash('No se pudo guardar el artÃƒÂ­culo en el backend.')
+      flash('No se pudo guardar el artículo en el backend.')
     }
   }
 
@@ -665,9 +665,9 @@ function Cuenta() {
           [pageKey]: savedPage,
         },
       }))
-      flash('Contenido de pÃƒÂ¡gina guardado.')
+      flash('Contenido de página guardado.')
     } catch {
-      flash('No se pudo guardar la pÃƒÂ¡gina en el backend.')
+      flash('No se pudo guardar la página en el backend.')
     }
   }
 
@@ -680,14 +680,14 @@ function Cuenta() {
   }
 
   async function addBlogPost() {
-    const baseTitle = `Nuevo artÃƒÂ­culo ${content.blogPosts.length + 1}`
+    const baseTitle = `Nuevo artículo ${content.blogPosts.length + 1}`
     try {
       const savedPost = await saveBlogPost({
         id: createSlug(baseTitle),
         tag: '',
         date: new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }),
         title: baseTitle,
-        desc: 'Resumen del artÃƒÂ­culo.',
+        desc: 'Resumen del artículo.',
         image: '',
         body: '',
         originalUrl: '',
@@ -696,9 +696,9 @@ function Cuenta() {
       })
       setContent((current) => ({ ...current, blogPosts: [...current.blogPosts, savedPost] }))
       setActiveSection('blog')
-      flash('ArtÃƒÂ­culo creado.')
+      flash('Artículo creado.')
     } catch {
-      flash('No se pudo crear el artÃƒÂ­culo en el backend.')
+      flash('No se pudo crear el artículo en el backend.')
     }
   }
 
@@ -753,9 +753,9 @@ function Cuenta() {
           [section]: savedPage,
         },
       }))
-      flash('Imagen de pÃƒÂ¡gina subida y guardada.')
+      flash('Imagen de página subida y guardada.')
     } catch (error) {
-      reportBackendError('No se pudo subir la imagen de pÃƒÂ¡gina al backend.', error)
+      reportBackendError('No se pudo subir la imagen de página al backend.', error)
     }
   }
 
@@ -786,7 +786,7 @@ function Cuenta() {
   }
 
   async function addProjectHighlight() {
-    const title = `Nuevo antes y despuÃƒÂ©s ${content.projectHighlights.length + 1}`
+    const title = `Nuevo antes y después ${content.projectHighlights.length + 1}`
     try {
       const savedProject = await saveProjectHighlight(
         { id: createSlug(title), category: 'Cocinas', title, before: '', after: '' },
@@ -806,7 +806,7 @@ function Cuenta() {
         id: createSlug(name),
         name,
         location: 'Ciudad, Colombia',
-        text: 'Escribe aquÃƒÂ­ el testimonio real del cliente.',
+        text: 'Escribe aquí el testimonio real del cliente.',
         image: '',
         approved: true,
       })
@@ -870,7 +870,7 @@ function Cuenta() {
           discountPercent: bulkType === 'products' ? cleanNumber(row.discountPercent) : row.discountPercent,
           discountStart: bulkType === 'products' ? cleanDate(row.discountStart) : row.discountStart,
           discountEnd: bulkType === 'products' ? cleanDate(row.discountEnd) : row.discountEnd,
-          featured: bulkType === 'products' ? ['true', '1', 'si', 'sÃƒÂ­', 'yes'].includes(String(row.featured).trim().toLowerCase()) : row.featured,
+          featured: bulkType === 'products' ? ['true', '1', 'si', 'sí', 'yes'].includes(String(row.featured).trim().toLowerCase()) : row.featured,
         }
 
         if (bulkType === 'products') {
@@ -915,9 +915,9 @@ function Cuenta() {
           homeProducts: savedPage,
         },
       }))
-      flash('Foto de Por quÃƒÂ© Formas Interiores subida y guardada.')
+      flash('Foto de Por qué Formas Interiores subida y guardada.')
     } catch (error) {
-      reportBackendError('No se pudo subir la foto de Por quÃƒÂ© Formas Interiores al backend.', error)
+      reportBackendError('No se pudo subir la foto de Por qué Formas Interiores al backend.', error)
     }
   }
 
@@ -927,7 +927,7 @@ function Cuenta() {
 
     const text = await readCsvFile(file)
     setCsvPreview(text)
-    flash('CSV cargado. RevÃƒÂ­salo y presiona Guardar CSV.')
+    flash('CSV cargado. Revísalo y presiona Guardar CSV.')
   }
 
   async function handleProductImagesZip(event) {
@@ -944,7 +944,7 @@ function Cuenta() {
       const unmatched = result.unmatchedFiles?.length ? ` ${result.unmatchedFiles.length} imagen(es) no encontraron producto.` : ''
       flash(`${result.matched} imagen(es) asignadas a productos.${unmatched}`)
     } catch (error) {
-      reportBackendError('No se pudo cargar el ZIP de imÃƒÂ¡genes.', error)
+      reportBackendError('No se pudo cargar el ZIP de imágenes.', error)
     } finally {
       event.target.value = ''
     }
@@ -962,9 +962,9 @@ function Cuenta() {
         products: catalog.products.length ? catalog.products : current.products,
       }))
       const unmatched = result.unmatchedFiles?.length ? ` ${result.unmatchedFiles.length} ficha(s) no encontraron producto.` : ''
-      flash(`${result.matched} ficha(s) tÃƒÂ©cnica(s) asignadas a productos.${unmatched}`)
+      flash(`${result.matched} ficha(s) técnica(s) asignadas a productos.${unmatched}`)
     } catch (error) {
-      reportBackendError('No se pudo cargar el ZIP de fichas tÃƒÂ©cnicas.', error)
+      reportBackendError('No se pudo cargar el ZIP de fichas técnicas.', error)
     } finally {
       event.target.value = ''
     }
@@ -977,7 +977,7 @@ function Cuenta() {
           <div>
             <p className="admin-kicker">Panel Formas Interiores</p>
             <h1>Administrador de contenido</h1>
-            <p>Actualiza productos, categorÃƒÂ­as, blog e imÃƒÂ¡genes desde un solo lugar.</p>
+            <p>Actualiza productos, categorías, blog e imágenes desde un solo lugar.</p>
           </div>
           <button className="button button--primary" onClick={goToProducts}><BadgePlus size={16} /> Nuevo producto</button>
         </div>
@@ -994,8 +994,8 @@ function Cuenta() {
         <div className="admin-quick-actions">
           <button onClick={goToProducts}><Package size={20} /> Crear producto</button>
           <button onClick={addHeroSlide}><Images size={20} /> Foto de inicio</button>
-          <button onClick={addBlogPost}><Newspaper size={20} /> Crear artÃƒÂ­culo</button>
-          <button onClick={addCategory}><Tags size={20} /> Crear categorÃƒÂ­a</button>
+          <button onClick={addBlogPost}><Newspaper size={20} /> Crear artículo</button>
+          <button onClick={addCategory}><Tags size={20} /> Crear categoría</button>
           <button onClick={() => openSection('bulk')}><FileJson size={20} /> Importar masivo</button>
         </div>
       </div>
@@ -1028,13 +1028,13 @@ function Cuenta() {
 
               <div className="admin-form-grid admin-form-grid--wide">
                 <label>ID<input value={slide.id} readOnly title="Este ID lo asigna el backend automaticamente." /></label>
-                <label>Texto pequeÃƒÂ±o<input value={slide.eyebrow || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { eyebrow: event.target.value })} placeholder="Opcional" /></label>
-                <label>LÃƒÂ­nea principal<input value={slide.titleAccent || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { titleAccent: event.target.value })} /></label>
-                <label>LÃƒÂ­nea secundaria<input value={slide.title || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { title: event.target.value })} /></label>
-                <label className="admin-colspan">DescripciÃƒÂ³n<textarea value={slide.description || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { description: event.target.value })} /></label>
-                <label>BotÃƒÂ³n principal<input value={slide.primaryLabel || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { primaryLabel: event.target.value })} /></label>
+                <label>Texto pequeño<input value={slide.eyebrow || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { eyebrow: event.target.value })} placeholder="Opcional" /></label>
+                <label>Línea principal<input value={slide.titleAccent || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { titleAccent: event.target.value })} /></label>
+                <label>Línea secundaria<input value={slide.title || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { title: event.target.value })} /></label>
+                <label className="admin-colspan">Descripción<textarea value={slide.description || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { description: event.target.value })} /></label>
+                <label>Botón principal<input value={slide.primaryLabel || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { primaryLabel: event.target.value })} /></label>
                 <label>Link principal<input value={slide.primaryLink || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { primaryLink: event.target.value })} /></label>
-                <label>BotÃƒÂ³n secundario<input value={slide.secondaryLabel || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { secondaryLabel: event.target.value })} /></label>
+                <label>Botón secundario<input value={slide.secondaryLabel || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { secondaryLabel: event.target.value })} /></label>
                 <label>Link secundario<input value={slide.secondaryLink || ''} onChange={(event) => updateCollection('heroSlides', slide.id, { secondaryLink: event.target.value })} /></label>
                 <label className="admin-check"><input type="checkbox" checked={slide.active !== false} onChange={(event) => updateCollection('heroSlides', slide.id, { active: event.target.checked })} /> Visible en inicio</label>
               </div>
@@ -1069,10 +1069,10 @@ function Cuenta() {
     const nextNumber = policies.length + 1
     policies.push({
       id: `politica-${nextNumber}`,
-      label: 'Nueva polÃƒÂ­tica',
+      label: 'Nueva política',
       slug: `politica-${nextNumber}`,
-      title: 'Nueva polÃƒÂ­tica',
-      content: 'Escribe aquÃƒÂ­ el contenido de esta polÃƒÂ­tica.',
+      title: 'Nueva política',
+      content: 'Escribe aquí el contenido de esta política.',
       active: true,
     })
     updatePageContent('footerPolicies', { policies })
@@ -1092,14 +1092,14 @@ function Cuenta() {
       <div className="admin-panel">
         <div className="admin-panel__header">
           <div>
-            <p className="admin-kicker">PÃƒÂ¡ginas</p>
-            <h1>Editar contenido de pÃƒÂ¡ginas</h1>
-            <p>Cambia textos e imÃƒÂ¡genes principales de Proyectos, Nosotros, Blog, Contacto y las secciones de productos del inicio.</p>
+            <p className="admin-kicker">Páginas</p>
+            <h1>Editar contenido de páginas</h1>
+            <p>Cambia textos e imágenes principales de Proyectos, Nosotros, Blog, Contacto y las secciones de productos del inicio.</p>
           </div>
           <div className="admin-header-actions">
-            <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> Guardar pÃƒÂ¡gina</button>
+            <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> Guardar página</button>
             <label className="admin-page-select">
-              PÃƒÂ¡gina
+              Página
               <select value={pageKey} onChange={(event) => setPageKey(event.target.value)}>
                 {pageOptions.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
               </select>
@@ -1115,14 +1115,14 @@ function Cuenta() {
                 Cargar foto hero
                 <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload(pageKey, 'image', event)} />
               </label>
-              {renderCardSave('Guardar pÃƒÂ¡gina', saveCurrentPageContent)}
+              {renderCardSave('Guardar página', saveCurrentPageContent)}
             </div>
 
             <div className="admin-form-grid admin-form-grid--wide">
               <label>Breadcrumb<input value={page.breadcrumb || ''} onChange={(event) => updatePageContent(pageKey, { breadcrumb: event.target.value })} /></label>
-              <label>Texto pequeÃƒÂ±o<input value={page.eyebrow || ''} onChange={(event) => updatePageContent(pageKey, { eyebrow: event.target.value })} placeholder="Opcional" /></label>
-              <label className="admin-colspan">TÃƒÂ­tulo<textarea value={page.title || ''} onChange={(event) => updatePageContent(pageKey, { title: event.target.value })} /></label>
-              <label className="admin-colspan">DescripciÃƒÂ³n<textarea value={page.description || ''} onChange={(event) => updatePageContent(pageKey, { description: event.target.value })} /></label>
+              <label>Texto pequeño<input value={page.eyebrow || ''} onChange={(event) => updatePageContent(pageKey, { eyebrow: event.target.value })} placeholder="Opcional" /></label>
+              <label className="admin-colspan">Título<textarea value={page.title || ''} onChange={(event) => updatePageContent(pageKey, { title: event.target.value })} /></label>
+              <label className="admin-colspan">Descripción<textarea value={page.description || ''} onChange={(event) => updatePageContent(pageKey, { description: event.target.value })} /></label>
             </div>
           </article>
         )}
@@ -1130,12 +1130,12 @@ function Cuenta() {
         {pageKey === 'productos' && (
           <article className="admin-editor-card admin-editor-card--hero">
             <div className="admin-image-box admin-image-box--hero">
-              {page.menuImage ? <img src={page.menuImage} alt="Foto del menÃƒÂº Productos" /> : <Images size={30} />}
+              {page.menuImage ? <img src={page.menuImage} alt="Foto del menú Productos" /> : <Images size={30} />}
               <label>
-                Foto del menÃƒÂº Productos
+                Foto del menú Productos
                 <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('productos', 'menuImage', event)} />
               </label>
-              {renderCardSave('Guardar pÃƒÂ¡gina', saveCurrentPageContent)}
+              {renderCardSave('Guardar página', saveCurrentPageContent)}
             </div>
 
             <div className="admin-form-grid admin-form-grid--wide">
@@ -1150,7 +1150,7 @@ function Cuenta() {
               <div>
                 <p className="admin-kicker">Inicio / Productos</p>
                 <h2>Textos de productos en el inicio</h2>
-                <p>Estos textos aparecen encima de las lÃƒÂ­neas de producto y de los productos destacados.</p>
+                <p>Estos textos aparecen encima de las líneas de producto y de los productos destacados.</p>
               </div>
             </div>
             <div className="admin-editor-card admin-editor-card--hero">
@@ -1160,12 +1160,12 @@ function Cuenta() {
                   Cargar logo
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('homeProducts', 'logoImage', event)} />
                 </label>
-                {renderCardSave('Guardar pÃƒÂ¡gina', saveCurrentPageContent)}
+                {renderCardSave('Guardar página', saveCurrentPageContent)}
               </div>
               <div className="admin-logo-copy">
                 <h3>Logo principal</h3>
                 <p>
-                  Este logo aparece arriba a la izquierda y tambiÃƒÂ©n puede usarse en el pie de pÃƒÂ¡gina.
+                  Este logo aparece arriba a la izquierda y también puede usarse en el pie de página.
                 </p>
               </div>
               <div className="admin-form-grid">
@@ -1179,22 +1179,22 @@ function Cuenta() {
               </div>
             </div>
             <div className="admin-form-grid admin-form-grid--wide">
-              <label>Etiqueta lÃƒÂ­neas<input value={page.categoriesEyebrow || ''} onChange={(event) => updatePageContent('homeProducts', { categoriesEyebrow: event.target.value })} /></label>
-              <label>TÃƒÂ­tulo lÃƒÂ­neas<input value={page.categoriesTitle || ''} onChange={(event) => updatePageContent('homeProducts', { categoriesTitle: event.target.value })} /></label>
-              <label className="admin-colspan">DescripciÃƒÂ³n lÃƒÂ­neas<textarea value={page.categoriesDescription || ''} onChange={(event) => updatePageContent('homeProducts', { categoriesDescription: event.target.value })} /></label>
+              <label>Etiqueta líneas<input value={page.categoriesEyebrow || ''} onChange={(event) => updatePageContent('homeProducts', { categoriesEyebrow: event.target.value })} /></label>
+              <label>Título líneas<input value={page.categoriesTitle || ''} onChange={(event) => updatePageContent('homeProducts', { categoriesTitle: event.target.value })} /></label>
+              <label className="admin-colspan">Descripción líneas<textarea value={page.categoriesDescription || ''} onChange={(event) => updatePageContent('homeProducts', { categoriesDescription: event.target.value })} /></label>
               <label>Etiqueta destacados<input value={page.featuredEyebrow || ''} onChange={(event) => updatePageContent('homeProducts', { featuredEyebrow: event.target.value })} /></label>
-              <label>TÃƒÂ­tulo destacados<input value={page.featuredTitle || ''} onChange={(event) => updatePageContent('homeProducts', { featuredTitle: event.target.value })} /></label>
-              <label className="admin-colspan">DescripciÃƒÂ³n destacados<textarea value={page.featuredDescription || ''} onChange={(event) => updatePageContent('homeProducts', { featuredDescription: event.target.value })} /></label>
+              <label>Título destacados<input value={page.featuredTitle || ''} onChange={(event) => updatePageContent('homeProducts', { featuredTitle: event.target.value })} /></label>
+              <label className="admin-colspan">Descripción destacados<textarea value={page.featuredDescription || ''} onChange={(event) => updatePageContent('homeProducts', { featuredDescription: event.target.value })} /></label>
             </div>
             <div className="admin-list-heading">
-              <h2>Fotos de Por quÃƒÂ© Formas Interiores</h2>
+              <h2>Fotos de Por qué Formas Interiores</h2>
             </div>
             <div className="admin-editor-list admin-editor-list--compact">
               {[
-                { id: 'diseno-personalizado', label: 'DiseÃƒÂ±o personalizado' },
-                { id: 'fabricacion-calidad', label: 'FabricaciÃƒÂ³n de calidad' },
-                { id: 'instalacion-profesional', label: 'InstalaciÃƒÂ³n profesional' },
-                { id: 'acompanamiento-completo', label: 'AcompaÃƒÂ±amiento completo' },
+                { id: 'diseno-personalizado', label: 'Diseño personalizado' },
+                { id: 'fabricacion-calidad', label: 'Fabricación de calidad' },
+                { id: 'instalacion-profesional', label: 'Instalación profesional' },
+                { id: 'acompanamiento-completo', label: 'Acompañamiento completo' },
               ].map((benefit) => {
                 const image = page.whyBenefits?.find((item) => item.id === benefit.id)?.image
 
@@ -1224,14 +1224,14 @@ function Cuenta() {
                   Cargar foto final
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('homeProducts', 'finalImage', event)} />
                 </label>
-                {renderCardSave('Guardar pÃƒÂ¡gina', saveCurrentPageContent)}
+                {renderCardSave('Guardar página', saveCurrentPageContent)}
               </div>
               <div className="admin-form-grid admin-form-grid--wide">
-                <label>Texto pequeÃƒÂ±o<input value={page.finalEyebrow || ''} onChange={(event) => updatePageContent('homeProducts', { finalEyebrow: event.target.value })} /></label>
-                <label>TÃƒÂ­tulo<input value={page.finalTitle || ''} onChange={(event) => updatePageContent('homeProducts', { finalTitle: event.target.value })} /></label>
+                <label>Texto pequeño<input value={page.finalEyebrow || ''} onChange={(event) => updatePageContent('homeProducts', { finalEyebrow: event.target.value })} /></label>
+                <label>Título<input value={page.finalTitle || ''} onChange={(event) => updatePageContent('homeProducts', { finalTitle: event.target.value })} /></label>
                 <label className="admin-colspan">Texto<textarea value={page.finalText || ''} onChange={(event) => updatePageContent('homeProducts', { finalText: event.target.value })} /></label>
-                <label>BotÃƒÂ³n principal<input value={page.finalPrimaryLabel || ''} onChange={(event) => updatePageContent('homeProducts', { finalPrimaryLabel: event.target.value })} /></label>
-                <label>Link botÃƒÂ³n principal<input value={page.finalPrimaryLink || ''} onChange={(event) => updatePageContent('homeProducts', { finalPrimaryLink: event.target.value })} /></label>
+                <label>Botón principal<input value={page.finalPrimaryLabel || ''} onChange={(event) => updatePageContent('homeProducts', { finalPrimaryLabel: event.target.value })} /></label>
+                <label>Link botón principal<input value={page.finalPrimaryLink || ''} onChange={(event) => updatePageContent('homeProducts', { finalPrimaryLink: event.target.value })} /></label>
                 <label>Texto WhatsApp<input value={page.finalWhatsappLabel || ''} onChange={(event) => updatePageContent('homeProducts', { finalWhatsappLabel: event.target.value })} /></label>
                 <label>Link WhatsApp<input value={page.finalWhatsappLink || ''} onChange={(event) => updatePageContent('homeProducts', { finalWhatsappLink: event.target.value })} /></label>
               </div>
@@ -1244,14 +1244,14 @@ function Cuenta() {
             <div className="admin-create-card__header">
               <div>
                 <p className="admin-kicker">Footer</p>
-                <h2>PolÃƒÂ­ticas del footer</h2>
-                <p>Estos enlaces aparecen en el pie de pÃƒÂ¡gina y abren una pÃƒÂ¡gina interna con el contenido de cada polÃƒÂ­tica.</p>
+                <h2>Políticas del footer</h2>
+                <p>Estos enlaces aparecen en el pie de página y abren una página interna con el contenido de cada política.</p>
               </div>
-              <button className="button button--primary" onClick={addFooterPolicy}><BadgePlus size={16} /> Agregar polÃƒÂ­tica</button>
+              <button className="button button--primary" onClick={addFooterPolicy}><BadgePlus size={16} /> Agregar política</button>
             </div>
 
             <div className="admin-form-grid admin-form-grid--wide">
-              <label>TÃƒÂ­tulo del bloque<input value={page.title || ''} onChange={(event) => updatePageContent('footerPolicies', { title: event.target.value })} /></label>
+              <label>Título del bloque<input value={page.title || ''} onChange={(event) => updatePageContent('footerPolicies', { title: event.target.value })} /></label>
             </div>
 
             <div className="admin-editor-list">
@@ -1280,8 +1280,8 @@ function Cuenta() {
               <button className="button button--primary" onClick={addProject}><BadgePlus size={16} /> Agregar proyecto</button>
             </div>
             <div className="admin-form-grid admin-form-grid--wide admin-create-card">
-              <label>Texto botÃƒÂ³n<input value={page.ctaLabel || ''} onChange={(event) => updatePageContent('proyectos', { ctaLabel: event.target.value })} /></label>
-              <label>Link botÃƒÂ³n<input value={page.ctaLink || ''} onChange={(event) => updatePageContent('proyectos', { ctaLink: event.target.value })} /></label>
+              <label>Texto botón<input value={page.ctaLabel || ''} onChange={(event) => updatePageContent('proyectos', { ctaLabel: event.target.value })} /></label>
+              <label>Link botón<input value={page.ctaLink || ''} onChange={(event) => updatePageContent('proyectos', { ctaLink: event.target.value })} /></label>
             </div>
             {content.projects.map((project, index) => (
               <article className="admin-editor-card" key={`project-${index}`}>
@@ -1295,14 +1295,14 @@ function Cuenta() {
                 </div>
                 <div className="admin-form-grid">
                   <label>ID<input value={project.id} onChange={(event) => updateCollection('projects', project.id, { id: createSlug(event.target.value) })} /></label>
-                  <label>CategorÃƒÂ­a
+                  <label>Categoría
                     <select value={project.cat || 'hogar'} onChange={(event) => handleProjectCategory(project, event.target.value)}>
                       {projectCategoryOptions.map((category) => <option key={category.id} value={category.id}>{category.label}</option>)}
                     </select>
                   </label>
-                  <label>Etiqueta<input value={project.label} readOnly title="Se actualiza automÃƒÂ¡ticamente con la categorÃƒÂ­a seleccionada." /></label>
-                  <label>TÃƒÂ­tulo<input value={project.title} onChange={(event) => updateCollection('projects', project.id, { title: event.target.value })} /></label>
-                  <label>UbicaciÃƒÂ³n<input value={project.location} onChange={(event) => updateCollection('projects', project.id, { location: event.target.value })} /></label>
+                  <label>Etiqueta<input value={project.label} readOnly title="Se actualiza automáticamente con la categoría seleccionada." /></label>
+                  <label>Título<input value={project.title} onChange={(event) => updateCollection('projects', project.id, { title: event.target.value })} /></label>
+                  <label>Ubicación<input value={project.location} onChange={(event) => updateCollection('projects', project.id, { location: event.target.value })} /></label>
                 </div>
                 <div className="admin-card-actions">
                   <button className="button button--primary" onClick={() => saveExistingProject(project, index)}><Save size={16} /> Guardar cambios</button>
@@ -1322,10 +1322,10 @@ function Cuenta() {
                   Foto historia
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('nosotros', 'historyImage', event)} />
                 </label>
-                {renderCardSave('Guardar pÃƒÂ¡gina', saveCurrentPageContent)}
+                {renderCardSave('Guardar página', saveCurrentPageContent)}
               </div>
               <div className="admin-form-grid admin-form-grid--wide">
-                <label className="admin-colspan">TÃƒÂ­tulo historia<input value={page.historyTitle || ''} onChange={(event) => updatePageContent('nosotros', { historyTitle: event.target.value })} /></label>
+                <label className="admin-colspan">Título historia<input value={page.historyTitle || ''} onChange={(event) => updatePageContent('nosotros', { historyTitle: event.target.value })} /></label>
                 <label className="admin-colspan">Texto historia<textarea value={page.historyText || ''} onChange={(event) => updatePageContent('nosotros', { historyText: event.target.value })} /></label>
               </div>
             </article>
@@ -1337,10 +1337,10 @@ function Cuenta() {
                   Foto sede
                   <input type="file" accept="image/*" onChange={(event) => handlePageImageUpload('nosotros', 'locationImage', event)} />
                 </label>
-                {renderCardSave('Guardar pÃƒÂ¡gina', saveCurrentPageContent)}
+                {renderCardSave('Guardar página', saveCurrentPageContent)}
               </div>
               <div className="admin-form-grid admin-form-grid--wide">
-                <label className="admin-colspan">Esta foto aparece en la secciÃƒÂ³n Nuestra sede<input value="Imagen editable desde este bloque" readOnly /></label>
+                <label className="admin-colspan">Esta foto aparece en la sección Nuestra sede<input value="Imagen editable desde este bloque" readOnly /></label>
               </div>
             </article>
           </div>
@@ -1349,8 +1349,8 @@ function Cuenta() {
         {pageKey === 'blog' && (
           <article className="admin-create-card">
             <div className="admin-form-grid admin-form-grid--wide">
-              <label>TÃƒÂ­tulo lateral<input value={page.sidebarTitle || ''} onChange={(event) => updatePageContent('blog', { sidebarTitle: event.target.value })} /></label>
-              <label>TÃƒÂ­tulo CTA<input value={page.ctaTitle || ''} onChange={(event) => updatePageContent('blog', { ctaTitle: event.target.value })} /></label>
+              <label>Título lateral<input value={page.sidebarTitle || ''} onChange={(event) => updatePageContent('blog', { sidebarTitle: event.target.value })} /></label>
+              <label>Título CTA<input value={page.ctaTitle || ''} onChange={(event) => updatePageContent('blog', { ctaTitle: event.target.value })} /></label>
               <label className="admin-colspan">Texto CTA<textarea value={page.ctaText || ''} onChange={(event) => updatePageContent('blog', { ctaText: event.target.value })} /></label>
             </div>
           </article>
@@ -1360,27 +1360,27 @@ function Cuenta() {
           <div className="admin-editor-list">
             <article className="admin-create-card">
               <div className="admin-form-grid admin-form-grid--wide">
-                <label>TÃƒÂ­tulo formulario<input value={page.formTitle || ''} onChange={(event) => updatePageContent('contacto', { formTitle: event.target.value })} /></label>
-                <label>SubtÃƒÂ­tulo formulario<input value={page.formSubtitle || ''} onChange={(event) => updatePageContent('contacto', { formSubtitle: event.target.value })} /></label>
-                <label>DirecciÃƒÂ³n tÃƒÂ­tulo<input value={page.addressTitle || ''} onChange={(event) => updatePageContent('contacto', { addressTitle: event.target.value })} /></label>
-                <label>DirecciÃƒÂ³n<textarea value={page.address || ''} onChange={(event) => updatePageContent('contacto', { address: event.target.value })} /></label>
-                <label>TelÃƒÂ©fono tÃƒÂ­tulo<input value={page.phoneTitle || ''} onChange={(event) => updatePageContent('contacto', { phoneTitle: event.target.value })} /></label>
-                <label>TelÃƒÂ©fono<textarea value={page.phone || ''} onChange={(event) => updatePageContent('contacto', { phone: event.target.value })} /></label>
-                <label>Email tÃƒÂ­tulo<input value={page.emailTitle || ''} onChange={(event) => updatePageContent('contacto', { emailTitle: event.target.value })} /></label>
+                <label>Título formulario<input value={page.formTitle || ''} onChange={(event) => updatePageContent('contacto', { formTitle: event.target.value })} /></label>
+                <label>Subtítulo formulario<input value={page.formSubtitle || ''} onChange={(event) => updatePageContent('contacto', { formSubtitle: event.target.value })} /></label>
+                <label>Dirección título<input value={page.addressTitle || ''} onChange={(event) => updatePageContent('contacto', { addressTitle: event.target.value })} /></label>
+                <label>Dirección<textarea value={page.address || ''} onChange={(event) => updatePageContent('contacto', { address: event.target.value })} /></label>
+                <label>Teléfono título<input value={page.phoneTitle || ''} onChange={(event) => updatePageContent('contacto', { phoneTitle: event.target.value })} /></label>
+                <label>Teléfono<textarea value={page.phone || ''} onChange={(event) => updatePageContent('contacto', { phone: event.target.value })} /></label>
+                <label>Email título<input value={page.emailTitle || ''} onChange={(event) => updatePageContent('contacto', { emailTitle: event.target.value })} /></label>
                 <label>Email<input value={page.email || ''} onChange={(event) => updatePageContent('contacto', { email: event.target.value })} /></label>
-                <label>Horario tÃƒÂ­tulo<input value={page.hoursTitle || ''} onChange={(event) => updatePageContent('contacto', { hoursTitle: event.target.value })} /></label>
+                <label>Horario título<input value={page.hoursTitle || ''} onChange={(event) => updatePageContent('contacto', { hoursTitle: event.target.value })} /></label>
                 <label>Horario<textarea value={page.hours || ''} onChange={(event) => updatePageContent('contacto', { hours: event.target.value })} /></label>
               </div>
             </article>
 
             <article className="admin-create-card">
               <div className="admin-form-grid admin-form-grid--wide">
-                <label>TÃƒÂ­tulo visita<input value={page.visitTitle || ''} onChange={(event) => updatePageContent('contacto', { visitTitle: event.target.value })} /></label>
+                <label>Título visita<input value={page.visitTitle || ''} onChange={(event) => updatePageContent('contacto', { visitTitle: event.target.value })} /></label>
                 <label>WhatsApp<input value={page.whatsappLink || ''} onChange={(event) => updatePageContent('contacto', { whatsappLink: event.target.value })} /></label>
-                <label className="admin-colspan">DirecciÃƒÂ³n para mapa<input value={page.mapAddress || ''} onChange={(event) => updatePageContent('contacto', { mapAddress: event.target.value })} placeholder="Ej: MedellÃƒÂ­n, Colombia" /></label>
+                <label className="admin-colspan">Dirección para mapa<input value={page.mapAddress || ''} onChange={(event) => updatePageContent('contacto', { mapAddress: event.target.value })} placeholder="Ej: Medellín, Colombia" /></label>
                 <label className="admin-colspan">Enlace embebido de Google Maps opcional<input value={page.mapEmbedUrl || ''} onChange={(event) => updatePageContent('contacto', { mapEmbedUrl: event.target.value })} placeholder="Opcional: pega aqui el src de un mapa embebido" /></label>
                 <label className="admin-colspan">Texto visita<textarea value={page.visitText || ''} onChange={(event) => updatePageContent('contacto', { visitText: event.target.value })} /></label>
-                <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> Guardar ubicaciÃƒÂ³n</button>
+                <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> Guardar ubicación</button>
               </div>
             </article>
           </div>
@@ -1394,9 +1394,9 @@ function Cuenta() {
       <div className="admin-panel">
         <div className="admin-panel__header">
           <div>
-            <p className="admin-kicker">Antes y despuÃƒÂ©s</p>
-            <h1>Antes y despuÃƒÂ©s y testimonios</h1>
-            <p>Administra el antes/despuÃƒÂ©s de trabajos terminados y los testimonios reales que aparecen en el inicio.</p>
+            <p className="admin-kicker">Antes y después</p>
+            <h1>Antes y después y testimonios</h1>
+            <p>Administra el antes/después de trabajos terminados y los testimonios reales que aparecen en el inicio.</p>
           </div>
           <div className="admin-header-actions">
             <button className="button button--soft" onClick={addTestimonial}><BadgePlus size={16} /> Testimonio</button>
@@ -1409,14 +1409,14 @@ function Cuenta() {
             <Images size={20} />
             <div>
               <strong>Proyectos realizados</strong>
-              <p>Carga una imagen de antes y otra de despuÃƒÂ©s. Estas tarjetas salen en el home como evidencia visual de los trabajos.</p>
+              <p>Carga una imagen de antes y otra de después. Estas tarjetas salen en el home como evidencia visual de los trabajos.</p>
             </div>
           </div>
           <div className="admin-help-card">
             <Newspaper size={20} />
             <div>
               <strong>Testimonios reales</strong>
-              <p>Usa testimonios autorizados por clientes. Puedes ocultar uno desmarcando Ã¢â‚¬Å“Visible en inicioÃ¢â‚¬Â.</p>
+              <p>Usa testimonios autorizados por clientes. Puedes ocultar uno desmarcando “Visible en inicio”.</p>
             </div>
           </div>
         </div>
@@ -1438,9 +1438,9 @@ function Cuenta() {
                   {renderCardSave('Guardar', () => saveExistingProjectHighlight(project, index))}
                 </div>
                 <div className="admin-image-box">
-                  {project.after ? <img src={project.after} alt={`${project.title} despuÃƒÂ©s`} /> : <Images size={24} />}
+                  {project.after ? <img src={project.after} alt={`${project.title} después`} /> : <Images size={24} />}
                   <label>
-                    DespuÃƒÂ©s
+                    Después
                     <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('projectHighlights', project.id, 'after', event)} />
                   </label>
                   {renderCardSave('Guardar', () => saveExistingProjectHighlight(project, index))}
@@ -1449,8 +1449,8 @@ function Cuenta() {
 
               <div className="admin-form-grid">
                 <label>ID<input value={project.id} onChange={(event) => updateCollection('projectHighlights', project.id, { id: createSlug(event.target.value) })} /></label>
-                <label>CategorÃƒÂ­a<input value={project.category} onChange={(event) => updateCollection('projectHighlights', project.id, { category: event.target.value })} /></label>
-                <label>TÃƒÂ­tulo<input value={project.title} onChange={(event) => updateCollection('projectHighlights', project.id, { title: event.target.value })} /></label>
+                <label>Categoría<input value={project.category} onChange={(event) => updateCollection('projectHighlights', project.id, { category: event.target.value })} /></label>
+                <label>Título<input value={project.title} onChange={(event) => updateCollection('projectHighlights', project.id, { title: event.target.value })} /></label>
               </div>
 
               <div className="admin-card-actions">
@@ -1480,7 +1480,7 @@ function Cuenta() {
               <div className="admin-form-grid admin-form-grid--wide">
                 <label>ID<input value={testimonial.id} onChange={(event) => updateCollection('testimonials', testimonial.id, { id: createSlug(event.target.value) })} /></label>
                 <label>Nombre<input value={testimonial.name} onChange={(event) => updateCollection('testimonials', testimonial.id, { name: event.target.value })} /></label>
-                <label>UbicaciÃƒÂ³n<input value={testimonial.location} onChange={(event) => updateCollection('testimonials', testimonial.id, { location: event.target.value })} /></label>
+                <label>Ubicación<input value={testimonial.location} onChange={(event) => updateCollection('testimonials', testimonial.id, { location: event.target.value })} /></label>
                 <label className="admin-check"><input type="checkbox" checked={testimonial.approved !== false} onChange={(event) => updateCollection('testimonials', testimonial.id, { approved: event.target.checked })} /> Visible en inicio</label>
                 <label className="admin-colspan">Testimonio<textarea value={testimonial.text} onChange={(event) => updateCollection('testimonials', testimonial.id, { text: event.target.value })} /></label>
               </div>
@@ -1512,7 +1512,7 @@ function Cuenta() {
             <div>
               <p className="admin-kicker">Nuevo producto</p>
               <h2>Guardar producto individual</h2>
-              <p>Completa un producto y presiona guardar. La lista inferior queda solo para ediciÃƒÂ³n.</p>
+              <p>Completa un producto y presiona guardar. La lista inferior queda solo para edición.</p>
             </div>
             <button type="submit" className="button button--primary"><Save size={16} /> Guardar producto</button>
           </div>
@@ -1529,7 +1529,7 @@ function Cuenta() {
             <div className="admin-form-grid">
               <label>ID<input value={newProduct.id} onChange={(event) => updateNewProduct({ id: createSlug(event.target.value) })} placeholder="Se genera desde el nombre" /></label>
               <label>Nombre<input id="admin-new-product-name" value={newProduct.name} onChange={(event) => updateNewProduct({ name: event.target.value })} placeholder="Ej: Cocina moderna" required /></label>
-              <label>CategorÃƒÂ­a
+              <label>Categoría
                 <select value={newProduct.categoryId} onChange={(event) => handleNewProductCategory(event.target.value)}>
                   {content.categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
                 </select>
@@ -1539,13 +1539,13 @@ function Cuenta() {
               <label>Medidas<input value={newProduct.size} onChange={(event) => updateNewProduct({ size: event.target.value })} placeholder="A medida" /></label>
               <label>Material<input value={newProduct.material} onChange={(event) => updateNewProduct({ material: event.target.value })} placeholder="Ej: MDF RH" /></label>
               <label>Color/acabado<input value={newProduct.color} onChange={(event) => updateNewProduct({ color: event.target.value })} placeholder="Ej: Nogal y blanco" /></label>
-              <label>Entrega<input value={newProduct.leadTime} onChange={(event) => updateNewProduct({ leadTime: event.target.value })} placeholder="Ej: 20 a 30 dÃƒÂ­as" /></label>
+              <label>Entrega<input value={newProduct.leadTime} onChange={(event) => updateNewProduct({ leadTime: event.target.value })} placeholder="Ej: 20 a 30 días" /></label>
               <label>Descuento %<input inputMode="numeric" value={newProduct.discountPercent} onChange={(event) => updateNewProduct({ discountPercent: onlyDigits(event.target.value) })} placeholder="Ej: 15" /></label>
               <label>Texto oferta<input value={newProduct.discountLabel} onChange={(event) => updateNewProduct({ discountLabel: event.target.value })} placeholder="Ej: Oferta de lanzamiento" /></label>
               <label>Inicio oferta<input type="date" value={newProduct.discountStart} onChange={(event) => updateNewProduct({ discountStart: event.target.value })} /></label>
               <label>Fin oferta<input type="date" value={newProduct.discountEnd} onChange={(event) => updateNewProduct({ discountEnd: event.target.value })} /></label>
-              <label className="admin-colspan">DescripciÃƒÂ³n para la ficha<textarea value={newProduct.description} onChange={(event) => updateNewProduct({ description: event.target.value })} placeholder="Describe el producto, su uso y lo que lo hace especial." /></label>
-              <label className="admin-colspan">Ficha tÃƒÂ©cnica PDF<input value={newProduct.technicalSheet || ''} onChange={(event) => updateNewProduct({ technicalSheet: event.target.value })} placeholder="URL del PDF o carga masiva por ZIP" /></label>
+              <label className="admin-colspan">Descripción para la ficha<textarea value={newProduct.description} onChange={(event) => updateNewProduct({ description: event.target.value })} placeholder="Describe el producto, su uso y lo que lo hace especial." /></label>
+              <label className="admin-colspan">Ficha técnica PDF<input value={newProduct.technicalSheet || ''} onChange={(event) => updateNewProduct({ technicalSheet: event.target.value })} placeholder="URL del PDF o carga masiva por ZIP" /></label>
               <label className="admin-check"><input type="checkbox" checked={newProduct.featured} onChange={(event) => updateNewProduct({ featured: event.target.checked })} /> Destacado</label>
             </div>
           </div>
@@ -1554,9 +1554,9 @@ function Cuenta() {
             <span>Nombre: obligatorio.</span>
             <span>Precio visible, precio neto, descuentos y fechas: opcionales.</span>
 
-            <span>CategorÃƒÂ­a: define dÃƒÂ³nde se verÃƒÂ¡ el producto.</span>
+            <span>Categoría: define dónde se verá el producto.</span>
             <span>Medidas: texto corto, ejemplo 200 x 40 x 180 cm o A medida.</span>
-            <span>Descuento: si tiene porcentaje y estÃƒÂ¡ vigente, se verÃƒÂ¡ como etiqueta de oferta.</span>
+            <span>Descuento: si tiene porcentaje y está vigente, se verá como etiqueta de oferta.</span>
           </div>
         </form>
 
@@ -1565,14 +1565,14 @@ function Cuenta() {
             <Images size={20} />
             <div>
               <strong>Foto del producto</strong>
-              <p>La imagen que cargues aquÃƒÂ­ aparece en la tarjeta del producto, en Ã¢â‚¬Å“Destacados de la semanaÃ¢â‚¬Â y en la ficha individual.</p>
+              <p>La imagen que cargues aquí aparece en la tarjeta del producto, en “Destacados de la semana” y en la ficha individual.</p>
             </div>
           </div>
           <div className="admin-help-card">
             <BadgePlus size={20} />
             <div>
               <strong>Producto destacado</strong>
-              <p>Marca la casilla Ã¢â‚¬Å“DestacadoÃ¢â‚¬Â para que ese producto salga en la secciÃƒÂ³n principal del inicio.</p>
+              <p>Marca la casilla “Destacado” para que ese producto salga en la sección principal del inicio.</p>
             </div>
           </div>
         </div>
@@ -1597,7 +1597,7 @@ function Cuenta() {
               <div className="admin-form-grid">
                 <label>ID<input value={product.id} onChange={(event) => updateCollection('products', product.id, { id: createSlug(event.target.value) })} /></label>
                 <label>Nombre<input value={product.name} onChange={(event) => updateCollection('products', product.id, { name: event.target.value })} /></label>
-                <label>CategorÃƒÂ­a
+                <label>Categoría
                   <select value={product.categoryId} onChange={(event) => handleProductCategory(product, event.target.value)}>
                     {content.categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
                   </select>
@@ -1612,8 +1612,8 @@ function Cuenta() {
                 <label>Texto oferta<input value={product.discountLabel || ''} onChange={(event) => updateCollection('products', product.id, { discountLabel: event.target.value })} /></label>
                 <label>Inicio oferta<input type="date" value={product.discountStart || ''} onChange={(event) => updateCollection('products', product.id, { discountStart: event.target.value })} /></label>
                 <label>Fin oferta<input type="date" value={product.discountEnd || ''} onChange={(event) => updateCollection('products', product.id, { discountEnd: event.target.value })} /></label>
-                <label className="admin-colspan">DescripciÃƒÂ³n para la ficha<textarea value={product.description || ''} onChange={(event) => updateCollection('products', product.id, { description: event.target.value })} /></label>
-                <label className="admin-colspan">Ficha tÃƒÂ©cnica PDF<input value={product.technicalSheet || ''} onChange={(event) => updateCollection('products', product.id, { technicalSheet: event.target.value })} placeholder="URL del PDF o carga masiva por ZIP" /></label>
+                <label className="admin-colspan">Descripción para la ficha<textarea value={product.description || ''} onChange={(event) => updateCollection('products', product.id, { description: event.target.value })} /></label>
+                <label className="admin-colspan">Ficha técnica PDF<input value={product.technicalSheet || ''} onChange={(event) => updateCollection('products', product.id, { technicalSheet: event.target.value })} placeholder="URL del PDF o carga masiva por ZIP" /></label>
                 <label className="admin-check"><input type="checkbox" checked={product.featured} onChange={(event) => updateCollection('products', product.id, { featured: event.target.checked })} /> Destacado</label>
               </div>
 
@@ -1634,9 +1634,9 @@ function Cuenta() {
         <div className="admin-panel__header">
           <div>
             <p className="admin-kicker">Blog</p>
-            <h1>Administrar artÃƒÂ­culos</h1>
+            <h1>Administrar artículos</h1>
           </div>
-          <button className="button button--primary" onClick={addBlogPost}><BadgePlus size={16} /> Nuevo artÃƒÂ­culo</button>
+          <button className="button button--primary" onClick={addBlogPost}><BadgePlus size={16} /> Nuevo artículo</button>
         </div>
 
         <div className="admin-editor-list">
@@ -1648,17 +1648,17 @@ function Cuenta() {
                   Cargar imagen
                   <input type="file" accept="image/*" onChange={(event) => handleImageUpload('blogPosts', post.id, event)} />
                 </label>
-                {renderCardSave('Guardar artÃƒÂ­culo', () => saveExistingBlogPost(post))}
+                {renderCardSave('Guardar artículo', () => saveExistingBlogPost(post))}
               </div>
 
               <div className="admin-form-grid admin-form-grid--wide">
                 <label>ID<input value={post.id} onChange={(event) => updateCollection('blogPosts', post.id, { id: createSlug(event.target.value) })} /></label>
-                <label>Etiqueta opcional<input value={post.tag || ''} onChange={(event) => updateCollection('blogPosts', post.id, { tag: event.target.value })} placeholder="Ej: Consejos, InspiraciÃƒÂ³n" /></label>
+                <label>Etiqueta opcional<input value={post.tag || ''} onChange={(event) => updateCollection('blogPosts', post.id, { tag: event.target.value })} placeholder="Ej: Consejos, Inspiración" /></label>
                 <label>Fecha<input value={post.date} onChange={(event) => updateCollection('blogPosts', post.id, { date: event.target.value })} /></label>
-                <label>TÃƒÂ­tulo<input value={post.title} onChange={(event) => updateCollection('blogPosts', post.id, { title: event.target.value })} /></label>
+                <label>Título<input value={post.title} onChange={(event) => updateCollection('blogPosts', post.id, { title: event.target.value })} /></label>
                 <div className="admin-colspan admin-source-list">
                   <div className="admin-source-list__header">
-                    <span>Fuentes originales del artÃƒÂ­culo</span>
+                    <span>Fuentes originales del artículo</span>
                     <button
                       type="button"
                       className="admin-inline-action"
@@ -1694,8 +1694,8 @@ function Cuenta() {
                   ))}
                 </div>
                 <label className="admin-check"><input type="checkbox" checked={post.trending === true} onChange={(event) => updateCollection('blogPosts', post.id, { trending: event.target.checked })} /> Marcar como tendencia</label>
-                <label className="admin-check"><input type="checkbox" checked={post.active !== false} onChange={(event) => updateCollection('blogPosts', post.id, { active: event.target.checked })} /> Visible en pÃƒÂ¡gina</label>
-                <label className="admin-colspan">DescripciÃƒÂ³n<textarea value={post.desc} onChange={(event) => updateCollection('blogPosts', post.id, { desc: event.target.value })} /></label>
+                <label className="admin-check"><input type="checkbox" checked={post.active !== false} onChange={(event) => updateCollection('blogPosts', post.id, { active: event.target.checked })} /> Visible en página</label>
+                <label className="admin-colspan">Descripción<textarea value={post.desc} onChange={(event) => updateCollection('blogPosts', post.id, { desc: event.target.value })} /></label>
                 <label className="admin-colspan">Contenido largo<textarea value={post.body} onChange={(event) => updateCollection('blogPosts', post.id, { body: event.target.value })} /></label>
               </div>
 
@@ -1715,26 +1715,26 @@ function Cuenta() {
       <div className="admin-panel">
         <div className="admin-panel__header">
           <div>
-            <p className="admin-kicker">CategorÃƒÂ­as</p>
-            <h1>Editar lÃƒÂ­neas de producto</h1>
-            <p>Estas imÃƒÂ¡genes son las fotos grandes de cada lÃƒÂ­nea: se ven en el inicio, en el menÃƒÂº de productos y en el hero de la categorÃƒÂ­a.</p>
+            <p className="admin-kicker">Categorías</p>
+            <h1>Editar líneas de producto</h1>
+            <p>Estas imágenes son las fotos grandes de cada línea: se ven en el inicio, en el menú de productos y en el hero de la categoría.</p>
           </div>
-          <button className="button button--primary" onClick={addCategory}><BadgePlus size={16} /> Nueva categorÃƒÂ­a</button>
+          <button className="button button--primary" onClick={addCategory}><BadgePlus size={16} /> Nueva categoría</button>
         </div>
 
         <div className="admin-help-grid">
           <div className="admin-help-card">
             <Images size={20} />
             <div>
-              <strong>Imagen de categorÃƒÂ­a</strong>
-              <p>ÃƒÅ¡sala para Centros de entretenimiento, Closets, Cocinas y las demÃƒÂ¡s lÃƒÂ­neas. No es la foto de un producto especÃƒÂ­fico.</p>
+              <strong>Imagen de categoría</strong>
+              <p>Úsala para Centros de entretenimiento, Closets, Cocinas y las demás líneas. No es la foto de un producto específico.</p>
             </div>
           </div>
           <div className="admin-help-card">
             <Tags size={20} />
             <div>
-              <strong>Nombre y descripciÃƒÂ³n</strong>
-              <p>El nombre aparece en el menÃƒÂº Productos; la descripciÃƒÂ³n aparece en el hero de la pÃƒÂ¡gina de esa categorÃƒÂ­a.</p>
+              <strong>Nombre y descripción</strong>
+              <p>El nombre aparece en el menú Productos; la descripción aparece en el hero de la página de esa categoría.</p>
             </div>
           </div>
         </div>
@@ -1748,18 +1748,18 @@ function Cuenta() {
                   Cargar imagen
                   <input type="file" accept="image/*" onChange={(event) => handleImageUpload('categories', category.id, event)} />
                 </label>
-                {renderCardSave('Guardar categorÃƒÂ­a', () => saveExistingCategory(category))}
+                {renderCardSave('Guardar categoría', () => saveExistingCategory(category))}
               </div>
 
               <div className="admin-form-grid">
-                <label>ID<input value={category.id} readOnly title="El ID se genera al crear la categorÃƒÂ­a y no debe cambiarse." /></label>
+                <label>ID<input value={category.id} readOnly title="El ID se genera al crear la categoría y no debe cambiarse." /></label>
                 <label>Nombre<input value={category.name} onChange={(event) => updateCollection('categories', category.id, { name: event.target.value })} /></label>
                 <label>Icono
                   <select value={category.icon} onChange={(event) => updateCollection('categories', category.id, { icon: event.target.value })}>
                     {iconOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                   </select>
                 </label>
-                <label className="admin-colspan">DescripciÃƒÂ³n<textarea value={category.description} onChange={(event) => updateCollection('categories', category.id, { description: event.target.value })} /></label>
+                <label className="admin-colspan">Descripción<textarea value={category.description} onChange={(event) => updateCollection('categories', category.id, { description: event.target.value })} /></label>
               </div>
 
               <div className="admin-card-actions">
@@ -1782,7 +1782,7 @@ function Cuenta() {
           <div>
             <p className="admin-kicker">Carga masiva</p>
             <h1>Importar desde Excel o CSV</h1>
-            <p>Exporta una plantilla, edÃƒÂ­tala en Excel y vuelve a cargarla como CSV. Las imÃƒÂ¡genes que subas desde el panel quedan guardadas en <strong>uploads</strong> del backend.</p>
+            <p>Exporta una plantilla, edítala en Excel y vuelve a cargarla como CSV. Las imágenes que subas desde el panel quedan guardadas en <strong>uploads</strong> del backend.</p>
           </div>
           <div className="admin-header-actions">
             <button className="button button--primary" onClick={() => importCsvText()}><Save size={16} /> Guardar CSV</button>
@@ -1808,11 +1808,11 @@ function Cuenta() {
           {bulkType === 'products' && (
             <>
               <label className="admin-upload-csv">
-                <Images size={16} /> Cargar ZIP de imÃƒÂ¡genes
+                <Images size={16} /> Cargar ZIP de imágenes
                 <input type="file" accept=".zip,application/zip" onChange={handleProductImagesZip} />
               </label>
               <label className="admin-upload-csv">
-                <FileText size={16} /> Cargar ZIP de fichas tÃƒÂ©cnicas
+                <FileText size={16} /> Cargar ZIP de fichas técnicas
                 <input type="file" accept=".zip,application/zip" onChange={handleProductTechnicalSheetsZip} />
               </label>
             </>
@@ -1826,15 +1826,15 @@ function Cuenta() {
 
         {bulkType === 'products' && (
           <div className="admin-csv-schema">
-            <strong>ImÃƒÂ¡genes masivas:</strong>
-            <span>Sube un ZIP con fotos llamadas igual que el ID del producto, por ejemplo <code>centro-tv-nogal-001.jpg</code>. El sistema las asigna automÃƒÂ¡ticamente.</span>
+            <strong>Imágenes masivas:</strong>
+            <span>Sube un ZIP con fotos llamadas igual que el ID del producto, por ejemplo <code>centro-tv-nogal-001.jpg</code>. El sistema las asigna automáticamente.</span>
           </div>
         )}
 
         {bulkType === 'products' && (
           <div className="admin-csv-schema">
-            <strong>Fichas tÃƒÂ©cnicas masivas:</strong>
-            <span>Sube un ZIP con PDFs llamados igual que el ID del producto, por ejemplo <code>centro-tv-nogal-001.pdf</code>. El botÃƒÂ³n Ver ficha tÃƒÂ©cnica aparecerÃƒÂ¡ automÃƒÂ¡ticamente.</span>
+            <strong>Fichas técnicas masivas:</strong>
+            <span>Sube un ZIP con PDFs llamados igual que el ID del producto, por ejemplo <code>centro-tv-nogal-001.pdf</code>. El botón Ver ficha técnica aparecerá automáticamente.</span>
           </div>
         )}
 
@@ -1863,21 +1863,21 @@ function Cuenta() {
               <p className="cuenta-panel__eyebrow">ADMIN Formas Interiores</p>
               <h2>Acceso privado al gestor de contenido.</h2>
               <p>
-                Inicia sesiÃƒÂ³n para crear productos, administrar artÃƒÂ­culos, subir imÃƒÂ¡genes y hacer cargas masivas.
+                Inicia sesión para crear productos, administrar artículos, subir imágenes y hacer cargas masivas.
               </p>
               <div className="cuenta-panel__list">
-                <span><Package size={18} /> Productos y categorÃƒÂ­as</span>
+                <span><Package size={18} /> Productos y categorías</span>
                 <span><Newspaper size={18} /> Blog y contenido</span>
-                <span><FileJson size={18} /> ImportaciÃƒÂ³n CSV</span>
+                <span><FileJson size={18} /> Importación CSV</span>
               </div>
             </aside>
 
             <div className="cuenta-card cuenta-card--admin">
               <div className="cuenta-icon cuenta-icon--admin"><Lock size={30} /></div>
               <p className="cuenta-admin-label">Acceso administrativo</p>
-              <h1>Iniciar sesiÃƒÂ³n</h1>
+              <h1>Iniciar sesión</h1>
               <p className="cuenta-sub">
-                Usa las credenciales internas para entrar al panel de administraciÃƒÂ³n.
+                Usa las credenciales internas para entrar al panel de administración.
               </p>
 
               <form onSubmit={handleLogin} className="cuenta-form">
@@ -1896,7 +1896,7 @@ function Cuenta() {
                   <Lock size={18} />
                   <input
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="ContraseÃƒÂ±a"
+                    placeholder="Contraseña"
                     autoComplete="current-password"
                     value={loginForm.password}
                     onChange={(event) => setLoginForm((current) => ({ ...current, password: event.target.value }))}
@@ -1905,7 +1905,7 @@ function Cuenta() {
                   <button
                     type="button"
                     className="password-toggle"
-                    aria-label={showPassword ? 'Ocultar contraseÃƒÂ±a' : 'Ver contraseÃƒÂ±a'}
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
                     onClick={() => setShowPassword((current) => !current)}
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -1920,7 +1920,7 @@ function Cuenta() {
               </form>
 
               <p className="cuenta-security-note">
-                Acceso temporal local. La autenticaciÃƒÂ³n segura se conectarÃƒÂ¡ al backend en Spring Boot.
+                Acceso temporal local. La autenticación segura se conectará al backend en Spring Boot.
               </p>
             </div>
           </div>
@@ -1953,7 +1953,7 @@ function Cuenta() {
         </nav>
         <button className="admin-logout" onClick={handleLogout}>
           <LogOut size={18} />
-          Cerrar sesiÃƒÂ³n
+          Cerrar sesión
         </button>
       </aside>
 
@@ -1966,5 +1966,3 @@ function Cuenta() {
 }
 
 export default Cuenta
-
-

@@ -150,7 +150,7 @@ export function useSiteContent() {
           },
         }))
       } catch {
-        // Si el backend no estÃ¡ prendido, la web usa el contenido local.
+        // Si el backend no está prendido, la web usa el contenido local.
       }
     }
 
