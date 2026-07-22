@@ -4,7 +4,6 @@ import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { addCartItem } from '../utils/cart'
-import { getActiveDiscount } from '../utils/discounts'
 import { API_BASE_URL } from '../api/cmsApi'
 import { optimizeImage, preloadImage } from '../utils/images'
 
@@ -54,7 +53,6 @@ function ProductDetail() {
   }
 
   const category = categories.find((item) => item.id === product.categoryId)
-  const discount = getActiveDiscount(product)
   const related = products.filter((item) => item.categoryId === product.categoryId && item.id !== product.id && item.active !== false)
   const visibleRelated = related.slice(relatedStart, relatedStart + relatedWindowSize)
   const canGoBack = relatedStart > 0
@@ -87,7 +85,6 @@ function ProductDetail() {
       <section className="product-hero-detail">
         <div className="product-hero-detail__inner">
           <div className="product-gallery">
-            {discount && <span className="discount-badge discount-badge--detail">{discount.label}</span>}
             <ProductMainImage product={product} />
           </div>
 
@@ -183,28 +180,23 @@ function ProductDetail() {
           </div>
 
           <div className="product-related__track">
-            {visibleRelated.map((item) => {
-              const relatedDiscount = getActiveDiscount(item)
-
-              return (
-                <Link
-                  className="cat-product-card"
-                  key={item.id}
-                  to={`/productos/${item.id}`}
-                  aria-label={`Ver producto ${item.name}`}
-                >
-                  <div className="cat-product-card__image">
-                    {relatedDiscount && <span className="discount-badge">{relatedDiscount.label}</span>}
-                    {item.image ? <img src={optimizeImage(item.image, { width: 700 })} alt={item.name} loading="lazy" /> : <span>Foto pendiente</span>}
-                  </div>
-                  <div className="cat-product-card__body">
-                    <h3>{item.name}</h3>
-                    <p>{item.size}</p>
-                    <span className="cat-product-card__btn">Ver producto</span>
-                  </div>
-                </Link>
-              )
-            })}
+            {visibleRelated.map((item) => (
+              <Link
+                className="cat-product-card"
+                key={item.id}
+                to={`/productos/${item.id}`}
+                aria-label={`Ver producto ${item.name}`}
+              >
+                <div className="cat-product-card__image">
+                  {item.image ? <img src={optimizeImage(item.image, { width: 700 })} alt={item.name} loading="lazy" /> : <span>Foto pendiente</span>}
+                </div>
+                <div className="cat-product-card__body">
+                  <h3>{item.name}</h3>
+                  <p>{item.size}</p>
+                  <span className="cat-product-card__btn">Ver producto</span>
+                </div>
+              </Link>
+            ))}
           </div>
         </section>
       )}

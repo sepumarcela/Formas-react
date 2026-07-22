@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom'
+﻿import { Link } from 'react-router-dom'
 import { useSiteContent } from '../../hooks/useSiteContent'
-import { getActiveDiscount } from '../../utils/discounts'
 import { optimizeImage } from '../../utils/images'
 
 function FeaturedProducts() {
@@ -17,41 +16,28 @@ function FeaturedProducts() {
       </div>
 
       <div className="product-grid">
-        {featuredProducts.map((product) => {
-          const discount = getActiveDiscount(product)
+        {featuredProducts.map((product) => (
+          <Link
+            className="product-card"
+            key={product.id}
+            to={`/productos/${product.id}`}
+            aria-label={`Ver producto ${product.name}`}
+          >
+            <div className="product-card__image">
+              {product.image ? (
+                <img src={optimizeImage(product.image, { width: 700 })} alt={product.name} loading="lazy" />
+              ) : (
+                <span>Foto pendiente</span>
+              )}
+            </div>
 
-          return (
-            <Link
-              className="product-card"
-              key={product.id}
-              to={`/productos/${product.id}`}
-              aria-label={`Ver producto ${product.name}`}
-            >
-              <div className="product-card__image">
-                {discount && <span className="discount-badge">{discount.label}</span>}
-                {product.image ? (
-                  <img src={optimizeImage(product.image, { width: 700 })} alt={product.name} loading="lazy" />
-                ) : (
-                  <span>Foto pendiente</span>
-                )}
-              </div>
-
-              <div className="product-card__body">
-                <p>{product.category}</p>
-                <h3>{product.name}</h3>
-                {discount ? (
-                  <div className="product-price-stack">
-                    <span>{discount.originalPrice}</span>
-                    <strong>{discount.finalPrice}</strong>
-                  </div>
-                ) : (
-                  <strong>{product.price}</strong>
-                )}
-                <span className="product-card__cta">Cotizar</span>
-              </div>
-            </Link>
-          )
-        })}
+            <div className="product-card__body">
+              <p>{product.category}</p>
+              <h3>{product.name}</h3>
+              <span className="product-card__cta">Cotizar</span>
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   )

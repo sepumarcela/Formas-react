@@ -1,8 +1,7 @@
-import { useEffect } from 'react'
+﻿import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone, PiToolboxDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
-import { getActiveDiscount } from '../utils/discounts'
 import { optimizeImage, preloadImage } from '../utils/images'
 
 const badges = [
@@ -69,36 +68,23 @@ function CategoryDetail() {
 
       <section style={{ background: 'var(--color-bg)' }}>
         <div className="cat-products-grid">
-          {categoryProducts.map((product) => {
-            const discount = getActiveDiscount(product)
-
-            return (
-              <Link
-                className="cat-product-card"
-                key={product.id}
-                to={`/productos/${product.id}`}
-                aria-label={`Ver producto ${product.name}`}
-              >
-                <div className="cat-product-card__image">
-                  {discount && <span className="discount-badge">{discount.label}</span>}
-                  {product.image ? <img src={optimizeImage(product.image, { width: 700 })} alt={product.name} loading="lazy" /> : <span>Foto pendiente</span>}
-                </div>
-                <div className="cat-product-card__body">
-                  <h3>{product.name}</h3>
-                  {discount ? (
-                    <div className="product-price-stack">
-                      <span>{discount.originalPrice}</span>
-                      <strong>{discount.finalPrice}</strong>
-                    </div>
-                  ) : (
-                    <strong>{product.price}</strong>
-                  )}
-                  <p>{product.size}</p>
-                  <span className="cat-product-card__btn">Ver producto</span>
-                </div>
-              </Link>
-            )
-          })}
+          {categoryProducts.map((product) => (
+            <Link
+              className="cat-product-card"
+              key={product.id}
+              to={`/productos/${product.id}`}
+              aria-label={`Ver producto ${product.name}`}
+            >
+              <div className="cat-product-card__image">
+                {product.image ? <img src={optimizeImage(product.image, { width: 700 })} alt={product.name} loading="lazy" /> : <span>Foto pendiente</span>}
+              </div>
+              <div className="cat-product-card__body">
+                <h3>{product.name}</h3>
+                <p>{product.size}</p>
+                <span className="cat-product-card__btn">Ver producto</span>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
     </main>
