@@ -100,18 +100,6 @@ function ProductDetail() {
             <h1>{product.name}</h1>
             <p className="product-summary__desc">{description}</p>
 
-            <div className="product-price-box">
-              <span>{discount ? `Oferta vigente: ${discount.percent}%` : 'Precio referencial'}</span>
-              {discount ? (
-                <>
-                  <del>{discount.originalPrice}</del>
-                  <strong>{discount.finalPrice}</strong>
-                </>
-              ) : (
-                <strong>{product.price || 'Cotizar'}</strong>
-              )}
-            </div>
-
             <div className="product-feature-row">
               <span><PiRulerDuotone size={16} /> {product.size || 'A medida'}</span>
               <span><PiSketchLogoDuotone size={16} /> Personalizable</span>
@@ -211,14 +199,6 @@ function ProductDetail() {
                   </div>
                   <div className="cat-product-card__body">
                     <h3>{item.name}</h3>
-                    {relatedDiscount ? (
-                      <div className="product-price-stack">
-                        <span>{relatedDiscount.originalPrice}</span>
-                        <strong>{relatedDiscount.finalPrice}</strong>
-                      </div>
-                    ) : (
-                      <strong>{item.price}</strong>
-                    )}
                     <p>{item.size}</p>
                     <span className="cat-product-card__btn">Ver producto</span>
                   </div>
