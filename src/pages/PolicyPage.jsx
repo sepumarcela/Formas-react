@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+﻿import { Link, useParams } from 'react-router-dom'
 import { ShieldCheck, Sparkles } from 'lucide-react'
 import { useSiteContent } from '../hooks/useSiteContent'
 
@@ -50,10 +50,135 @@ const cookiePolicySections = [
   },
 ]
 
+function renderInlineMarkdown(text, keyPrefix = 'inline') {
+  const source = String(text || '')
+  const pattern = /(\*\*([^*]+)\*\*)|(\[([^\]]+)\]\(([^)]+)\))/g
+  const parts = []
+  let lastIndex = 0
+  let match
+
+  while ((match = pattern.exec(source)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(source.slice(lastIndex, match.index))
+    }
+
+    if (match[2]) {
+      parts.push(<strong key={keyPrefix + '-strong-' + match.index}>{match[2]}</strong>)
+    } else if (match[4] && match[5]) {
+      parts.push(
+        <a key={keyPrefix + '-link-' + match.index} href={match[5]} target="_blank" rel="noreferrer">
+          {match[4]}
+        </a>,
+      )
+    }
+
+    lastIndex = pattern.lastIndex
+  }
+
+  if (lastIndex < source.length) {
+    parts.push(source.slice(lastIndex))
+  }
+
+  return parts.length ? parts : source
+}
+
+function MarkdownContent({ content }) {
+  const lines = String(content || '').split(/\r?\n/)
+  const nodes = []
+  let paragraphLines = []
+  let listItems = []
+  let listType = null
+
+  const flushParagraph = () => {
+    if (!paragraphLines.length) return
+    const text = paragraphLines.join(' ').replace(/\s+/g, ' ').trim()
+    if (text) {
+      nodes.push(<p key={'p-' + nodes.length}>{renderInlineMarkdown(text, 'p-' + nodes.length)}</p>)
+    }
+    paragraphLines = []
+  }
+
+  const flushList = () => {
+    if (!listItems.length) return
+    const Tag = listType === 'ol' ? 'ol' : 'ul'
+    nodes.push(
+      <Tag key={'list-' + nodes.length}>
+        {listItems.map((item, index) => (
+          <li key={'item-' + index}>{renderInlineMarkdown(item, 'li-' + nodes.length + '-' + index)}</li>
+        ))}
+      </Tag>,
+    )
+    listItems = []
+    listType = null
+  }
+
+  lines.forEach((rawLine, index) => {
+    const line = rawLine.trim()
+
+    if (!line) {
+      const nextLine = lines.slice(index + 1).find((candidate) => candidate.trim())?.trim() || ''
+      const nextIsList = /^([-*•])\s+/.test(nextLine) || /^\d+\.\s+/.test(nextLine)
+      if (listItems.length && nextIsList) return
+      flushParagraph()
+      flushList()
+      return
+    }
+
+    if (/^(-{3,}|\*{3,})$/.test(line)) {
+      flushParagraph()
+      flushList()
+      nodes.push(<hr key={'hr-' + nodes.length} className="policy-content__divider" />)
+      return
+    }
+
+    const heading = line.match(/^(#{1,4})\s+(.+)$/)
+    if (heading) {
+      flushParagraph()
+      flushList()
+      const level = heading[1].length
+      const text = heading[2]
+      if (level <= 2) {
+        nodes.push(<h2 key={'h2-' + nodes.length}>{renderInlineMarkdown(text, 'h2-' + nodes.length)}</h2>)
+      } else if (level === 3) {
+        nodes.push(<h3 key={'h3-' + nodes.length}>{renderInlineMarkdown(text, 'h3-' + nodes.length)}</h3>)
+      } else {
+        nodes.push(<h4 key={'h4-' + nodes.length}>{renderInlineMarkdown(text, 'h4-' + nodes.length)}</h4>)
+      }
+      return
+    }
+
+    const unordered = line.match(/^[-*•]\s+(.+)$/)
+    if (unordered) {
+      flushParagraph()
+      if (listType && listType !== 'ul') flushList()
+      listType = 'ul'
+      listItems.push(unordered[1])
+      return
+    }
+
+    const ordered = line.match(/^\d+\.\s+(.+)$/)
+    if (ordered) {
+      flushParagraph()
+      if (listType && listType !== 'ol') flushList()
+      listType = 'ol'
+      listItems.push(ordered[1])
+      return
+    }
+
+    flushList()
+    paragraphLines.push(line)
+  })
+
+  flushParagraph()
+  flushList()
+
+  return nodes.length ? nodes : <p>Contenido pendiente.</p>
+}
+
 function PolicyContent({ policy, policySlug }) {
   if (policySlug === 'cookies') {
     return (
-      <div className="policy-content">
+      <div className="policy-content policy-content--markdown">
         <p>
           En Formas Interiores usamos cookies y tecnologias similares para ofrecer una navegacion segura, mejorar la experiencia del usuario y entender como se utiliza nuestro sitio web.
         </p>
@@ -72,14 +197,12 @@ function PolicyContent({ policy, policySlug }) {
     )
   }
 
-  const paragraphs = String(policy.content || '').split('\n').map((paragraph) => paragraph.trim()).filter(Boolean)
   return (
-    <div className="policy-content">
-      {paragraphs.length ? paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>) : <p>Contenido pendiente.</p>}
+    <div className="policy-content policy-content--markdown">
+      <MarkdownContent content={policy.content} />
     </div>
   )
 }
-
 function PolicyPage() {
   const { policySlug } = useParams()
   const [{ pageContent }] = useSiteContent()
@@ -155,3 +278,4 @@ function PolicyPage() {
 }
 
 export default PolicyPage
+

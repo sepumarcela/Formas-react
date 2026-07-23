@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════
    FORMAS — global.css  ·  Diseña tu estilo
    ═══════════════════════════════════════════ */
 
@@ -7953,5 +7953,100 @@ section {
 
   .cookie-consent__button {
     width: 100%;
+  }
+}
+/* POLICY MARKDOWN COMPACT OVERRIDE */
+.policy-content--markdown {
+  color: #2b2724;
+}
+
+.policy-content--markdown h2,
+.policy-content--markdown h3,
+.policy-content--markdown h4 {
+  color: #18110f;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.policy-content--markdown h2 {
+  margin: 22px 0 10px;
+  font-size: clamp(24px, 2.2vw, 32px);
+  line-height: 1.15;
+}
+
+.policy-content--markdown h3 {
+  margin: 18px 0 8px;
+  font-size: clamp(19px, 1.55vw, 24px);
+  line-height: 1.2;
+}
+
+.policy-content--markdown h4 {
+  margin: 16px 0 7px;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.policy-content--markdown p,
+.policy-content--markdown li {
+  color: #241f1b;
+  font-size: 17px;
+  line-height: 1.5;
+  font-weight: 650;
+}
+
+.policy-content--markdown p {
+  margin: 0 0 12px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.policy-content--markdown ul,
+.policy-content--markdown ol {
+  display: grid;
+  gap: 4px;
+  margin: 6px 0 14px;
+  padding-left: 22px;
+}
+
+.policy-content--markdown strong {
+  color: #18110f;
+  font-weight: 850;
+}
+
+.policy-content--markdown a {
+  color: #9f6746;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.policy-content__divider {
+  border: 0;
+  border-top: 1px solid rgba(176, 122, 86, 0.24);
+  margin: 16px 0;
+}
+
+.policy-content--markdown > :first-child {
+  margin-top: 0;
+}
+
+.policy-content--markdown > :last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .policy-content--markdown h2 {
+    font-size: 24px;
+  }
+
+  .policy-content--markdown h3 {
+    font-size: 19px;
+  }
+
+  .policy-content--markdown p,
+  .policy-content--markdown li {
+    font-size: 16px;
+    line-height: 1.48;
+    text-align: left;
   }
 }
