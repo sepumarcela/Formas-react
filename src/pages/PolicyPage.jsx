@@ -1,4 +1,4 @@
-﻿import { Link, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { ShieldCheck, Sparkles } from 'lucide-react'
 import { useSiteContent } from '../hooks/useSiteContent'
 
@@ -176,7 +176,9 @@ function MarkdownContent({ content }) {
 }
 
 function PolicyContent({ policy, policySlug }) {
-  if (policySlug === 'cookies') {
+  const editableContent = typeof policy?.content === 'string' ? policy.content.trim() : ''
+
+  if (policySlug === 'cookies' && !editableContent) {
     return (
       <div className="policy-content policy-content--markdown">
         <p>
