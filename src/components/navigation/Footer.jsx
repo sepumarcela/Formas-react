@@ -25,6 +25,10 @@ function Footer() {
   const logoImage = pageContent.homeProducts?.logoImage
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
   const footerPolicies = (pageContent.footerPolicies?.policies || []).filter((policy) => policy.active !== false)
+  const contactContent = pageContent.contacto || {}
+  const footerEmail = contactContent.email || 'contacto@formasinteriores.com'
+  const footerPhone = contactContent.phone || '+57 316 973 3417'
+  const footerAddress = contactContent.address || 'Itagüí, Antioquia, Colombia'
 
   return (
     <footer className="site-footer">
@@ -106,15 +110,15 @@ function Footer() {
         <div className="site-footer__col site-footer__col--contact">
           <p className="site-footer__heading">Contacto</p>
           <ul>
-            <li>contacto@formasinteriores.com</li>
-            <li>+57 316 973 3417</li>
-            <li>{'Medell\u00edn, Colombia'}</li>
+            <li>{footerEmail}</li>
+            <li>{footerPhone}</li>
+            <li>{footerAddress}</li>
           </ul>
         </div>
       </div>
 
       <div className="site-footer__bottom">
-        {'\u00a9 2026 Formas Interiores \u00b7 Dise\u00f1a tu estilo \u00b7 Medell\u00edn, Colombia'}
+        {'\u00a9 2026 Formas Interiores \u00b7 Dise\u00f1a tu estilo \u00b7 ' + footerAddress}
       </div>
     </footer>
   )
