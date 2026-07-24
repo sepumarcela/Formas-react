@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react'
 import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { addCartItem } from '../utils/cart'
@@ -10,27 +10,84 @@ import { optimizeImage, preloadImage } from '../utils/images'
 const relatedWindowSize = 3
 
 function ProductMainImage({ product }) {
+  const [viewerOpen, setViewerOpen] = useState(false)
+  const [isZoomed, setIsZoomed] = useState(false)
   const imageSrc = product.image ? optimizeImage(product.image, { width: 1400 }) : ''
+  const viewerImageSrc = product.image ? optimizeImage(product.image, { width: 2200 }) : ''
 
   useEffect(() => {
     preloadImage(imageSrc)
   }, [imageSrc])
 
+  useEffect(() => {
+    if (!viewerOpen) return undefined
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setViewerOpen(false)
+        setIsZoomed(false)
+      }
+    }
+
+    document.body.classList.add('modal-open')
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.classList.remove('modal-open')
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [viewerOpen])
+
+  const closeViewer = () => {
+    setViewerOpen(false)
+    setIsZoomed(false)
+  }
+
   return product.image ? (
-    <img src={imageSrc} alt={product.name} loading="eager" decoding="async" fetchPriority="high" />
+    <>
+      <button
+        type="button"
+        className="product-gallery__image-button"
+        onClick={() => setViewerOpen(true)}
+        aria-label={`Ampliar imagen de ${product.name}`}
+      >
+        <img
+          className="product-gallery__image"
+          src={imageSrc}
+          alt={product.name}
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          width="1400"
+          height="1400"
+        />
+        <span className="product-gallery__zoom-hint" aria-hidden="true">
+          <ZoomIn size={18} />
+          Ver imagen
+        </span>
+      </button>
+
+      {viewerOpen && (
+        <div className="product-image-viewer" role="dialog" aria-modal="true" aria-label={`Imagen ampliada de ${product.name}`}>
+          <button className="product-image-viewer__backdrop" type="button" aria-label="Cerrar imagen" onClick={closeViewer} />
+          <div className={`product-image-viewer__panel${isZoomed ? ' product-image-viewer__panel--zoomed' : ''}`}>
+            <div className="product-image-viewer__toolbar">
+              <button type="button" onClick={() => setIsZoomed((current) => !current)}>
+                <ZoomIn size={18} />
+                {isZoomed ? 'Ajustar' : 'Zoom'}
+              </button>
+              <button type="button" onClick={closeViewer} aria-label="Cerrar imagen">
+                <X size={22} />
+              </button>
+            </div>
+            <img src={viewerImageSrc} alt={product.name} className="product-image-viewer__image" />
+          </div>
+        </div>
+      )}
+    </>
   ) : (
     <div className="product-gallery__placeholder">Foto pendiente</div>
   )
-}
-
-function technicalSheetUrl(value) {
-  if (!value) return ''
-  const cleanValue = value.split('?')[0]
-  if (cleanValue.includes('/api/technical-sheets/')) return value
-  if (!cleanValue.toLowerCase().endsWith('.pdf')) return value
-
-  const fileName = cleanValue.split('/').filter(Boolean).pop()
-  return fileName ? `${API_BASE_URL}/api/technical-sheets/${encodeURIComponent(decodeURIComponent(fileName))}` : value
 }
 
 function ProductDetail() {
