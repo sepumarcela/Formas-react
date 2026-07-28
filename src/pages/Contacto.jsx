@@ -27,13 +27,13 @@ const spaceOptions = [
 ]
 
 const investmentRanges = {
-  'Centro de entretenimiento / TV': '$1.890.000 - $4.100.000',
-  'Centro de estudio': '$5.200.000 - $8.500.000',
-  'Cocina integral': '$8.500.000 - $60.000.000',
-  Closet: '$4.500.000 - $18.000.000',
-  'Mueble de baño': '$2.000.000 - $4.800.000',
-  Biblioteca: '$2.500.000 - $7.800.000',
-  Repisas: '$1.200.000 - $3.100.000',
+  'Centro de entretenimiento / TV': { min: 1890000, max: 4100000 },
+  'Centro de estudio': { min: 5200000, max: 8500000 },
+  'Cocina integral': { min: 8500000, max: 60000000 },
+  Closet: { min: 4500000, max: 18000000 },
+  'Mueble de ba\u00f1o': { min: 2000000, max: 4800000 },
+  Biblioteca: { min: 2500000, max: 7800000 },
+  Repisas: { min: 1200000, max: 3100000 },
 }
 
 const locationOptions = [
@@ -105,6 +105,19 @@ function formatBudget(value) {
   return digits ? new Intl.NumberFormat('es-CO').format(Number(digits)) : ''
 }
 
+function parseBudget(value) {
+  return Number(String(value || '').replace(/\D/g, '')) || 0
+}
+
+function formatCurrency(value) {
+  return `$${new Intl.NumberFormat('es-CO').format(value)}`
+}
+
+function formatInvestmentRange(range) {
+  if (!range) return 'A definir con uno de nuestros asesores'
+  return `Desde ${formatCurrency(range.min)} hasta ${formatCurrency(range.max)}`
+}
+
 function Contacto() {
   const [{ pageContent }] = useSiteContent()
   const page = pageContent.contacto
@@ -120,11 +133,22 @@ function Contacto() {
   )
 
   const selectedInvestmentRanges = useMemo(() => (
-    formData.spaces.map((space) => ({
-      space,
-      range: investmentRanges[space] || 'A definir con uno de nuestros asesores',
-    }))
+    formData.spaces.map((space) => {
+      const range = investmentRanges[space]
+      return {
+        space,
+        rangeLabel: formatInvestmentRange(range),
+        minimum: range?.min || 0,
+      }
+    })
   ), [formData.spaces])
+  const minimumInvestment = selectedInvestmentRanges
+    .reduce((total, item) => total + item.minimum, 0)
+  const enteredInvestment = parseBudget(formData.budget)
+  const budgetBelowMinimum = !formData.budgetUnknown
+    && enteredInvestment > 0
+    && minimumInvestment > 0
+    && enteredInvestment < minimumInvestment
 
   const progress = ((step + 1) / TOTAL_STEPS) * 100
 
@@ -150,7 +174,10 @@ function Contacto() {
         return formData.spaces.length > 0
           && (!formData.spaces.includes('Otro') || Boolean(formData.otherSpace.trim()))
       case 1:
-        return formData.budgetUnknown || Boolean(formData.budget.replace(/\D/g, ''))
+        return formData.budgetUnknown || (
+          enteredInvestment > 0
+          && enteredInvestment >= minimumInvestment
+        )
       case 2:
         return Boolean(
           formData.name.trim()
@@ -201,7 +228,7 @@ function Contacto() {
       ? 'Aún no tiene un presupuesto definido'
       : `$${formData.budget}`
     const referenceRanges = selectedInvestmentRanges
-      .map((item) => `${item.space}: ${item.range}`)
+      .map((item) => `${item.space}: ${item.rangeLabel}`)
       .join('; ')
 
     return [
@@ -311,16 +338,22 @@ function Contacto() {
         return (
           <>
             <p className="contacto-step-help">
-              Estos son los rangos de referencia para los espacios seleccionados.
+              {'Los valores son precios de referencia desde, seg\u00fan el espacio seleccionado.'}
             </p>
             <div className="contacto-investment-list">
               {selectedInvestmentRanges.map((item) => (
                 <div className="contacto-investment-card" key={item.space}>
                   <span>{item.space}</span>
-                  <strong>{item.range}</strong>
+                  <strong>{item.rangeLabel}</strong>
                 </div>
               ))}
             </div>
+            {minimumInvestment > 0 && (
+              <p className="contacto-investment-minimum">
+                {'La inversi\u00f3n m\u00ednima para tu selecci\u00f3n es '}
+                <strong>{formatCurrency(minimumInvestment)}</strong>
+              </p>
+            )}
             <label className="contacto-field">
               <span>¿Cuánto tienes previsto invertir?</span>
               <div className="contacto-budget-input">
@@ -330,11 +363,18 @@ function Contacto() {
                   inputMode="numeric"
                   value={formData.budget}
                   disabled={formData.budgetUnknown}
+                  aria-invalid={budgetBelowMinimum}
                   onChange={(event) => updateField('budget', formatBudget(event.target.value))}
-                  placeholder="Ej. 8.500.000"
+                  placeholder={minimumInvestment ? `M\u00ednimo ${formatCurrency(minimumInvestment)}` : 'Escribe tu presupuesto'}
                 />
               </div>
             </label>
+            {budgetBelowMinimum && (
+              <p className="contacto-budget-warning" role="alert">
+                {'El valor ingresado no puede ser inferior a '}
+                <strong>{formatCurrency(minimumInvestment)}</strong>.
+              </p>
+            )}
             <label className="contacto-budget-unknown">
               <input
                 type="checkbox"

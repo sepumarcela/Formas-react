@@ -8568,3 +8568,29 @@ section {
     transition: none;
   }
 }
+.contacto-investment-minimum {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(159, 103, 70, 0.09);
+  color: rgba(43, 39, 36, 0.78);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.contacto-investment-minimum strong {
+  color: #7f4c31;
+}
+
+.contacto-budget-warning {
+  margin: 9px 0 0;
+  color: #a33030;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.contacto-form input[aria-invalid='true'] {
+  border-color: #b53e3e;
+  box-shadow: 0 0 0 3px rgba(181, 62, 62, 0.1);
+}
