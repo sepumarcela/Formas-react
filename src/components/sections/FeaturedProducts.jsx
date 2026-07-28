@@ -1,11 +1,12 @@
 ﻿import { Link } from 'react-router-dom'
 import { useSiteContent } from '../../hooks/useSiteContent'
+import { isPublicProductVisible } from '../../config/features'
 import { optimizeImage } from '../../utils/images'
 
 function FeaturedProducts() {
   const [{ products, pageContent }] = useSiteContent()
   const section = pageContent.homeProducts
-  const featuredProducts = products.filter((product) => product.featured && product.active !== false).slice(0, 8)
+  const featuredProducts = products.filter((product) => product.featured && isPublicProductVisible(product)).slice(0, 8)
 
   return (
     <section className="featured-products">

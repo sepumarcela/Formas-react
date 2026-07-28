@@ -3,7 +3,7 @@ import { FaFacebookF, FaInstagram, FaTiktok } from 'react-icons/fa6'
 import { PiBankDuotone, PiCreditCardDuotone, PiLockKeyDuotone, PiSealCheckDuotone, PiShieldCheckDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { optimizeImage } from '../../utils/images'
-import { SHOW_PROJECTS_PAGE } from '../../config/features'
+import { isPublicCategoryVisible, SHOW_PROJECTS_PAGE } from '../../config/features'
 
 const socialLinks = [
   { label: 'Facebook', href: 'https://www.facebook.com/formasinteriores', Icon: FaFacebookF },
@@ -21,7 +21,7 @@ const trustBadges = [
 
 function Footer() {
   const [{ categories, pageContent }] = useSiteContent()
-  const visibleCategories = categories.filter((category) => category.active !== false)
+  const visibleCategories = categories.filter(isPublicCategoryVisible)
   const logoImage = pageContent.homeProducts?.logoImage
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
   const footerPolicies = (pageContent.footerPolicies?.policies || []).filter((policy) => policy.active !== false)

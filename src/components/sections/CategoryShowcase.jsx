@@ -2,6 +2,7 @@
 import { PiBathtubDuotone, PiBedDuotone, PiBookOpenTextDuotone, PiCookingPotDuotone, PiGridFourDuotone, PiRulerDuotone, PiSquaresFourDuotone, PiTelevisionDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { optimizeImage } from '../../utils/images'
+import { isPublicCategoryVisible } from '../../config/features'
 
 const categoryIcons = {
   tv: PiTelevisionDuotone,
@@ -17,7 +18,7 @@ const categoryIcons = {
 function CategoryShowcase() {
   const [{ categories, pageContent }] = useSiteContent()
   const section = pageContent.homeProducts
-  const visibleCategories = categories.filter((category) => category.active !== false)
+  const visibleCategories = categories.filter(isPublicCategoryVisible)
 
   return (
     <section className="category-showcase">

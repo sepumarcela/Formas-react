@@ -6,6 +6,7 @@ import { useSiteContent } from '../hooks/useSiteContent'
 import { addCartItem } from '../utils/cart'
 import { API_BASE_URL } from '../api/cmsApi'
 import { optimizeImage, preloadImage } from '../utils/images'
+import { isPublicProductVisible } from '../config/features'
 
 const relatedWindowSize = 3
 
@@ -38,7 +39,7 @@ function ProductDetail() {
   const navigate = useNavigate()
   const [{ categories, products }] = useSiteContent()
   const [relatedStart, setRelatedStart] = useState(0)
-  const product = products.find((item) => item.id === productId && item.active !== false)
+  const product = products.find((item) => item.id === productId && isPublicProductVisible(item))
 
   if (!product) {
     return (

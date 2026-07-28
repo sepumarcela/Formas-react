@@ -1,4 +1,9 @@
-import { SHOW_PROJECTS_PAGE, SHOW_PROJECT_HIGHLIGHTS } from '../config/features'
+import {
+  isPublicCategoryVisible,
+  isPublicProductVisible,
+  SHOW_PROJECTS_PAGE,
+  SHOW_PROJECT_HIGHLIGHTS,
+} from '../config/features'
 
 export function normalizeSearchText(value) {
   return String(value || '')
@@ -27,8 +32,8 @@ function uniqueByUrl(items) {
 }
 
 export function buildSearchIndex(content) {
-  const categories = (content.categories || []).filter((item) => item.active !== false)
-  const products = (content.products || []).filter((item) => item.active !== false)
+  const categories = (content.categories || []).filter(isPublicCategoryVisible)
+  const products = (content.products || []).filter(isPublicProductVisible)
   const projects = SHOW_PROJECTS_PAGE ? (content.projects || []).filter((item) => item.active !== false) : []
   const projectHighlights = SHOW_PROJECT_HIGHLIGHTS ? (content.projectHighlights || []).filter((item) => item.active !== false) : []
   const blogPosts = (content.blogPosts || []).filter((item) => item.active !== false)

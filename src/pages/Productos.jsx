@@ -15,6 +15,7 @@ import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
 import { printCatalogPdf } from '../utils/catalogPdf'
+import { isPublicCategoryVisible, isPublicProductVisible } from '../config/features'
 
 const categoryIcons = {
   tv: PiTelevisionDuotone,
@@ -30,8 +31,9 @@ const categoryIcons = {
 function Productos() {
   const [{ categories, products, pageContent }] = useSiteContent()
   const page = pageContent.productos
-  const visibleCategories = categories.filter((category) => category.active !== false)
-  const featuredProducts = products.filter((product) => product.featured && product.active !== false).slice(0, 4)
+  const visibleCategories = categories.filter(isPublicCategoryVisible)
+  const visibleProducts = products.filter(isPublicProductVisible)
+  const featuredProducts = visibleProducts.filter((product) => product.featured).slice(0, 4)
 
   return (
     <main className="page">
@@ -45,7 +47,7 @@ function Productos() {
           <button
             type="button"
             className="products-catalog-download"
-            onClick={() => printCatalogPdf({ categories, products, pageContent })}
+            onClick={() => printCatalogPdf({ categories: visibleCategories, products: visibleProducts, pageContent })}
           >
             <Download size={16} />
             Descargar catálogo PDF
@@ -55,7 +57,7 @@ function Productos() {
         <div className="products-category-list">
           {visibleCategories.map((category) => {
             const Icon = categoryIcons[category.icon] || PiGridFourDuotone
-            const categoryProducts = products.filter((product) => product.categoryId === category.id && product.active !== false)
+            const categoryProducts = visibleProducts.filter((product) => product.categoryId === category.id)
 
             return (
               <Link

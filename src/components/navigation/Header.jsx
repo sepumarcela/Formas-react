@@ -8,7 +8,7 @@ import { useSiteContent } from '../../hooks/useSiteContent'
 import { CART_UPDATED_EVENT, loadCartItems } from '../../utils/cart'
 import { optimizeImage } from '../../utils/images'
 import { normalizeSearchText, searchSiteContent } from '../../utils/searchIndex'
-import { SHOW_PROJECTS_PAGE } from '../../config/features'
+import { isPublicCategoryVisible, SHOW_PROJECTS_PAGE } from '../../config/features'
 
 const categoryIcons = {
   tv: PiTelevisionDuotone,
@@ -33,7 +33,7 @@ function Header({ transparent = false }) {
   const logoHeight = pageContent.homeProducts?.logoHeight || 120
   const fallbackLogo = '/favicon-formas-128.png?v=1'
   const productsMenuImage = pageContent.productos?.menuImage
-  const visibleCategories = categories.filter((category) => category.active !== false)
+  const visibleCategories = categories.filter(isPublicCategoryVisible)
   const dropRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()

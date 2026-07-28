@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone, PiToolboxDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage, preloadImage } from '../utils/images'
+import { isPublicCategoryVisible } from '../config/features'
 
 const badges = [
   { icon: PiRulerDuotone, label: 'Dise\u00f1os personalizados' },
@@ -14,7 +15,7 @@ const badges = [
 function CategoryDetail() {
   const { categoryId } = useParams()
   const [{ categories, products }] = useSiteContent()
-  const category = categories.find((item) => item.id === categoryId && item.active !== false)
+  const category = categories.find((item) => item.id === categoryId && isPublicCategoryVisible(item))
   const heroImage = category?.image ? optimizeImage(category.image, { width: 1800 }) : ''
 
   useEffect(() => {
