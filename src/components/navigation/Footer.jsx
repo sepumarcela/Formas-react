@@ -4,6 +4,7 @@ import { PiBankDuotone, PiCreditCardDuotone, PiLockKeyDuotone, PiSealCheckDuoton
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { optimizeImage } from '../../utils/images'
 import { isPublicCategoryVisible, SHOW_PROJECTS_PAGE } from '../../config/features'
+import { COMPANY_ADDRESS } from '../../config/company'
 
 const socialLinks = [
   { label: 'Facebook', href: 'https://www.facebook.com/formasinteriores', Icon: FaFacebookF },
@@ -28,7 +29,7 @@ function Footer() {
   const contactContent = pageContent.contacto || {}
   const footerEmail = contactContent.email || 'contacto@formasinteriores.com'
   const footerPhone = contactContent.phone || '+57 316 973 3417'
-  const footerAddress = contactContent.address || 'Itagüí, Antioquia, Colombia'
+  const footerAddress = contactContent.address || COMPANY_ADDRESS
 
   return (
     <footer className="site-footer">

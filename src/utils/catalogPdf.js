@@ -1,4 +1,5 @@
 ﻿import { optimizeImage } from './images'
+import { COMPANY_ADDRESS } from '../config/company'
 
 const categoryCopy = {
   'centros-entretenimiento': 'Piezas pensadas para integrar tecnología, almacenamiento y atmósfera en el centro social de la casa.',
@@ -328,7 +329,7 @@ function contactMarkup(pageContent) {
   const contact = pageContent?.contacto || {}
   const phone = contact.phone || contact.whatsapp || ''
   const email = contact.email || ''
-  const city = contact.city || 'Medellín, Colombia'
+  const city = contact.address || contact.city || COMPANY_ADDRESS
 
   return `
     <section class="catalog-page catalog-contact">

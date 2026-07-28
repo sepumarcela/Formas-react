@@ -1,3 +1,5 @@
+import { COMPANY_ADDRESS, COMPANY_OFFICE_TITLE } from '../config/company'
+
 export const SITE_CONTENT_KEY = 'formas-site-content-v1'
 export const SITE_CONTENT_EVENT = 'formas-site-content-updated'
 
@@ -45,6 +47,25 @@ function normalizeFormsWhatsapp(value) {
   const normalized = String(value || '').trim()
   return oldWhatsappValues.has(normalized) ? FORMS_WHATSAPP : value
 }
+
+const oldAddressValues = new Set([
+  'Itag\u00fc\u00ed, Antioquia, Colombia',
+  'Medell\u00edn, Colombia',
+  'Medellin, Colombia',
+])
+
+function normalizeFormsAddress(value) {
+  const normalized = String(value || '').trim()
+  return !normalized || oldAddressValues.has(normalized) ? COMPANY_ADDRESS : value
+}
+
+function normalizeFormsOfficeTitle(value) {
+  const normalized = String(value || '').trim().toLocaleLowerCase('es')
+  return !normalized || ['sala de dise\u00f1o', 'sala de diseno'].includes(normalized)
+    ? COMPANY_OFFICE_TITLE
+    : value
+}
+
 export const defaultSiteContent = {
   heroSlides: [
     {
@@ -172,16 +193,16 @@ export const defaultSiteContent = {
       formTitle: 'Cuéntanos tu idea',
       formSubtitle: 'Completa el formulario y uno de nuestros asesores se pondrá en contacto contigo.',
       addressTitle: 'Visítanos',
-      address: 'Itagüí, Antioquia, Colombia',
+      address: COMPANY_ADDRESS,
       phoneTitle: 'Llámanos',
       phone: '+57 316 973 3417',
       emailTitle: 'Escríbenos',
       email: 'contacto@formasinteriores.com',
       hoursTitle: 'Horario de atención',
       hours: 'Lunes a Viernes: 8:00 a.m. - 5:00 p.m.\nSábados: 8:00 a.m. - 12:00 p.m.',
-      mapAddress: 'Itagüí, Antioquia, Colombia',
+      mapAddress: COMPANY_ADDRESS,
       mapEmbedUrl: '',
-      visitTitle: 'Sala de diseño',
+      visitTitle: COMPANY_OFFICE_TITLE,
       visitText: 'Agenda tu visita y conoce nuestros espacios de inspiración.',
       whatsappLink: 'https://wa.me/573169733417',
       
@@ -379,6 +400,11 @@ export function mergeSiteContent(content) {
       contacto: {
         ...defaultSiteContent.pageContent.contacto,
         ...(content?.pageContent?.contacto || {}),
+        address: normalizeFormsAddress(
+          content?.pageContent?.contacto?.address || defaultSiteContent.pageContent.contacto.address,
+        ),
+        mapAddress: normalizeFormsAddress(content?.pageContent?.contacto?.mapAddress),
+        visitTitle: normalizeFormsOfficeTitle(content?.pageContent?.contacto?.visitTitle),
         phone: normalizeFormsPhone(content?.pageContent?.contacto?.phone || defaultSiteContent.pageContent.contacto.phone),
         whatsappLink: normalizeFormsWhatsapp(
           content?.pageContent?.contacto?.whatsappLink || defaultSiteContent.pageContent.contacto.whatsappLink,

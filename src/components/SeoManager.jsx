@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useSiteContent } from '../hooks/useSiteContent'
+import { COMPANY_CITY, COMPANY_REGION, COMPANY_STREET_ADDRESS } from '../config/company'
 
 const SITE_NAME = 'Formas Interiores'
 const BUSINESS_NAME = 'Formas Interiores S.A.S.'
@@ -298,8 +299,9 @@ function buildGlobalSchema() {
         telephone: CONTACT_PHONE,
         address: {
           '@type': 'PostalAddress',
-          addressLocality: 'Medellin',
-          addressRegion: 'Antioquia',
+          streetAddress: COMPANY_STREET_ADDRESS,
+          addressLocality: COMPANY_CITY,
+          addressRegion: COMPANY_REGION,
           addressCountry: 'CO',
         },
         areaServed: 'Colombia',

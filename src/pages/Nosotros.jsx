@@ -3,6 +3,7 @@ import { PiClockDuotone, PiHandshakeDuotone, PiHeartDuotone, PiMapPinDuotone, Pi
 import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
+import { COMPANY_ADDRESS, COMPANY_OFFICE_TITLE } from '../config/company'
 
 const pilares = [
   { icon: PiHeartDuotone, title: 'Pasión por el diseño', text: 'Nos inspira crear espacios únicos y funcionales.' },
@@ -21,6 +22,7 @@ const valores = [
 function Nosotros() {
   const [{ pageContent }] = useSiteContent()
   const page = pageContent.nosotros
+  const contactPage = pageContent.contacto || {}
   const historyParagraphs = String(page.historyText || '').split('\n').filter(Boolean)
 
   return (
@@ -77,12 +79,12 @@ function Nosotros() {
         </div>
         <div className="nosotros-ubicacion">
           <div className="nosotros-ubicacion__img">
-            {page.locationImage ? <img src={optimizeImage(page.locationImage, { width: 1000 })} alt="Sala de diseño" loading="lazy" /> : <div className="nosotros-ph">Foto sede pendiente</div>}
+            {page.locationImage ? <img src={optimizeImage(page.locationImage, { width: 1000 })} alt={contactPage.visitTitle || COMPANY_OFFICE_TITLE} loading="lazy" /> : <div className="nosotros-ph">Foto sede pendiente</div>}
           </div>
           <div className="nosotros-ubicacion__info">
-            <h3>Sala de diseño</h3>
-            <p className="sub">Agenda tu visita y conoce nuestros espacios</p>
-            <div className="ubi-row"><PiMapPinDuotone size={20} /><p>Medellín, Colombia</p></div>
+            <h3>{contactPage.visitTitle || COMPANY_OFFICE_TITLE}</h3>
+            <p className="sub">{contactPage.visitText || 'Agenda tu visita y conoce nuestros espacios'}</p>
+            <div className="ubi-row"><PiMapPinDuotone size={20} /><p>{contactPage.address || COMPANY_ADDRESS}</p></div>
             <div className="ubi-row"><PiClockDuotone size={20} /><p>Lunes a Viernes: 8:00 a.m. - 6:00 p.m.<br />Sábados: 9:00 a.m. - 1:00 p.m.</p></div>
             <Link to="/contacto" className="button button--primary" style={{ marginTop: 20, alignSelf: 'flex-start' }}>Contactarnos &rarr;</Link>
           </div>

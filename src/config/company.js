@@ -1,0 +1,5 @@
+export const COMPANY_OFFICE_TITLE = 'Sede administrativa'
+export const COMPANY_ADDRESS = 'Cra. 50A #46 - 48, piso 3 Villa Paula, Itag\u00fc\u00ed, Itag\u00fci, Antioquia'
+export const COMPANY_STREET_ADDRESS = 'Cra. 50A #46 - 48, piso 3 Villa Paula'
+export const COMPANY_CITY = 'Itag\u00fc\u00ed'
+export const COMPANY_REGION = 'Antioquia'

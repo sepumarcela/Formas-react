@@ -44,6 +44,7 @@ import {
 } from '../api/cmsApi'
 import { createSlug } from '../data/siteContent'
 import { useSiteContent } from '../hooks/useSiteContent'
+import { COMPANY_ADDRESS } from '../config/company'
 
 const sections = [
   { id: 'overview', label: 'Resumen', icon: LayoutDashboard },
@@ -1377,7 +1378,7 @@ function Cuenta() {
               <div className="admin-form-grid admin-form-grid--wide">
                 <label>Título visita<input value={page.visitTitle || ''} onChange={(event) => updatePageContent('contacto', { visitTitle: event.target.value })} /></label>
                 <label>WhatsApp<input value={page.whatsappLink || ''} onChange={(event) => updatePageContent('contacto', { whatsappLink: event.target.value })} /></label>
-                <label className="admin-colspan">Dirección para mapa<input value={page.mapAddress || ''} onChange={(event) => updatePageContent('contacto', { mapAddress: event.target.value })} placeholder="Ej: Medellín, Colombia" /></label>
+                <label className="admin-colspan">Dirección para mapa<input value={page.mapAddress || ''} onChange={(event) => updatePageContent('contacto', { mapAddress: event.target.value })} placeholder={COMPANY_ADDRESS} /></label>
                 <label className="admin-colspan">Enlace embebido de Google Maps opcional<input value={page.mapEmbedUrl || ''} onChange={(event) => updatePageContent('contacto', { mapEmbedUrl: event.target.value })} placeholder="Opcional: pega aqui el src de un mapa embebido" /></label>
                 <label className="admin-colspan">Texto visita<textarea value={page.visitText || ''} onChange={(event) => updatePageContent('contacto', { visitText: event.target.value })} /></label>
                 <button className="button button--primary" onClick={saveCurrentPageContent}><Save size={16} /> Guardar ubicación</button>
