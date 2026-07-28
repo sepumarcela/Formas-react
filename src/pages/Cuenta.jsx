@@ -100,7 +100,7 @@ function getEmptyHeroSlide(index) {
     description: 'Muebles modernos y funcionales\npara transformar cada espacio\nde tu hogar.',
     primaryLabel: 'Ver colecciones',
     primaryLink: '/proyectos',
-    secondaryLabel: 'Solicitar diseño',
+    secondaryLabel: 'Solicitar cotizaci\u00f3n',
     secondaryLink: '/contacto',
     image: '',
     active: true,

@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react'
 import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
-import { addCartItem } from '../utils/cart'
 import { API_BASE_URL } from '../api/cmsApi'
 import { optimizeImage, preloadImage } from '../utils/images'
 import { isPublicProductVisible } from '../config/features'
@@ -47,7 +46,6 @@ function technicalSheetUrl(value) {
 
 function ProductDetail() {
   const { productId } = useParams()
-  const navigate = useNavigate()
   const [{ categories, products }] = useSiteContent()
   const [relatedStart, setRelatedStart] = useState(0)
   const [imageOpen, setImageOpen] = useState(false)
@@ -106,11 +104,6 @@ function ProductDetail() {
     })
   }
 
-  function handleAddToCart() {
-    addCartItem(product)
-    navigate('/carrito')
-  }
-
   return (
     <main className="page product-detail-page">
       <section className="product-hero-detail">
@@ -135,8 +128,7 @@ function ProductDetail() {
             </div>
 
             <div className="product-actions">
-              <Link to="/contacto" className="button button--primary">Cotizar este producto</Link>
-              <button type="button" className="button button--cart" onClick={handleAddToCart}>Agregar al carrito</button>
+              <Link to="/contacto" className="button button--primary">Cotizar</Link>
             </div>
             <section className={`product-technical-card${technicalSheetViewerUrl ? '' : ' product-technical-card--disabled'}`}>
               {technicalSheetViewerUrl ? (

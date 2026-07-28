@@ -55,7 +55,7 @@ export const defaultSiteContent = {
       description: 'Muebles modernos y funcionales\npara transformar cada espacio\nde tu hogar.',
       primaryLabel: 'Ver colecciones',
       primaryLink: '/proyectos',
-      secondaryLabel: 'Solicitar diseño',
+      secondaryLabel: 'Solicitar cotizaci\u00f3n',
       secondaryLink: '/contacto',
       image: 'https://res.cloudinary.com/dokodfzmu/image/upload/v1781298433/formas/inicio/inicio01.png',
       active: true,
@@ -68,7 +68,7 @@ export const defaultSiteContent = {
       description: 'Muebles modernos y funcionales\npara transformar cada espacio\nde tu hogar.',
       primaryLabel: 'Ver colecciones',
       primaryLink: '/proyectos',
-      secondaryLabel: 'Solicitar diseño',
+      secondaryLabel: 'Solicitar cotizaci\u00f3n',
       secondaryLink: '/contacto',
       image: 'https://res.cloudinary.com/dokodfzmu/image/upload/v1781298486/formas/inicio/inicio02.png',
       active: true,
@@ -81,7 +81,7 @@ export const defaultSiteContent = {
       description: 'Muebles modernos y funcionales\npara transformar cada espacio\nde tu hogar.',
       primaryLabel: 'Ver colecciones',
       primaryLink: '/proyectos',
-      secondaryLabel: 'Solicitar diseño',
+      secondaryLabel: 'Solicitar cotizaci\u00f3n',
       secondaryLink: '/contacto',
       image: 'https://res.cloudinary.com/dokodfzmu/image/upload/v1781298533/formas/inicio/inicio03.png',
       active: true,
@@ -313,12 +313,22 @@ export function createSlug(value) {
 }
 
 
+function updatedHeroSecondaryLabel(value) {
+  const label = String(value || '')
+  const normalized = label.trim().toLocaleLowerCase('es')
+
+  return ['solicita dise\u00f1o', 'solicitar dise\u00f1o'].includes(normalized)
+    ? 'Solicitar cotizaci\u00f3n'
+    : label
+}
+
 function normalizeHeroSlides(slides) {
   const fallbackSlide = defaultSiteContent.heroSlides[0]
   const source = Array.isArray(slides) && slides.length ? slides : defaultSiteContent.heroSlides
 
   return source.map((slide, index) => ({
     ...slide,
+    secondaryLabel: updatedHeroSecondaryLabel(slide.secondaryLabel),
     image: slide.image || (index === 0 ? fallbackSlide.image : ''),
   }))
 }
