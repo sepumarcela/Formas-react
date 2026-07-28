@@ -1,12 +1,115 @@
-import { useState } from 'react'
-import { PiClockDuotone, PiEnvelopeSimpleDuotone, PiMapPinDuotone, PiPhoneCallDuotone } from 'react-icons/pi'
+import { useMemo, useState } from 'react'
+import { Check, ChevronLeft, ChevronRight, Send } from 'lucide-react'
+import {
+  PiCheckCircleDuotone,
+  PiClockDuotone,
+  PiEnvelopeSimpleDuotone,
+  PiMapPinDuotone,
+  PiPhoneCallDuotone,
+} from 'react-icons/pi'
 import PageHero from '../components/sections/PageHero'
 import { submitContactForm } from '../api/cmsApi'
 import { useSiteContent } from '../hooks/useSiteContent'
 
+const TOTAL_STEPS = 7
+
+const spaceOptions = [
+  'Cocina integral',
+  'Closet',
+  'Centro de entretenimiento / TV',
+  'Centro de estudio',
+  'Biblioteca',
+  'Mueble de ba\u00f1o',
+  'Vestier',
+  'Home Office',
+  'Proyecto integral (varios espacios)',
+  'Otro',
+]
+
+const investmentRanges = {
+  'Centro de entretenimiento / TV': '$1.890.000 - $4.100.000',
+  'Centro de estudio': '$5.200.000 - $8.500.000',
+  'Cocina integral': '$8.500.000 - $60.000.000',
+  Closet: '$4.500.000 - $18.000.000',
+  'Mueble de ba\u00f1o': '$2.000.000 - $4.800.000',
+  Biblioteca: '$2.500.000 - $7.800.000',
+  Repisas: '$1.200.000 - $3.100.000',
+}
+
+const locationOptions = [
+  'Medell\u00edn',
+  'Envigado',
+  'Sabaneta',
+  'Itag\u00fc\u00ed',
+  'Bello',
+  'La Estrella',
+  'Caldas',
+  'Copacabana',
+  'Girardota',
+  'Barbosa',
+  'Otro municipio',
+]
+
+const stageOptions = [
+  'Ya tengo las medidas',
+  'Necesito una visita para tomar medidas',
+  'Estoy remodelando',
+  'Es un proyecto nuevo',
+  'Solo estoy explorando opciones',
+]
+
+const propertyOptions = [
+  'Casa',
+  'Apartamento',
+  'Local comercial',
+  'Oficina',
+  'Otro',
+]
+
+const startOptions = [
+  'Lo antes posible',
+  'En 1 a 3 meses',
+  'En 3 a 6 meses',
+  'En m\u00e1s de 6 meses',
+  'A\u00fan no lo he definido',
+]
+
+const stepTitles = [
+  '\u00bfQu\u00e9 espacios deseas transformar?',
+  'Inversi\u00f3n aproximada prevista',
+  'Cu\u00e9ntanos qui\u00e9n eres',
+  '\u00bfD\u00f3nde est\u00e1 ubicado el proyecto?',
+  '\u00bfEn qu\u00e9 etapa se encuentra tu proyecto?',
+  '\u00bfEl inmueble es?',
+  '\u00bfCu\u00e1ndo deseas iniciar el proyecto?',
+]
+
+const initialFormData = {
+  spaces: [],
+  otherSpace: '',
+  budget: '',
+  budgetUnknown: false,
+  name: '',
+  phone: '',
+  email: '',
+  location: '',
+  otherLocation: '',
+  projectStage: '',
+  propertyType: '',
+  otherProperty: '',
+  startTime: '',
+}
+
+function formatBudget(value) {
+  const digits = String(value || '').replace(/\D/g, '')
+  return digits ? new Intl.NumberFormat('es-CO').format(Number(digits)) : ''
+}
+
 function Contacto() {
   const [{ pageContent }] = useSiteContent()
   const page = pageContent.contacto
+  const [step, setStep] = useState(0)
+  const [formData, setFormData] = useState(initialFormData)
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
@@ -16,29 +119,314 @@ function Contacto() {
       : ''
   )
 
+  const selectedInvestmentRanges = useMemo(() => (
+    formData.spaces.map((space) => ({
+      space,
+      range: investmentRanges[space] || 'A definir con uno de nuestros asesores',
+    }))
+  ), [formData.spaces])
+
+  const progress = ((step + 1) / TOTAL_STEPS) * 100
+
+  function updateField(field, value) {
+    setFormData((current) => ({ ...current, [field]: value }))
+    setError('')
+  }
+
+  function toggleSpace(space) {
+    setFormData((current) => ({
+      ...current,
+      spaces: current.spaces.includes(space)
+        ? current.spaces.filter((item) => item !== space)
+        : [...current.spaces, space],
+      ...(space === 'Otro' && current.spaces.includes(space) ? { otherSpace: '' } : {}),
+    }))
+    setError('')
+  }
+
+  function isStepValid() {
+    switch (step) {
+      case 0:
+        return formData.spaces.length > 0
+          && (!formData.spaces.includes('Otro') || Boolean(formData.otherSpace.trim()))
+      case 1:
+        return formData.budgetUnknown || Boolean(formData.budget.replace(/\D/g, ''))
+      case 2:
+        return Boolean(
+          formData.name.trim()
+          && formData.phone.replace(/\D/g, '').length >= 7
+          && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email),
+        )
+      case 3:
+        return Boolean(
+          formData.location
+          && (formData.location !== 'Otro municipio' || formData.otherLocation.trim()),
+        )
+      case 4:
+        return Boolean(formData.projectStage)
+      case 5:
+        return Boolean(
+          formData.propertyType
+          && (formData.propertyType !== 'Otro' || formData.otherProperty.trim()),
+        )
+      case 6:
+        return Boolean(formData.startTime)
+      default:
+        return false
+    }
+  }
+
+  function handleNext() {
+    if (!isStepValid()) return
+    setStep((current) => Math.min(current + 1, TOTAL_STEPS - 1))
+    setError('')
+  }
+
+  function handleBack() {
+    setStep((current) => Math.max(current - 1, 0))
+    setError('')
+  }
+
+  function buildMessage() {
+    const spaces = formData.spaces.map((space) => (
+      space === 'Otro' ? `Otro: ${formData.otherSpace.trim()}` : space
+    ))
+    const location = formData.location === 'Otro municipio'
+      ? formData.otherLocation.trim()
+      : formData.location
+    const property = formData.propertyType === 'Otro'
+      ? formData.otherProperty.trim()
+      : formData.propertyType
+    const budget = formData.budgetUnknown
+      ? 'A\u00fan no tiene un presupuesto definido'
+      : `$${formData.budget}`
+    const referenceRanges = selectedInvestmentRanges
+      .map((item) => `${item.space}: ${item.range}`)
+      .join('; ')
+
+    return [
+      `Espacios: ${spaces.join(', ')}`,
+      `Inversi\u00f3n prevista: ${budget}`,
+      `Rangos de referencia mostrados: ${referenceRanges}`,
+      `Ubicaci\u00f3n: ${location}`,
+      `Etapa del proyecto: ${formData.projectStage}`,
+      `Tipo de inmueble: ${property}`,
+      `Fecha estimada de inicio: ${formData.startTime}`,
+    ].join('\n')
+  }
+
   async function handleSubmit(event) {
     event.preventDefault()
-    const form = event.currentTarget
-    const data = new FormData(form)
+    if (step < TOTAL_STEPS - 1) {
+      handleNext()
+      return
+    }
+    if (!isStepValid()) return
 
     setSending(true)
     setError('')
 
     try {
       await submitContactForm({
-        name: data.get('name'),
-        phone: data.get('phone'),
-        email: data.get('email'),
-        interest: data.get('interest'),
-        message: data.get('message'),
+        name: formData.name.trim(),
+        phone: formData.phone,
+        email: formData.email.trim(),
+        interest: formData.spaces.join(', '),
+        message: buildMessage(),
       })
-      form.reset()
       setSent(true)
-      setTimeout(() => setSent(false), 3000)
+      setFormData(initialFormData)
+      setStep(0)
     } catch {
-      setError('No se pudo enviar el mensaje. Inténtalo de nuevo.')
+      setError('No se pudo enviar la solicitud. Int\u00e9ntalo de nuevo.')
     } finally {
       setSending(false)
+    }
+  }
+
+  function renderChoiceGrid(options, field, className = '') {
+    return (
+      <div className={`contacto-choice-grid ${className}`}>
+        {options.map((option) => {
+          const selected = formData[field] === option
+          return (
+            <button
+              type="button"
+              className={`contacto-choice${selected ? ' is-selected' : ''}`}
+              aria-pressed={selected}
+              onClick={() => updateField(field, option)}
+              key={option}
+            >
+              <span className="contacto-choice__check" aria-hidden="true">
+                {selected && <Check size={15} />}
+              </span>
+              <span>{option}</span>
+            </button>
+          )
+        })}
+      </div>
+    )
+  }
+
+  function renderStep() {
+    switch (step) {
+      case 0:
+        return (
+          <>
+            <p className="contacto-step-help">Puedes seleccionar uno o varios espacios.</p>
+            <div className="contacto-choice-grid contacto-choice-grid--spaces">
+              {spaceOptions.map((space) => {
+                const selected = formData.spaces.includes(space)
+                return (
+                  <button
+                    type="button"
+                    className={`contacto-choice${selected ? ' is-selected' : ''}`}
+                    aria-pressed={selected}
+                    onClick={() => toggleSpace(space)}
+                    key={space}
+                  >
+                    <span className="contacto-choice__check" aria-hidden="true">
+                      {selected && <Check size={15} />}
+                    </span>
+                    <span>{space}</span>
+                  </button>
+                )
+              })}
+            </div>
+            {formData.spaces.includes('Otro') && (
+              <label className="contacto-field">
+                <span>\u00bfCu\u00e1l otro espacio?</span>
+                <input
+                  type="text"
+                  value={formData.otherSpace}
+                  onChange={(event) => updateField('otherSpace', event.target.value)}
+                  placeholder="Escribe el espacio"
+                  autoFocus
+                />
+              </label>
+            )}
+          </>
+        )
+      case 1:
+        return (
+          <>
+            <p className="contacto-step-help">
+              Estos son los rangos de referencia para los espacios seleccionados.
+            </p>
+            <div className="contacto-investment-list">
+              {selectedInvestmentRanges.map((item) => (
+                <div className="contacto-investment-card" key={item.space}>
+                  <span>{item.space}</span>
+                  <strong>{item.range}</strong>
+                </div>
+              ))}
+            </div>
+            <label className="contacto-field">
+              <span>\u00bfCu\u00e1nto tienes previsto invertir?</span>
+              <div className="contacto-budget-input">
+                <span aria-hidden="true">$</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={formData.budget}
+                  disabled={formData.budgetUnknown}
+                  onChange={(event) => updateField('budget', formatBudget(event.target.value))}
+                  placeholder="Ej. 8.500.000"
+                />
+              </div>
+            </label>
+            <label className="contacto-budget-unknown">
+              <input
+                type="checkbox"
+                checked={formData.budgetUnknown}
+                onChange={(event) => {
+                  updateField('budgetUnknown', event.target.checked)
+                  if (event.target.checked) updateField('budget', '')
+                }}
+              />
+              <span>A\u00fan no tengo un presupuesto definido</span>
+            </label>
+          </>
+        )
+      case 2:
+        return (
+          <div className="contacto-data-fields">
+            <label className="contacto-field">
+              <span>Nombre completo</span>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(event) => updateField('name', event.target.value)}
+                placeholder="Tu nombre"
+                autoComplete="name"
+                autoFocus
+              />
+            </label>
+            <label className="contacto-field">
+              <span>N\u00famero de celular</span>
+              <input
+                type="tel"
+                inputMode="numeric"
+                value={formData.phone}
+                onChange={(event) => updateField('phone', event.target.value.replace(/\D/g, ''))}
+                placeholder="Tu celular"
+                autoComplete="tel"
+              />
+            </label>
+            <label className="contacto-field contacto-field--full">
+              <span>Correo electr\u00f3nico</span>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(event) => updateField('email', event.target.value)}
+                placeholder="correo@ejemplo.com"
+                autoComplete="email"
+              />
+            </label>
+          </div>
+        )
+      case 3:
+        return (
+          <>
+            {renderChoiceGrid(locationOptions, 'location', 'contacto-choice-grid--compact')}
+            {formData.location === 'Otro municipio' && (
+              <label className="contacto-field">
+                <span>\u00bfEn cu\u00e1l municipio?</span>
+                <input
+                  type="text"
+                  value={formData.otherLocation}
+                  onChange={(event) => updateField('otherLocation', event.target.value)}
+                  placeholder="Escribe el municipio"
+                  autoFocus
+                />
+              </label>
+            )}
+          </>
+        )
+      case 4:
+        return renderChoiceGrid(stageOptions, 'projectStage')
+      case 5:
+        return (
+          <>
+            {renderChoiceGrid(propertyOptions, 'propertyType')}
+            {formData.propertyType === 'Otro' && (
+              <label className="contacto-field">
+                <span>\u00bfQu\u00e9 tipo de inmueble?</span>
+                <input
+                  type="text"
+                  value={formData.otherProperty}
+                  onChange={(event) => updateField('otherProperty', event.target.value)}
+                  placeholder="Escribe el tipo de inmueble"
+                  autoFocus
+                />
+              </label>
+            )}
+          </>
+        )
+      case 6:
+        return renderChoiceGrid(startOptions, 'startTime')
+      default:
+        return null
     }
   }
 
@@ -47,39 +435,94 @@ function Contacto() {
       <PageHero content={page} fallbackTitle="Contacto" />
 
       <section style={{ background: 'var(--color-bg)' }}>
-        <div className="contacto-layout">
-          <div className="contacto-form-box">
+        <div className="contacto-layout contacto-layout--wizard">
+          <div className="contacto-form-box contacto-form-box--wizard">
             <h3>{page.formTitle}</h3>
-            <p className="contacto-form-sub">{page.formSubtitle}</p>
-            <form onSubmit={handleSubmit} className="contacto-form">
-              <div className="contacto-form-row">
-                <input name="name" type="text" placeholder="Nombre completo" required />
-                <input name="phone" type="tel" inputMode="numeric" pattern="[0-9]*" placeholder="Teléfono" onInput={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/\D/g, '') }} />
+            <p className="contacto-form-sub">
+              Completa estos pasos y uno de nuestros asesores se pondr\u00e1 en contacto contigo.
+            </p>
+
+            {sent ? (
+              <div className="contacto-wizard-success" role="status">
+                <PiCheckCircleDuotone size={58} aria-hidden="true" />
+                <h4>Solicitud enviada</h4>
+                <p>Gracias por compartir tu proyecto. Te contactaremos muy pronto.</p>
+                <button
+                  type="button"
+                  className="button button--primary"
+                  onClick={() => setSent(false)}
+                >
+                  Enviar otra solicitud
+                </button>
               </div>
-              <input name="email" type="email" placeholder="Correo electrónico" required />
-              <select name="interest">
-                <option value="">Estoy interesado en...</option>
-                <option>Centros de entretenimiento</option>
-                <option>Closets</option>
-                <option>Cocinas</option>
-                <option>Centros de estudio</option>
-                <option>Repisas</option>
-                <option>Bibliotecas</option>
-                <option>Muebles de baño</option>
-                <option>Alcobas infantiles</option>
-                <option>Otro</option>
-              </select>
-              <textarea name="message" rows={4} placeholder="Cuéntanos sobre tu proyecto, medidas aproximadas, materiales de preferencia..." />
-              {error && <p className="contacto-form-note">{error}</p>}
-              <button type="submit" className="button button--primary" style={{ width: '100%' }}>
-                {sending ? 'Enviando...' : sent ? 'Mensaje enviado' : 'Enviar mensaje'}
-              </button>
-              <p className="contacto-form-note">Tu información está protegida. No compartimos tus datos.</p>
-            </form>
+            ) : (
+              <form onSubmit={handleSubmit} className="contacto-form contacto-wizard">
+                <div className="contacto-wizard__progress">
+                  <div className="contacto-wizard__meta">
+                    <span>Paso {step + 1} de {TOTAL_STEPS}</span>
+                    <span>{Math.round(progress)}%</span>
+                  </div>
+                  <div
+                    className="contacto-wizard__track"
+                    role="progressbar"
+                    aria-valuemin="1"
+                    aria-valuemax={TOTAL_STEPS}
+                    aria-valuenow={step + 1}
+                    aria-label={`Paso ${step + 1} de ${TOTAL_STEPS}`}
+                  >
+                    <span style={{ width: `${progress}%` }} />
+                  </div>
+                </div>
+
+                <fieldset className="contacto-wizard__step" key={step}>
+                  <legend>{stepTitles[step]}</legend>
+                  {renderStep()}
+                </fieldset>
+
+                {error && <p className="contacto-form-error" role="alert">{error}</p>}
+
+                <div className="contacto-wizard__actions">
+                  <button
+                    type="button"
+                    className="contacto-wizard__back"
+                    onClick={handleBack}
+                    disabled={step === 0 || sending}
+                  >
+                    <ChevronLeft size={18} aria-hidden="true" />
+                    Anterior
+                  </button>
+
+                  {step < TOTAL_STEPS - 1 ? (
+                    <button
+                      type="button"
+                      className="button button--primary contacto-wizard__next"
+                      onClick={handleNext}
+                      disabled={!isStepValid()}
+                    >
+                      Continuar
+                      <ChevronRight size={18} aria-hidden="true" />
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="button button--primary contacto-wizard__next"
+                      disabled={!isStepValid() || sending}
+                    >
+                      {sending ? 'Enviando...' : 'Enviar solicitud'}
+                      {!sending && <Send size={17} aria-hidden="true" />}
+                    </button>
+                  )}
+                </div>
+
+                <p className="contacto-form-note">
+                  Tu informaci\u00f3n est\u00e1 protegida. No compartimos tus datos.
+                </p>
+              </form>
+            )}
           </div>
 
           <div className="contacto-info">
-            <h3>Información de contacto</h3>
+            <h3>Informaci\u00f3n de contacto</h3>
             <div className="contacto-info-item"><div className="contacto-info-icon"><PiMapPinDuotone size={20} /></div><div><strong>{page.addressTitle}</strong><p>{page.address.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
             <div className="contacto-info-item"><div className="contacto-info-icon"><PiPhoneCallDuotone size={20} /></div><div><strong>{page.phoneTitle}</strong><p>{page.phone.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
             <div className="contacto-info-item"><div className="contacto-info-icon"><PiEnvelopeSimpleDuotone size={20} /></div><div><strong>{page.emailTitle}</strong><p>{page.email}</p></div></div>
@@ -89,7 +532,7 @@ function Contacto() {
           <div className="contacto-mapa">
             {mapUrl ? (
               <iframe
-                title={page.visitTitle || 'Ubicación'}
+                title={page.visitTitle || 'Ubicaci\u00f3n'}
                 src={mapUrl}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"

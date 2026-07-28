@@ -8196,3 +8196,375 @@ section {
     transition: none;
   }
 }
+/* Formulario guiado de cotizacion */
+.contacto-layout--wizard {
+  grid-template-columns: minmax(440px, 1.3fr) minmax(240px, 0.75fr) minmax(280px, 0.95fr);
+  gap: clamp(28px, 3vw, 44px);
+}
+
+.contacto-form-box--wizard {
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid rgba(159, 103, 70, 0.18);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 24px 60px rgba(65, 45, 34, 0.08);
+}
+
+.contacto-wizard {
+  gap: 18px;
+}
+
+.contacto-wizard__progress {
+  display: grid;
+  gap: 9px;
+}
+
+.contacto-wizard__meta {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(43, 39, 36, 0.64);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.contacto-wizard__track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(159, 103, 70, 0.13);
+}
+
+.contacto-wizard__track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #9f6746, #d9a77c);
+  transition: width 0.28s ease;
+}
+
+.contacto-wizard__step {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  animation: contacto-step-in 0.24s ease-out;
+}
+
+.contacto-wizard__step legend {
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 0;
+  color: var(--color-text);
+  font-family: var(--serif);
+  font-size: clamp(23px, 2.4vw, 31px);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.contacto-step-help {
+  margin: 0 0 16px;
+  color: rgba(43, 39, 36, 0.66);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.contacto-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.contacto-choice-grid--spaces,
+.contacto-choice-grid--compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.contacto-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.contacto-choice:hover {
+  border-color: rgba(159, 103, 70, 0.58);
+  transform: translateY(-1px);
+}
+
+.contacto-choice.is-selected {
+  border-color: #9f6746;
+  background: rgba(159, 103, 70, 0.1);
+  color: #6f4029;
+}
+
+.contacto-choice__check {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  border: 1px solid rgba(159, 103, 70, 0.34);
+  border-radius: 7px;
+  color: #fff;
+}
+
+.contacto-choice.is-selected .contacto-choice__check {
+  border-color: #9f6746;
+  background: #9f6746;
+}
+
+.contacto-field {
+  display: grid;
+  gap: 7px;
+  margin-top: 16px;
+}
+
+.contacto-field > span {
+  color: rgba(43, 39, 36, 0.8);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.contacto-data-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.contacto-data-fields .contacto-field {
+  margin-top: 0;
+}
+
+.contacto-field--full {
+  grid-column: 1 / -1;
+}
+
+.contacto-investment-list {
+  display: grid;
+  gap: 8px;
+  max-height: 190px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.contacto-investment-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 13px;
+  border: 1px solid rgba(159, 103, 70, 0.16);
+  border-radius: 11px;
+  background: rgba(159, 103, 70, 0.055);
+  font-size: 12px;
+}
+
+.contacto-investment-card span {
+  color: rgba(43, 39, 36, 0.72);
+}
+
+.contacto-investment-card strong {
+  color: #7f4c31;
+  text-align: right;
+}
+
+.contacto-budget-input {
+  position: relative;
+}
+
+.contacto-budget-input > span {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  z-index: 1;
+  color: #9f6746;
+  font-weight: 850;
+  transform: translateY(-50%);
+}
+
+.contacto-form .contacto-budget-input input {
+  padding-left: 34px;
+}
+
+.contacto-budget-unknown {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 12px;
+  color: rgba(43, 39, 36, 0.72);
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.contacto-form .contacto-budget-unknown input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  padding: 0;
+  accent-color: #9f6746;
+}
+
+.contacto-wizard__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 2px;
+}
+
+.contacto-wizard__back,
+.contacto-wizard__next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+}
+
+.contacto-wizard__back {
+  padding: 10px 4px;
+  border: 0;
+  background: transparent;
+  color: #7f4c31;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.contacto-wizard__back:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.contacto-wizard__next {
+  min-width: 150px;
+}
+
+.contacto-wizard__next:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.contacto-form-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(173, 47, 47, 0.09);
+  color: #9f2f2f;
+  font-size: 12px;
+  font-weight: 650;
+  text-align: center;
+}
+
+.contacto-wizard-success {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  min-height: 360px;
+  align-content: center;
+  text-align: center;
+}
+
+.contacto-wizard-success > svg {
+  color: #9f6746;
+}
+
+.contacto-wizard-success h4 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.contacto-wizard-success p {
+  max-width: 360px;
+  margin: 0 0 8px;
+  color: rgba(43, 39, 36, 0.68);
+  line-height: 1.6;
+}
+
+@keyframes contacto-step-in {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 1100px) {
+  .contacto-layout--wizard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contacto-form-box--wizard {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .contacto-form-box--wizard {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .contacto-choice-grid--spaces,
+  .contacto-choice-grid--compact,
+  .contacto-data-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .contacto-field--full {
+    grid-column: auto;
+  }
+
+  .contacto-investment-card {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .contacto-investment-card strong {
+    text-align: left;
+  }
+
+  .contacto-wizard__actions {
+    align-items: stretch;
+  }
+
+  .contacto-wizard__next {
+    min-width: 0;
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contacto-wizard__step {
+    animation: none;
+  }
+
+  .contacto-wizard__track > span,
+  .contacto-choice {
+    transition: none;
+  }
+}
