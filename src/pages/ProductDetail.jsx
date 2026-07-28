@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react'
 import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { addCartItem } from '../utils/cart'
@@ -10,7 +10,7 @@ import { isPublicProductVisible } from '../config/features'
 
 const relatedWindowSize = 3
 
-function ProductMainImage({ product }) {
+function ProductMainImage({ product, onOpen }) {
   const imageSrc = product.image ? optimizeImage(product.image, { width: 1400 }) : ''
 
   useEffect(() => {
@@ -18,7 +18,18 @@ function ProductMainImage({ product }) {
   }, [imageSrc])
 
   return product.image ? (
-    <img src={imageSrc} alt={product.name} loading="eager" decoding="async" fetchPriority="high" />
+    <button
+      type="button"
+      className="product-gallery__open"
+      onClick={onOpen}
+      aria-label={`Ampliar foto de ${product.name}`}
+    >
+      <img src={imageSrc} alt={product.name} loading="eager" decoding="async" fetchPriority="high" />
+      <span className="product-gallery__zoom-hint">
+        <Maximize2 size={17} aria-hidden="true" />
+        Ampliar foto
+      </span>
+    </button>
   ) : (
     <div className="product-gallery__placeholder">Foto pendiente</div>
   )
@@ -39,7 +50,25 @@ function ProductDetail() {
   const navigate = useNavigate()
   const [{ categories, products }] = useSiteContent()
   const [relatedStart, setRelatedStart] = useState(0)
+  const [imageOpen, setImageOpen] = useState(false)
   const product = products.find((item) => item.id === productId && isPublicProductVisible(item))
+
+  useEffect(() => {
+    if (!imageOpen) return undefined
+
+    const previousOverflow = document.body.style.overflow
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') setImageOpen(false)
+    }
+
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [imageOpen])
 
   if (!product) {
     return (
@@ -53,6 +82,7 @@ function ProductDetail() {
     )
   }
 
+  const lightboxImageSrc = optimizeImage(product.image, { width: 2400, quality: 'q_auto:best' })
   const category = categories.find((item) => item.id === product.categoryId)
   const related = products.filter((item) => item.categoryId === product.categoryId && item.id !== product.id && item.active !== false)
   const visibleRelated = related.slice(relatedStart, relatedStart + relatedWindowSize)
@@ -86,7 +116,7 @@ function ProductDetail() {
       <section className="product-hero-detail">
         <div className="product-hero-detail__inner">
           <div className="product-gallery">
-            <ProductMainImage product={product} />
+            <ProductMainImage product={product} onOpen={() => setImageOpen(true)} />
           </div>
 
           <div className="product-summary">
@@ -200,6 +230,31 @@ function ProductDetail() {
             ))}
           </div>
         </section>
+      )}
+
+      {imageOpen && (
+        <div
+          className="product-image-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="product-image-lightbox-title"
+          onClick={() => setImageOpen(false)}
+        >
+          <button
+            type="button"
+            className="product-image-lightbox__close"
+            onClick={() => setImageOpen(false)}
+            aria-label="Cerrar foto ampliada"
+            autoFocus
+          >
+            <X size={25} aria-hidden="true" />
+          </button>
+
+          <figure className="product-image-lightbox__content" onClick={(event) => event.stopPropagation()}>
+            <img src={lightboxImageSrc} alt={product.name} />
+            <figcaption id="product-image-lightbox-title">{product.name}</figcaption>
+          </figure>
+        </div>
       )}
     </main>
   )
