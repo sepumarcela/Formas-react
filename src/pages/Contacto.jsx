@@ -19,7 +19,7 @@ const spaceOptions = [
   'Centro de entretenimiento / TV',
   'Centro de estudio',
   'Biblioteca',
-  'Mueble de ba\u00f1o',
+  'Mueble de baño',
   'Vestier',
   'Home Office',
   'Proyecto integral (varios espacios)',
@@ -31,16 +31,16 @@ const investmentRanges = {
   'Centro de estudio': '$5.200.000 - $8.500.000',
   'Cocina integral': '$8.500.000 - $60.000.000',
   Closet: '$4.500.000 - $18.000.000',
-  'Mueble de ba\u00f1o': '$2.000.000 - $4.800.000',
+  'Mueble de baño': '$2.000.000 - $4.800.000',
   Biblioteca: '$2.500.000 - $7.800.000',
   Repisas: '$1.200.000 - $3.100.000',
 }
 
 const locationOptions = [
-  'Medell\u00edn',
+  'Medellín',
   'Envigado',
   'Sabaneta',
-  'Itag\u00fc\u00ed',
+  'Itagüí',
   'Bello',
   'La Estrella',
   'Caldas',
@@ -70,18 +70,18 @@ const startOptions = [
   'Lo antes posible',
   'En 1 a 3 meses',
   'En 3 a 6 meses',
-  'En m\u00e1s de 6 meses',
-  'A\u00fan no lo he definido',
+  'En más de 6 meses',
+  'Aún no lo he definido',
 ]
 
 const stepTitles = [
-  '\u00bfQu\u00e9 espacios deseas transformar?',
-  'Inversi\u00f3n aproximada prevista',
-  'Cu\u00e9ntanos qui\u00e9n eres',
-  '\u00bfD\u00f3nde est\u00e1 ubicado el proyecto?',
-  '\u00bfEn qu\u00e9 etapa se encuentra tu proyecto?',
-  '\u00bfEl inmueble es?',
-  '\u00bfCu\u00e1ndo deseas iniciar el proyecto?',
+  '¿Qué espacios deseas transformar?',
+  'Inversión aproximada prevista',
+  'Cuéntanos quién eres',
+  '¿Dónde está ubicado el proyecto?',
+  '¿En qué etapa se encuentra tu proyecto?',
+  '¿El inmueble es?',
+  '¿Cuándo deseas iniciar el proyecto?',
 ]
 
 const initialFormData = {
@@ -198,7 +198,7 @@ function Contacto() {
       ? formData.otherProperty.trim()
       : formData.propertyType
     const budget = formData.budgetUnknown
-      ? 'A\u00fan no tiene un presupuesto definido'
+      ? 'Aún no tiene un presupuesto definido'
       : `$${formData.budget}`
     const referenceRanges = selectedInvestmentRanges
       .map((item) => `${item.space}: ${item.range}`)
@@ -206,9 +206,9 @@ function Contacto() {
 
     return [
       `Espacios: ${spaces.join(', ')}`,
-      `Inversi\u00f3n prevista: ${budget}`,
+      `Inversión prevista: ${budget}`,
       `Rangos de referencia mostrados: ${referenceRanges}`,
-      `Ubicaci\u00f3n: ${location}`,
+      `Ubicación: ${location}`,
       `Etapa del proyecto: ${formData.projectStage}`,
       `Tipo de inmueble: ${property}`,
       `Fecha estimada de inicio: ${formData.startTime}`,
@@ -238,7 +238,7 @@ function Contacto() {
       setFormData(initialFormData)
       setStep(0)
     } catch {
-      setError('No se pudo enviar la solicitud. Int\u00e9ntalo de nuevo.')
+      setError('No se pudo enviar la solicitud. Inténtalo de nuevo.')
     } finally {
       setSending(false)
     }
@@ -295,7 +295,7 @@ function Contacto() {
             </div>
             {formData.spaces.includes('Otro') && (
               <label className="contacto-field">
-                <span>\u00bfCu\u00e1l otro espacio?</span>
+                <span>¿Cuál otro espacio?</span>
                 <input
                   type="text"
                   value={formData.otherSpace}
@@ -322,7 +322,7 @@ function Contacto() {
               ))}
             </div>
             <label className="contacto-field">
-              <span>\u00bfCu\u00e1nto tienes previsto invertir?</span>
+              <span>¿Cuánto tienes previsto invertir?</span>
               <div className="contacto-budget-input">
                 <span aria-hidden="true">$</span>
                 <input
@@ -344,7 +344,7 @@ function Contacto() {
                   if (event.target.checked) updateField('budget', '')
                 }}
               />
-              <span>A\u00fan no tengo un presupuesto definido</span>
+              <span>Aún no tengo un presupuesto definido</span>
             </label>
           </>
         )
@@ -363,7 +363,7 @@ function Contacto() {
               />
             </label>
             <label className="contacto-field">
-              <span>N\u00famero de celular</span>
+              <span>Número de celular</span>
               <input
                 type="tel"
                 inputMode="numeric"
@@ -374,7 +374,7 @@ function Contacto() {
               />
             </label>
             <label className="contacto-field contacto-field--full">
-              <span>Correo electr\u00f3nico</span>
+              <span>Correo electrónico</span>
               <input
                 type="email"
                 value={formData.email}
@@ -391,7 +391,7 @@ function Contacto() {
             {renderChoiceGrid(locationOptions, 'location', 'contacto-choice-grid--compact')}
             {formData.location === 'Otro municipio' && (
               <label className="contacto-field">
-                <span>\u00bfEn cu\u00e1l municipio?</span>
+                <span>¿En cuál municipio?</span>
                 <input
                   type="text"
                   value={formData.otherLocation}
@@ -411,7 +411,7 @@ function Contacto() {
             {renderChoiceGrid(propertyOptions, 'propertyType')}
             {formData.propertyType === 'Otro' && (
               <label className="contacto-field">
-                <span>\u00bfQu\u00e9 tipo de inmueble?</span>
+                <span>¿Qué tipo de inmueble?</span>
                 <input
                   type="text"
                   value={formData.otherProperty}
@@ -439,7 +439,7 @@ function Contacto() {
           <div className="contacto-form-box contacto-form-box--wizard">
             <h3>{page.formTitle}</h3>
             <p className="contacto-form-sub">
-              Completa estos pasos y uno de nuestros asesores se pondr\u00e1 en contacto contigo.
+              Completa estos pasos y uno de nuestros asesores se pondrá en contacto contigo.
             </p>
 
             {sent ? (
@@ -515,14 +515,14 @@ function Contacto() {
                 </div>
 
                 <p className="contacto-form-note">
-                  Tu informaci\u00f3n est\u00e1 protegida. No compartimos tus datos.
+                  Tu información está protegida. No compartimos tus datos.
                 </p>
               </form>
             )}
           </div>
 
           <div className="contacto-info">
-            <h3>Informaci\u00f3n de contacto</h3>
+            <h3>Información de contacto</h3>
             <div className="contacto-info-item"><div className="contacto-info-icon"><PiMapPinDuotone size={20} /></div><div><strong>{page.addressTitle}</strong><p>{page.address.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
             <div className="contacto-info-item"><div className="contacto-info-icon"><PiPhoneCallDuotone size={20} /></div><div><strong>{page.phoneTitle}</strong><p>{page.phone.split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div></div>
             <div className="contacto-info-item"><div className="contacto-info-icon"><PiEnvelopeSimpleDuotone size={20} /></div><div><strong>{page.emailTitle}</strong><p>{page.email}</p></div></div>
@@ -532,7 +532,7 @@ function Contacto() {
           <div className="contacto-mapa">
             {mapUrl ? (
               <iframe
-                title={page.visitTitle || 'Ubicaci\u00f3n'}
+                title={page.visitTitle || 'Ubicación'}
                 src={mapUrl}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
