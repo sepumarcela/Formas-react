@@ -1,4 +1,4 @@
-import { COMPANY_ADDRESS, COMPANY_OFFICE_TITLE } from '../config/company'
+import { COMPANY_ADDRESS, COMPANY_HOURS, COMPANY_OFFICE_DESCRIPTION, COMPANY_OFFICE_TITLE } from '../config/company'
 
 export const SITE_CONTENT_KEY = 'formas-site-content-v1'
 export const SITE_CONTENT_EVENT = 'formas-site-content-updated'
@@ -64,6 +64,34 @@ function normalizeFormsOfficeTitle(value) {
   return !normalized || ['sala de dise\u00f1o', 'sala de diseno'].includes(normalized)
     ? COMPANY_OFFICE_TITLE
     : value
+}
+
+function normalizeFormsAddressTitle(value) {
+  const normalized = String(value || '').trim().toLocaleLowerCase('es')
+  return !normalized || ['vis\u00edtanos', 'visitanos'].includes(normalized)
+    ? COMPANY_OFFICE_TITLE
+    : value
+}
+
+const oldOfficeDescriptions = new Set([
+  'agenda tu visita y conoce nuestros espacios de inspiraci\u00f3n.',
+  'agenda tu visita y conoce nuestros espacios',
+])
+
+function normalizeFormsOfficeDescription(value) {
+  const normalized = String(value || '').trim().toLocaleLowerCase('es')
+  return !normalized || oldOfficeDescriptions.has(normalized)
+    ? COMPANY_OFFICE_DESCRIPTION
+    : value
+}
+
+const oldHoursValues = new Set([
+  'Lunes a Viernes: 8:00 a.m. - 6:00 p.m.\nS\u00e1bados: 9:00 a.m. - 1:00 p.m.',
+])
+
+function normalizeFormsHours(value) {
+  const normalized = String(value || '').trim()
+  return !normalized || oldHoursValues.has(normalized) ? COMPANY_HOURS : value
 }
 
 export const defaultSiteContent = {
@@ -192,18 +220,18 @@ export const defaultSiteContent = {
       image: 'https://res.cloudinary.com/dokodfzmu/image/upload/v1781541332/formas/paginas/contacto.png',
       formTitle: 'Cuéntanos tu idea',
       formSubtitle: 'Completa el formulario y uno de nuestros asesores se pondrá en contacto contigo.',
-      addressTitle: 'Visítanos',
+      addressTitle: COMPANY_OFFICE_TITLE,
       address: COMPANY_ADDRESS,
       phoneTitle: 'Llámanos',
       phone: '+57 316 973 3417',
       emailTitle: 'Escríbenos',
       email: 'contacto@formasinteriores.com',
       hoursTitle: 'Horario de atención',
-      hours: 'Lunes a Viernes: 8:00 a.m. - 5:00 p.m.\nSábados: 8:00 a.m. - 12:00 p.m.',
+      hours: COMPANY_HOURS,
       mapAddress: COMPANY_ADDRESS,
       mapEmbedUrl: '',
       visitTitle: COMPANY_OFFICE_TITLE,
-      visitText: 'Agenda tu visita y conoce nuestros espacios de inspiración.',
+      visitText: COMPANY_OFFICE_DESCRIPTION,
       whatsappLink: 'https://wa.me/573169733417',
       
     },
@@ -400,11 +428,14 @@ export function mergeSiteContent(content) {
       contacto: {
         ...defaultSiteContent.pageContent.contacto,
         ...(content?.pageContent?.contacto || {}),
+        addressTitle: normalizeFormsAddressTitle(content?.pageContent?.contacto?.addressTitle),
         address: normalizeFormsAddress(
           content?.pageContent?.contacto?.address || defaultSiteContent.pageContent.contacto.address,
         ),
+        hours: normalizeFormsHours(content?.pageContent?.contacto?.hours),
         mapAddress: normalizeFormsAddress(content?.pageContent?.contacto?.mapAddress),
         visitTitle: normalizeFormsOfficeTitle(content?.pageContent?.contacto?.visitTitle),
+        visitText: normalizeFormsOfficeDescription(content?.pageContent?.contacto?.visitText),
         phone: normalizeFormsPhone(content?.pageContent?.contacto?.phone || defaultSiteContent.pageContent.contacto.phone),
         whatsappLink: normalizeFormsWhatsapp(
           content?.pageContent?.contacto?.whatsappLink || defaultSiteContent.pageContent.contacto.whatsappLink,

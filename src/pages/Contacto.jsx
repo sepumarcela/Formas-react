@@ -583,7 +583,7 @@ function Contacto() {
             <div className="contacto-mapa-card">
               <h5>{page.visitTitle}</h5>
               <p>{page.visitText}</p>
-              <a href={page.whatsappLink} className="button button--primary" style={{ fontSize: 11, padding: '10px 16px', width: '100%' }}>Agendar visita</a>
+              <a href={page.whatsappLink} className="button button--primary" style={{ fontSize: 11, padding: '10px 16px', width: '100%' }}>Escribir por WhatsApp</a>
             </div>
           </div>
         </div>

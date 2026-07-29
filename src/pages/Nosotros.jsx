@@ -3,7 +3,7 @@ import { PiClockDuotone, PiHandshakeDuotone, PiHeartDuotone, PiMapPinDuotone, Pi
 import PageHero from '../components/sections/PageHero'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
-import { COMPANY_ADDRESS, COMPANY_OFFICE_TITLE } from '../config/company'
+import { COMPANY_ADDRESS, COMPANY_HOURS, COMPANY_OFFICE_DESCRIPTION, COMPANY_OFFICE_TITLE } from '../config/company'
 
 const pilares = [
   { icon: PiHeartDuotone, title: 'Pasión por el diseño', text: 'Nos inspira crear espacios únicos y funcionales.' },
@@ -74,8 +74,8 @@ function Nosotros() {
       <section style={{ background: 'var(--color-surface)' }}>
         <div className="section-heading">
           <p className="eyebrow">Nuestra sede</p>
-          <h2>¿Dónde estamos?</h2>
-          <p>Visítanos y conoce nuestros espacios de inspiración.</p>
+          <h2>Ubicación administrativa</h2>
+          <p>Consulta la ubicación y los canales de contacto de nuestra sede administrativa.</p>
         </div>
         <div className="nosotros-ubicacion">
           <div className="nosotros-ubicacion__img">
@@ -83,9 +83,9 @@ function Nosotros() {
           </div>
           <div className="nosotros-ubicacion__info">
             <h3>{contactPage.visitTitle || COMPANY_OFFICE_TITLE}</h3>
-            <p className="sub">{contactPage.visitText || 'Agenda tu visita y conoce nuestros espacios'}</p>
+            <p className="sub">{contactPage.visitText || COMPANY_OFFICE_DESCRIPTION}</p>
             <div className="ubi-row"><PiMapPinDuotone size={20} /><p>{contactPage.address || COMPANY_ADDRESS}</p></div>
-            <div className="ubi-row"><PiClockDuotone size={20} /><p>Lunes a Viernes: 8:00 a.m. - 6:00 p.m.<br />Sábados: 9:00 a.m. - 1:00 p.m.</p></div>
+            <div className="ubi-row"><PiClockDuotone size={20} /><p>{String(contactPage.hours || COMPANY_HOURS).split('\n').map((line) => <span key={line}>{line}<br /></span>)}</p></div>
             <Link to="/contacto" className="button button--primary" style={{ marginTop: 20, alignSelf: 'flex-start' }}>Contactarnos &rarr;</Link>
           </div>
         </div>

@@ -1,4 +1,6 @@
 export const COMPANY_OFFICE_TITLE = 'Sede administrativa'
+export const COMPANY_OFFICE_DESCRIPTION = 'Oficina administrativa para la gesti\u00f3n y coordinaci\u00f3n de nuestros proyectos.'
+export const COMPANY_HOURS = 'Lunes a Viernes: 8:00 a.m. - 5:00 p.m.\nS\u00e1bados: 8:00 a.m. - 12:00 p.m.'
 export const COMPANY_ADDRESS = 'Cra. 50A #46 - 48, piso 3 Villa Paula, Itag\u00fc\u00ed, Itag\u00fci, Antioquia'
 export const COMPANY_STREET_ADDRESS = 'Cra. 50A #46 - 48, piso 3 Villa Paula'
 export const COMPANY_CITY = 'Itag\u00fc\u00ed'
