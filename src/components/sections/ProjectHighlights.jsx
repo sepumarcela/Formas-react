@@ -1,6 +1,50 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { optimizeImage } from '../../utils/images'
+
+function ComparisonLayer({ image, alt, label, variant }) {
+  return (
+    <div className={'project-comparison__layer project-comparison__layer--' + variant}>
+      {image ? (
+        <img src={optimizeImage(image, { width: 1600 })} alt={alt} loading="lazy" draggable="false" />
+      ) : (
+        <span className="project-comparison__placeholder">{label}</span>
+      )}
+    </div>
+  )
+}
+
+function BeforeAfterSlider({ project }) {
+  const [position, setPosition] = useState(50)
+
+  return (
+    <div
+      className="project-highlight-card__media project-comparison"
+      style={{ '--comparison-position': position + '%' }}
+    >
+      <ComparisonLayer image={project.before} alt={project.title + ' antes'} label="Antes" variant="before" />
+      <ComparisonLayer image={project.after} alt={project.title + ' después'} label="Después" variant="after" />
+
+      <span className="project-comparison__label project-comparison__label--before">Antes</span>
+      <span className="project-comparison__label project-comparison__label--after">Después</span>
+
+      <input
+        className="project-comparison__range"
+        type="range"
+        min="0"
+        max="100"
+        value={position}
+        onChange={(event) => setPosition(Number(event.target.value))}
+        aria-label={'Comparar el antes y después de ' + project.title}
+        aria-valuetext={position + '% de la imagen antes'}
+      />
+
+      <div className="project-comparison__divider" aria-hidden="true">
+        <span className="project-comparison__handle">‹ ›</span>
+      </div>
+    </div>
+  )
+}
 
 function ProjectHighlights() {
   const [{ projectHighlights }] = useSiteContent()
@@ -29,7 +73,7 @@ function ProjectHighlights() {
       </div>
 
       <div className="project-highlight-carousel">
-        {visibleProjects.length > 2 && (
+        {visibleProjects.length > 1 && (
           <button className="project-highlight-carousel__arrow project-highlight-carousel__arrow--prev" type="button" onClick={() => scrollProjects(-1)} aria-label="Ver proyectos anteriores">
             <span aria-hidden="true">‹</span>
           </button>
@@ -38,22 +82,7 @@ function ProjectHighlights() {
         <div className="project-highlight-track" ref={carouselRef}>
           {visibleProjects.map((project) => (
             <article className="project-highlight-card" key={project.id}>
-              <div className="project-highlight-card__media">
-                <div data-label="Antes">
-                  {project.before ? (
-                    <img src={optimizeImage(project.before, { width: 900 })} alt={project.title + ' antes'} loading="lazy" />
-                  ) : (
-                    <span>Antes</span>
-                  )}
-                </div>
-                <div data-label="Después">
-                  {project.after ? (
-                    <img src={optimizeImage(project.after, { width: 900 })} alt={project.title + ' después' } loading="lazy" />
-                  ) : (
-                    <span>Después</span>
-                  )}
-                </div>
-              </div>
+              <BeforeAfterSlider project={project} />
 
               <div className="project-highlight-card__body">
                 <p>{project.category}</p>
@@ -63,7 +92,7 @@ function ProjectHighlights() {
           ))}
         </div>
 
-        {visibleProjects.length > 2 && (
+        {visibleProjects.length > 1 && (
           <button className="project-highlight-carousel__arrow project-highlight-carousel__arrow--next" type="button" onClick={() => scrollProjects(1)} aria-label="Ver más proyectos">
             <span aria-hidden="true">›</span>
           </button>

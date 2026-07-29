@@ -1368,7 +1368,7 @@ section {
 }
 
 .project-highlight-card {
-  flex: 0 0 calc((100% - 28px) / 2);
+  flex: 0 0 100%;
   scroll-snap-align: start;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -1383,42 +1383,131 @@ section {
 }
 
 .project-highlight-card__media {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-  height: clamp(300px, 30vw, 390px);
-}
-
-.project-highlight-card__media>div {
-  background: var(--color-surface-warm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-muted);
-  font-size: 12px;
   position: relative;
-  overflow: hidden;
+  height: clamp(500px, 52vw, 700px);
+  background: var(--color-surface-warm);
+  isolation: isolate;
+  cursor: ew-resize;
+  user-select: none;
 }
 
-.project-highlight-card__media>div::before {
-  content: attr(data-label);
+.project-comparison__layer {
   position: absolute;
-  top: 14px;
-  left: 14px;
-  background: rgba(255, 255, 255, 0.92);
-  padding: 5px 14px;
-  border-radius: 50px;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  color: var(--color-text);
-  z-index: 2;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--color-surface-warm);
+}
+
+.project-comparison__layer--before {
+  z-index: 1;
+  clip-path: inset(0 calc(100% - var(--comparison-position)) 0 0);
 }
 
 .project-highlight-card__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
+}
+
+.project-comparison__placeholder {
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.project-comparison__label {
+  position: absolute;
+  top: 18px;
+  z-index: 3;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-text);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  pointer-events: none;
+  box-shadow: 0 5px 18px rgba(26, 23, 20, 0.12);
+}
+
+.project-comparison__label--before {
+  left: 18px;
+}
+
+.project-comparison__label--after {
+  right: 18px;
+}
+
+.project-comparison__range {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  touch-action: pan-y;
+}
+
+.project-comparison__range::-webkit-slider-thumb {
+  width: 58px;
+  height: 58px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.project-comparison__range::-moz-range-thumb {
+  width: 58px;
+  height: 58px;
+  border: 0;
+  background: transparent;
+}
+
+.project-comparison__divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--comparison-position);
+  z-index: 4;
+  width: 3px;
+  background: #fff;
+  transform: translateX(-50%);
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(26, 23, 20, 0.12), 0 0 14px rgba(26, 23, 20, 0.24);
+}
+
+.project-comparison__handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--color-brand-dark);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 10px 28px rgba(26, 23, 20, 0.3);
+}
+
+.project-comparison__range:focus-visible + .project-comparison__divider .project-comparison__handle {
+  outline: 3px solid var(--color-brand-light);
+  outline-offset: 4px;
 }
 
 .project-highlight-card__body {
@@ -1489,11 +1578,11 @@ section {
   }
 
   .project-highlight-card {
-    flex-basis: 82%;
+    flex-basis: 100%;
   }
 
   .project-highlight-card__media {
-    height: 300px;
+    height: clamp(420px, 70vw, 560px);
   }
 
   .project-highlight-carousel__arrow--prev {
@@ -1511,7 +1600,7 @@ section {
   }
 
   .project-highlight-card__media {
-    height: 260px;
+    height: clamp(320px, 88vw, 440px);
   }
 
   .project-highlight-carousel__arrow {
@@ -6452,7 +6541,6 @@ section {
 .category-card:hover,
 .product-card:hover,
 .benefit-card:hover,
-.project-highlight-card:hover,
 .products-featured-mini__item:hover,
 .cat-product-card:hover,
 .proyecto-item:hover,
