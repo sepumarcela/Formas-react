@@ -1384,7 +1384,8 @@ section {
 
 .project-highlight-card__media {
   position: relative;
-  height: clamp(360px, 42vw, 520px);
+  height: auto;
+  aspect-ratio: 16 / 9;
   background: var(--color-surface-warm);
   isolation: isolate;
   cursor: ew-resize;
@@ -1581,9 +1582,6 @@ section {
     flex-basis: 100%;
   }
 
-  .project-highlight-card__media {
-    height: clamp(340px, 60vw, 460px);
-  }
 
   .project-highlight-carousel__arrow--prev {
     left: 8px;
@@ -1600,7 +1598,7 @@ section {
   }
 
   .project-highlight-card__media {
-    height: clamp(260px, 75vw, 360px);
+    aspect-ratio: 4 / 3;
   }
 
   .project-highlight-carousel__arrow {
