@@ -8682,3 +8682,9 @@ section {
   border-color: #b53e3e;
   box-shadow: 0 0 0 3px rgba(181, 62, 62, 0.1);
 }
+
+/* Mantiene completas las fotos del comparador, sin recortar sus bordes. */
+.project-highlight-card__media.project-comparison img {
+  object-fit: contain !important;
+  object-position: center !important;
+}
