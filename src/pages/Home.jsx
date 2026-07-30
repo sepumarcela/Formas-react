@@ -4,12 +4,10 @@ import CategoryShowcase from '../components/sections/CategoryShowcase'
 import FeaturedProducts from '../components/sections/FeaturedProducts'
 import WhyFormas from '../components/sections/WhyFormas'
 import PurchaseProcess from '../components/sections/PurchaseProcess'
-import ProjectHighlights from '../components/sections/ProjectHighlights'
 import TestimonialSection from '../components/sections/TestimonialSection'
 import FinalCta from '../components/sections/FinalCta'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
-import { SHOW_PROJECT_HIGHLIGHTS } from '../config/features'
 
 const HOME_HERO_FALLBACK = 'https://res.cloudinary.com/dokodfzmu/image/upload/v1781298433/formas/inicio/inicio01.png'
 
@@ -116,7 +114,6 @@ function Home() {
       <FeaturedProducts />
       <WhyFormas />
       <PurchaseProcess />
-      {SHOW_PROJECT_HIGHLIGHTS && <ProjectHighlights />}
       <TestimonialSection />
       <FinalCta />
     </main>

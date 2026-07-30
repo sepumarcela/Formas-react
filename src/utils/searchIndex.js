@@ -118,7 +118,7 @@ export function buildSearchIndex(content) {
     title: project.title,
     description: compactText([project.category, project.description]),
     keywords: compactText([project.id, 'antes despues transformacion']),
-    url: '/nosotros#proyectos-realizados',
+    url: '/proyectos#proyectos-realizados',
   }))
 
   const blogItems = blogPosts.map((post) => ({

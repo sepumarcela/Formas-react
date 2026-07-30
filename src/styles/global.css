@@ -1347,6 +1347,19 @@ section {
   background: var(--color-bg);
 }
 
+.projects-page .project-highlights {
+  padding-top: clamp(54px, 7vw, 88px);
+}
+
+.projects-page .project-highlight-carousel {
+  max-width: 1040px;
+}
+
+.projects-page .project-highlight-track {
+  overscroll-behavior-inline: contain;
+  scroll-snap-stop: always;
+}
+
 .project-highlight-carousel {
   max-width: 940px;
   margin: 0 auto;

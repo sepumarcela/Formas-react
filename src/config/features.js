@@ -1,4 +1,4 @@
-export const SHOW_PROJECTS_PAGE = false
+export const SHOW_PROJECTS_PAGE = true
 export const SHOW_PROJECT_HIGHLIGHTS = true
 
 const HIDDEN_PUBLIC_CATEGORY_IDS = new Set([
