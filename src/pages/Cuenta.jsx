@@ -50,7 +50,7 @@ const sections = [
   { id: 'overview', label: 'Resumen', icon: LayoutDashboard },
   { id: 'hero', label: 'Inicio', icon: Images },
   { id: 'pages', label: 'Páginas', icon: LayoutDashboard },
-  { id: 'stories', label: 'Antes y después', icon: Images },
+  { id: 'stories', label: 'Testimonios', icon: Newspaper },
   { id: 'products', label: 'Productos', icon: Package },
   { id: 'blog', label: 'Blog', icon: Newspaper },
   { id: 'categories', label: 'Categorías', icon: Tags },
@@ -60,7 +60,7 @@ const sections = [
 const pageOptions = [
   { id: 'homeProducts', label: 'Productos en inicio' },
   { id: 'productos', label: 'Productos' },
-  { id: 'proyectos', label: 'Proyectos' },
+  { id: 'proyectos', label: 'Proyectos realizados' },
   { id: 'nosotros', label: 'Nosotros' },
   { id: 'blog', label: 'Blog' },
   { id: 'contacto', label: 'Contacto' },
@@ -117,15 +117,6 @@ const iconOptions = [
   ['shelf', 'Repisa'],
   ['bed', 'Alcoba'],
   ['book', 'Biblioteca'],
-]
-
-const projectCategoryOptions = [
-  { id: 'hogar', label: 'Hogares' },
-  { id: 'cocina', label: 'Cocinas' },
-  { id: 'closet', label: 'Closets' },
-  { id: 'bano', label: 'Baños' },
-  { id: 'oficina', label: 'Oficinas' },
-  { id: 'comercial', label: 'Comerciales' },
 ]
 
 function parseCsvRecords(text, delimiter) {
@@ -626,16 +617,6 @@ function Cuenta() {
     }
   }
 
-  async function saveExistingProject(project, index) {
-    try {
-      const savedProject = await saveProject(project, index)
-      updateCollection('projects', project.id, savedProject)
-      flash('Proyecto guardado.')
-    } catch {
-      flash('No se pudo guardar el proyecto en el backend.')
-    }
-  }
-
   async function saveExistingProjectHighlight(project, index) {
     try {
       const savedProject = await saveProjectHighlight(project, index)
@@ -760,32 +741,6 @@ function Cuenta() {
     }
   }
 
-  async function addProject() {
-    const title = `Nuevo proyecto ${content.projects.length + 1}`
-    try {
-      const savedProject = await saveProject(
-        { id: createSlug(title), cat: 'hogar', label: 'Hogar', title, location: 'Ciudad, Colombia', image: '' },
-        content.projects.length,
-      )
-      setContent((current) => ({ ...current, projects: [...current.projects, savedProject] }))
-      flash('Proyecto creado.')
-    } catch {
-      flash('No se pudo crear el proyecto en el backend.')
-    }
-  }
-
-  async function handleProjectImageUpload(id, event) {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    try {
-      const image = await uploadImage(imageFolders.projects, file)
-      await persistImagePatch('projects', id, { image })
-    } catch (error) {
-      reportBackendError('No se pudo subir la imagen del proyecto al backend.', error)
-    }
-  }
-
   async function addProjectHighlight() {
     const title = `Nuevo antes y después ${content.projectHighlights.length + 1}`
     try {
@@ -833,11 +788,6 @@ function Cuenta() {
   function handleProductCategory(product, categoryId) {
     const category = content.categories.find((item) => item.id === categoryId)
     updateCollection('products', product.id, { categoryId, category: category?.name || product.category })
-  }
-
-  function handleProjectCategory(project, categoryId) {
-    const category = projectCategoryOptions.find((item) => item.id === categoryId) || projectCategoryOptions[0]
-    updateCollection('projects', project.id, { cat: category.id, label: category.label })
   }
 
   function openSection(sectionId) {
@@ -1274,45 +1224,7 @@ function Cuenta() {
             </div>
           </article>
         )}
-        {pageKey === 'proyectos' && (
-          <div className="admin-editor-list">
-            <div className="admin-list-heading">
-              <h2>Proyectos publicados</h2>
-              <button className="button button--primary" onClick={addProject}><BadgePlus size={16} /> Agregar proyecto</button>
-            </div>
-            <div className="admin-form-grid admin-form-grid--wide admin-create-card">
-              <label>Texto botón<input value={page.ctaLabel || ''} onChange={(event) => updatePageContent('proyectos', { ctaLabel: event.target.value })} /></label>
-              <label>Link botón<input value={page.ctaLink || ''} onChange={(event) => updatePageContent('proyectos', { ctaLink: event.target.value })} /></label>
-            </div>
-            {content.projects.map((project, index) => (
-              <article className="admin-editor-card" key={`project-${index}`}>
-                <div className="admin-image-box">
-                  {project.image ? <img src={project.image} alt={project.title} /> : <Images size={26} />}
-                  <label>
-                    Cargar imagen
-                    <input type="file" accept="image/*" onChange={(event) => handleProjectImageUpload(project.id, event)} />
-                  </label>
-                  {renderCardSave('Guardar proyecto', () => saveExistingProject(project, index))}
-                </div>
-                <div className="admin-form-grid">
-                  <label>ID<input value={project.id} onChange={(event) => updateCollection('projects', project.id, { id: createSlug(event.target.value) })} /></label>
-                  <label>Categoría
-                    <select value={project.cat || 'hogar'} onChange={(event) => handleProjectCategory(project, event.target.value)}>
-                      {projectCategoryOptions.map((category) => <option key={category.id} value={category.id}>{category.label}</option>)}
-                    </select>
-                  </label>
-                  <label>Etiqueta<input value={project.label} readOnly title="Se actualiza automáticamente con la categoría seleccionada." /></label>
-                  <label>Título<input value={project.title} onChange={(event) => updateCollection('projects', project.id, { title: event.target.value })} /></label>
-                  <label>Ubicación<input value={project.location} onChange={(event) => updateCollection('projects', project.id, { location: event.target.value })} /></label>
-                </div>
-                <div className="admin-card-actions">
-                  <button className="button button--primary" onClick={() => saveExistingProject(project, index)}><Save size={16} /> Guardar cambios</button>
-                  <button className="admin-delete" onClick={() => removeFromCollection('projects', project.id)}><Trash2 size={16} /> Eliminar</button>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
+        {pageKey === 'proyectos' && renderProjectHighlightsEditor()}
 
         {pageKey === 'nosotros' && (
           <div className="admin-editor-list">
@@ -1390,80 +1302,76 @@ function Cuenta() {
     )
   }
 
+  function renderProjectHighlightsEditor() {
+    return (
+      <div className="admin-editor-list">
+        <div className="admin-list-heading">
+          <div>
+            <h2>Proyectos publicados</h2>
+            <p>Cada proyecto usa una foto de antes y otra de después.</p>
+          </div>
+          <button className="button button--primary" onClick={addProjectHighlight}><BadgePlus size={16} /> Agregar proyecto</button>
+        </div>
+
+        <div className="admin-help-card">
+          <Images size={20} />
+          <div>
+            <strong>Comparadores de la página Proyectos</strong>
+            <p>Los registros aparecen uno por uno. Las flechas de la página pública permiten avanzar al proyecto anterior o siguiente.</p>
+          </div>
+        </div>
+
+        {content.projectHighlights.map((project, index) => (
+          <article className="admin-editor-card admin-editor-card--story" key={`project-highlight-${index}`}>
+            <div className="admin-before-after">
+              <div className="admin-image-box">
+                {project.before ? <img src={project.before} alt={`${project.title} antes`} /> : <Images size={24} />}
+                <label>
+                  Foto antes
+                  <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('projectHighlights', project.id, 'before', event)} />
+                </label>
+                {renderCardSave('Guardar antes', () => saveExistingProjectHighlight(project, index))}
+              </div>
+              <div className="admin-image-box">
+                {project.after ? <img src={project.after} alt={`${project.title} después`} /> : <Images size={24} />}
+                <label>
+                  Foto después
+                  <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('projectHighlights', project.id, 'after', event)} />
+                </label>
+                {renderCardSave('Guardar después', () => saveExistingProjectHighlight(project, index))}
+              </div>
+            </div>
+
+            <div className="admin-form-grid">
+              <label>ID<input value={project.id} onChange={(event) => updateCollection('projectHighlights', project.id, { id: createSlug(event.target.value) })} /></label>
+              <label>Categoría<input value={project.category} onChange={(event) => updateCollection('projectHighlights', project.id, { category: event.target.value })} /></label>
+              <label>Título<input value={project.title} onChange={(event) => updateCollection('projectHighlights', project.id, { title: event.target.value })} /></label>
+            </div>
+
+            <div className="admin-card-actions">
+              <button className="button button--primary" onClick={() => saveExistingProjectHighlight(project, index)}><Save size={16} /> Guardar cambios</button>
+              <button className="admin-delete" onClick={() => removeFromCollection('projectHighlights', project.id)}><Trash2 size={16} /> Eliminar</button>
+            </div>
+          </article>
+        ))}
+      </div>
+    )
+  }
+
   function renderStories() {
     return (
       <div className="admin-panel">
         <div className="admin-panel__header">
           <div>
-            <p className="admin-kicker">Antes y después</p>
-            <h1>Proyectos realizados y testimonios</h1>
-            <p>Administra los proyectos que aparecen en la pestaña “Proyectos” y los testimonios que se muestran en el inicio.</p>
+            <p className="admin-kicker">Testimonios</p>
+            <h1>Testimonios reales</h1>
+            <p>Administra los comentarios de clientes que se muestran en la página de inicio.</p>
           </div>
-          <div className="admin-header-actions">
-            <button className="button button--soft" onClick={addTestimonial}><BadgePlus size={16} /> Testimonio</button>
-            <button className="button button--primary" onClick={addProjectHighlight}><BadgePlus size={16} /> Proyecto realizado</button>
-          </div>
-        </div>
-
-        <div className="admin-help-grid">
-          <div className="admin-help-card">
-            <Images size={20} />
-            <div>
-              <strong>Proyectos realizados</strong>
-              <p>Carga una imagen de antes y otra de después. En la página pública se muestra un proyecto por vez y se navega con las flechas.</p>
-            </div>
-          </div>
-          <div className="admin-help-card">
-            <Newspaper size={20} />
-            <div>
-              <strong>Testimonios reales</strong>
-              <p>Usa testimonios autorizados por clientes. Puedes ocultar uno desmarcando “Visible en inicio”.</p>
-            </div>
-          </div>
+          <button className="button button--primary" onClick={addTestimonial}><BadgePlus size={16} /> Testimonio</button>
         </div>
 
         <div className="admin-list-heading">
-          <h2>Proyectos realizados</h2>
-          <span>{content.projectHighlights.length} registros</span>
-        </div>
-        <div className="admin-editor-list">
-          {content.projectHighlights.map((project, index) => (
-            <article className="admin-editor-card admin-editor-card--story" key={`project-highlight-${index}`}>
-              <div className="admin-before-after">
-                <div className="admin-image-box">
-                  {project.before ? <img src={project.before} alt={`${project.title} antes`} /> : <Images size={24} />}
-                  <label>
-                    Antes
-                    <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('projectHighlights', project.id, 'before', event)} />
-                  </label>
-                  {renderCardSave('Guardar', () => saveExistingProjectHighlight(project, index))}
-                </div>
-                <div className="admin-image-box">
-                  {project.after ? <img src={project.after} alt={`${project.title} después`} /> : <Images size={24} />}
-                  <label>
-                    Después
-                    <input type="file" accept="image/*" onChange={(event) => handleCollectionImageUpload('projectHighlights', project.id, 'after', event)} />
-                  </label>
-                  {renderCardSave('Guardar', () => saveExistingProjectHighlight(project, index))}
-                </div>
-              </div>
-
-              <div className="admin-form-grid">
-                <label>ID<input value={project.id} onChange={(event) => updateCollection('projectHighlights', project.id, { id: createSlug(event.target.value) })} /></label>
-                <label>Categoría<input value={project.category} onChange={(event) => updateCollection('projectHighlights', project.id, { category: event.target.value })} /></label>
-                <label>Título<input value={project.title} onChange={(event) => updateCollection('projectHighlights', project.id, { title: event.target.value })} /></label>
-              </div>
-
-              <div className="admin-card-actions">
-                <button className="button button--primary" onClick={() => saveExistingProjectHighlight(project, index)}><Save size={16} /> Guardar cambios</button>
-                <button className="admin-delete" onClick={() => removeFromCollection('projectHighlights', project.id)}><Trash2 size={16} /> Eliminar</button>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <div className="admin-list-heading admin-list-heading--spaced">
-          <h2>Testimonios</h2>
+          <h2>Testimonios publicados</h2>
           <span>{content.testimonials.length} testimonios</span>
         </div>
         <div className="admin-editor-list">

@@ -8779,3 +8779,50 @@ section {
   object-position: center;
   background: var(--color-surface-warm);
 }
+
+/* Presenta las dos fotos de cada proyecto al mismo tiempo. */
+.project-highlight-card__media.project-comparison--pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  height: clamp(380px, 45vw, 540px);
+  aspect-ratio: auto;
+  cursor: default;
+}
+
+.project-comparison--pair .project-comparison__layer {
+  position: relative;
+  inset: auto;
+  min-width: 0;
+  clip-path: none;
+}
+
+.project-comparison--pair .project-comparison__layer--before {
+  border-right: 2px solid rgba(255, 255, 255, 0.9);
+}
+
+.project-comparison--pair .project-comparison__label {
+  left: 18px;
+  right: auto;
+}
+
+.project-comparison--pair .project-comparison__layer--after .project-comparison__label {
+  left: auto;
+  right: 18px;
+}
+
+@media (max-width: 620px) {
+  .project-highlight-card__media.project-comparison--pair {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .project-comparison--pair .project-comparison__layer {
+    min-height: 300px;
+    aspect-ratio: 4 / 3;
+  }
+
+  .project-comparison--pair .project-comparison__layer--before {
+    border-right: 0;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.9);
+  }
+}
