@@ -26,23 +26,109 @@ function BlogPostLink({ post, className, children }) {
   )
 }
 
-function articleBlocks(post) {
-  const source = post.body || post.desc || ''
-  const lines = source
-    .split(/\n{2,}|\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean)
+function safeLink(url) {
+  const value = String(url || '').trim()
+  return /^(https?:\/\/|mailto:|tel:|\/|#)/i.test(value) ? value : '#'
+}
 
-  return lines.map((line, index) => {
-    const cleanLine = line.replace(/^#+\s*/, '')
-    const looksLikeHeading = /^#+\s/.test(line) || (/^[¿?A-ZÁÉÍÓÚÑ]/.test(cleanLine) && cleanLine.length <= 86 && /[?:]$/.test(cleanLine))
+function inlineMarkdown(text, keyPrefix) {
+  const source = String(text || '')
+  const pattern = /(`([^`]+)`)|(\*\*([^*]+)\*\*)|(__([^_]+)__)|(\*([^*]+)\*)|(_([^_]+)_)|(\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\))/g
+  const parts = []
+  let lastIndex = 0
+  let match
 
-    return {
-      id: `section-${index + 1}`,
-      text: cleanLine,
-      type: looksLikeHeading ? 'heading' : 'paragraph',
+  while ((match = pattern.exec(source)) !== null) {
+    if (match.index > lastIndex) parts.push(source.slice(lastIndex, match.index))
+    if (match[2]) parts.push(<code key={`${keyPrefix}-code-${match.index}`}>{match[2]}</code>)
+    else if (match[4] || match[6]) parts.push(<strong key={`${keyPrefix}-strong-${match.index}`}>{match[4] || match[6]}</strong>)
+    else if (match[8] || match[10]) parts.push(<em key={`${keyPrefix}-em-${match.index}`}>{match[8] || match[10]}</em>)
+    else if (match[12] && match[13]) {
+      const href = safeLink(match[13])
+      const external = /^https?:\/\//i.test(href)
+      parts.push(<a href={href} key={`${keyPrefix}-link-${match.index}`} {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}>{match[12]}</a>)
     }
+    lastIndex = pattern.lastIndex
+  }
+  if (lastIndex < source.length) parts.push(source.slice(lastIndex))
+  return parts.length ? parts : source
+}
+
+function articleBlocks(post) {
+  const lines = String(post.body || post.desc || '').split(/\r?\n/)
+  const blocks = []
+  let paragraph = []
+  let listItems = []
+  let listType = null
+  const flushParagraph = () => {
+    const text = paragraph.join(' ').replace(/\s+/g, ' ').trim()
+    if (text) blocks.push({ type: 'paragraph', text })
+    paragraph = []
+  }
+  const flushList = () => {
+    if (listItems.length) blocks.push({ type: listType, items: listItems })
+    listItems = []
+    listType = null
+  }
+
+  lines.forEach((rawLine) => {
+    const line = rawLine.trim()
+    if (!line) {
+      flushParagraph()
+      flushList()
+      return
+    }
+    const heading = line.match(/^(#{1,4})\s+(.+)$/)
+    if (heading) {
+      flushParagraph()
+      flushList()
+      blocks.push({ type: 'heading', level: heading[1].length, text: heading[2] })
+      return
+    }
+    const unordered = line.match(/^[-*+]\s+(.+)$/)
+    const ordered = line.match(/^\d+[.)]\s+(.+)$/)
+    if (unordered || ordered) {
+      flushParagraph()
+      const nextType = ordered ? 'ol' : 'ul'
+      if (listType && listType !== nextType) flushList()
+      listType = nextType
+      listItems.push((unordered || ordered)[1])
+      return
+    }
+    const quote = line.match(/^>\s?(.+)$/)
+    if (quote) {
+      flushParagraph()
+      flushList()
+      blocks.push({ type: 'quote', text: quote[1] })
+      return
+    }
+    if (/^([-*_])\1{2,}$/.test(line)) {
+      flushParagraph()
+      flushList()
+      blocks.push({ type: 'divider' })
+      return
+    }
+    flushList()
+    paragraph.push(line)
   })
+  flushParagraph()
+  flushList()
+  return blocks.map((block, index) => ({ ...block, id: `section-${index + 1}` }))
+}
+
+function ArticleBlock({ block }) {
+  const content = block.text ? inlineMarkdown(block.text, block.id) : null
+  if (block.type === 'heading') {
+    const Heading = block.level >= 3 ? 'h3' : 'h2'
+    return <Heading id={block.id}>{content}</Heading>
+  }
+  if (block.type === 'ul' || block.type === 'ol') {
+    const List = block.type
+    return <List>{block.items.map((item, index) => <li key={`${block.id}-${index}`}>{inlineMarkdown(item, `${block.id}-${index}`)}</li>)}</List>
+  }
+  if (block.type === 'quote') return <blockquote>{content}</blockquote>
+  if (block.type === 'divider') return <hr />
+  return <p>{content}</p>
 }
 
 function sidebarHeadingText(text) {
@@ -109,9 +195,7 @@ function BlogPostDetail() {
       <section className="blog-post-content-section">
         <article className="blog-post-article">
           {blocks.length ? blocks.map((block) => (
-            block.type === 'heading'
-              ? <h2 id={block.id} key={block.id}>{block.text}</h2>
-              : <p key={block.id}>{block.text}</p>
+            <ArticleBlock block={block} key={block.id} />
           )) : (
             <p>Muy pronto ampliaremos este artículo con más inspiración, recomendaciones y detalles para tu proyecto.</p>
           )}

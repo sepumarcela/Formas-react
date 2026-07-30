@@ -1697,7 +1697,11 @@ function Cuenta() {
                 <label className="admin-check"><input type="checkbox" checked={post.trending === true} onChange={(event) => updateCollection('blogPosts', post.id, { trending: event.target.checked })} /> Marcar como tendencia</label>
                 <label className="admin-check"><input type="checkbox" checked={post.active !== false} onChange={(event) => updateCollection('blogPosts', post.id, { active: event.target.checked })} /> Visible en página</label>
                 <label className="admin-colspan">Descripción<textarea value={post.desc} onChange={(event) => updateCollection('blogPosts', post.id, { desc: event.target.value })} /></label>
-                <label className="admin-colspan">Contenido largo<textarea value={post.body} onChange={(event) => updateCollection('blogPosts', post.id, { body: event.target.value })} /></label>
+                <label className="admin-colspan">
+                  Contenido largo
+                  <small>Admite Markdown: # títulos, **negrita**, *cursiva*, listas con - o 1., enlaces y citas con &gt;.</small>
+                  <textarea value={post.body} onChange={(event) => updateCollection('blogPosts', post.id, { body: event.target.value })} />
+                </label>
               </div>
 
               <div className="admin-card-actions">
