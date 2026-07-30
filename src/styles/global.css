@@ -8763,3 +8763,19 @@ section {
   border-color: #b53e3e;
   box-shadow: 0 0 0 3px rgba(181, 62, 62, 0.1);
 }
+
+/* El comparador siempre muestra la foto completa, incluso si otra regla global usa cover. */
+.project-highlight-card__media.project-comparison .project-comparison__layer > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+/* La vista previa del administrador también conserva la imagen completa. */
+.admin-before-after .admin-image-box img {
+  width: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: var(--color-surface-warm);
+}

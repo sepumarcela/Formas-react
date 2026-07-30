@@ -1396,8 +1396,8 @@ function Cuenta() {
         <div className="admin-panel__header">
           <div>
             <p className="admin-kicker">Antes y después</p>
-            <h1>Antes y después y testimonios</h1>
-            <p>Administra el antes/después de trabajos terminados y los testimonios reales que aparecen en el inicio.</p>
+            <h1>Proyectos realizados y testimonios</h1>
+            <p>Administra los proyectos que aparecen en la pestaña “Proyectos” y los testimonios que se muestran en el inicio.</p>
           </div>
           <div className="admin-header-actions">
             <button className="button button--soft" onClick={addTestimonial}><BadgePlus size={16} /> Testimonio</button>
@@ -1410,7 +1410,7 @@ function Cuenta() {
             <Images size={20} />
             <div>
               <strong>Proyectos realizados</strong>
-              <p>Carga una imagen de antes y otra de después. Estas tarjetas salen en el home como evidencia visual de los trabajos.</p>
+              <p>Carga una imagen de antes y otra de después. En la página pública se muestra un proyecto por vez y se navega con las flechas.</p>
             </div>
           </div>
           <div className="admin-help-card">
