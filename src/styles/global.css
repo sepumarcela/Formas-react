@@ -3596,6 +3596,22 @@ section {
   font-weight: 500;
 }
 
+.blog-card__body p strong {
+  color: var(--color-text);
+  font-weight: 800;
+}
+
+.blog-card__body p em {
+  font-style: italic;
+}
+
+.blog-card__body p code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(52, 38, 29, 0.08);
+  font-size: 0.9em;
+}
+
 .blog-card__more {
   font-size: 14px;
   color: var(--color-brand);

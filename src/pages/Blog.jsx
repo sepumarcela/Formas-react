@@ -13,6 +13,37 @@ function BlogPostLink({ post, className, children }) {
   )
 }
 
+function renderCardMarkdown(text, keyPrefix) {
+  const source = String(text || '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+  const pattern = /(`([^`]+)`)|(\*\*([^*]+)\*\*)|(__([^_]+)__)|(\*([^*]+)\*)|(_([^_]+)_)/g
+  const parts = []
+  let lastIndex = 0
+  let match
+
+  while ((match = pattern.exec(source)) !== null) {
+    if (match.index > lastIndex) parts.push(source.slice(lastIndex, match.index))
+    if (match[2]) parts.push(<code key={`${keyPrefix}-code-${match.index}`}>{match[2]}</code>)
+    else if (match[4] || match[6]) parts.push(<strong key={`${keyPrefix}-strong-${match.index}`}>{match[4] || match[6]}</strong>)
+    else if (match[8] || match[10]) parts.push(<em key={`${keyPrefix}-em-${match.index}`}>{match[8] || match[10]}</em>)
+    lastIndex = pattern.lastIndex
+  }
+
+  if (lastIndex < source.length) parts.push(source.slice(lastIndex))
+  return parts.length ? parts : source
+}
+
+function blogCardSummary(post) {
+  const lines = String(post.desc || '').split(/\r?\n/)
+  const firstContentLine = lines.findIndex((line) => line.trim())
+
+  if (firstContentLine >= 0 && /^#{1,4}\s+/.test(lines[firstContentLine].trim())) {
+    lines.splice(firstContentLine, 1)
+  }
+
+  const summary = lines.join(' ').replace(/\s+/g, ' ').trim()
+  return renderCardMarkdown(summary, `blog-card-${post.id}`)
+}
+
 function Blog() {
   const [{ blogPosts, pageContent }] = useSiteContent()
   const page = pageContent.blog
@@ -53,7 +84,7 @@ function Blog() {
                 <div className="blog-card__body">
                   <span className="blog-card__date">{post.date}</span>
                   <h3>{post.title}</h3>
-                  <p>{post.desc}</p>
+                  <p>{blogCardSummary(post)}</p>
                   <span className="blog-card__more">Leer mas &rarr;</span>
                 </div>
               </BlogPostLink>
