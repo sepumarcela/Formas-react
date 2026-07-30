@@ -8780,49 +8780,30 @@ section {
   background: var(--color-surface-warm);
 }
 
-/* Presenta las dos fotos de cada proyecto al mismo tiempo. */
-.project-highlight-card__media.project-comparison--pair {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+/* Mantiene el tamaño aprobado y restaura el deslizador Antes/Después. */
+.project-highlight-card__media.project-comparison--slider {
   height: clamp(380px, 45vw, 540px);
   aspect-ratio: auto;
-  cursor: default;
 }
 
-.project-comparison--pair .project-comparison__layer {
-  position: relative;
-  inset: auto;
-  min-width: 0;
-  clip-path: none;
+.project-comparison--slider .project-comparison__layer {
+  position: absolute;
+  inset: 0;
 }
 
-.project-comparison--pair .project-comparison__layer--before {
-  border-right: 2px solid rgba(255, 255, 255, 0.9);
+.project-comparison--slider .project-comparison__layer--before {
+  clip-path: inset(0 calc(100% - var(--comparison-position)) 0 0);
 }
 
-.project-comparison--pair .project-comparison__label {
-  left: 18px;
-  right: auto;
-}
-
-.project-comparison--pair .project-comparison__layer--after .project-comparison__label {
-  left: auto;
-  right: 18px;
+.project-comparison--slider .project-comparison__layer > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  object-position: center !important;
 }
 
 @media (max-width: 620px) {
-  .project-highlight-card__media.project-comparison--pair {
-    grid-template-columns: 1fr;
-    height: auto;
-  }
-
-  .project-comparison--pair .project-comparison__layer {
-    min-height: 300px;
-    aspect-ratio: 4 / 3;
-  }
-
-  .project-comparison--pair .project-comparison__layer--before {
-    border-right: 0;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.9);
+  .project-highlight-card__media.project-comparison--slider {
+    height: clamp(300px, 78vw, 420px);
   }
 }
