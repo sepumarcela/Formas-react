@@ -8780,10 +8780,15 @@ section {
   background: var(--color-surface-warm);
 }
 
-/* Mantiene el tamaño aprobado y restaura el deslizador Antes/Después. */
+/* Comparador superpuesto, completo y adaptado a fotos casi cuadradas. */
+.projects-page .project-highlight-carousel {
+  max-width: 570px;
+}
+
 .project-highlight-card__media.project-comparison--slider {
-  height: clamp(380px, 45vw, 540px);
-  aspect-ratio: auto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.05 / 1;
 }
 
 .project-comparison--slider .project-comparison__layer {
@@ -8791,34 +8796,29 @@ section {
   inset: 0;
 }
 
+.project-comparison--slider .project-comparison__layer::before {
+  display: none;
+}
+
 .project-comparison--slider .project-comparison__layer--before {
   clip-path: inset(0 calc(100% - var(--comparison-position)) 0 0);
 }
 
 .project-comparison--slider .project-comparison__layer > img {
-  width: 52% !important;
-  max-width: 620px;
+  width: 100% !important;
+  max-width: none;
   height: 100% !important;
+  justify-self: stretch;
   object-fit: contain !important;
-}
-
-.project-comparison--slider .project-comparison__layer--before > img {
-  justify-self: start;
-  object-position: left center !important;
-}
-
-.project-comparison--slider .project-comparison__layer--after > img {
-  justify-self: end;
-  object-position: right center !important;
+  object-position: center !important;
 }
 
 @media (max-width: 620px) {
-  .project-highlight-card__media.project-comparison--slider {
-    height: clamp(300px, 78vw, 420px);
+  .projects-page .project-highlight-carousel {
+    max-width: 100%;
   }
 
-  .project-comparison--slider .project-comparison__layer > img {
-    width: 92% !important;
-    max-width: none;
+  .project-highlight-card__media.project-comparison--slider {
+    aspect-ratio: 1.05 / 1;
   }
 }
