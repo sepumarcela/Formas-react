@@ -6841,10 +6841,10 @@ section {
 
 .blog-post-hero__content > p {
   max-width: 630px;
-  margin: 24px 0 0;
+  margin: 20px 0 0;
   color: rgba(52, 38, 29, 0.72);
   font-size: 17px;
-  line-height: 1.8;
+  line-height: 1.45;
 }
 
 .blog-post-hero__media {
@@ -6882,10 +6882,10 @@ section {
 }
 
 .blog-post-article p {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   color: rgba(26, 23, 20, 0.82);
   font-size: 17px;
-  line-height: 1.5;
+  line-height: 1.42;
 }
 
 .blog-post-article ul,
@@ -6894,7 +6894,7 @@ section {
   padding-left: 26px;
   color: rgba(26, 23, 20, 0.82);
   font-size: 17px;
-  line-height: 1.5;
+  line-height: 1.42;
 }
 
 .blog-post-article li + li { margin-top: 5px; }
@@ -6906,7 +6906,7 @@ section {
   background: rgba(255, 255, 255, 0.48);
   color: rgba(26, 23, 20, 0.78);
   font-style: italic;
-  line-height: 1.5;
+  line-height: 1.42;
 }
 
 .blog-post-article a {

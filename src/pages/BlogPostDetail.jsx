@@ -131,6 +131,18 @@ function ArticleBlock({ block }) {
   return <p>{content}</p>
 }
 
+function blogSummary(post) {
+  const lines = String(post.desc || '').split(/\r?\n/)
+  const firstContentLine = lines.findIndex((line) => line.trim())
+
+  if (firstContentLine >= 0 && /^#{1,4}\s+/.test(lines[firstContentLine].trim())) {
+    lines.splice(firstContentLine, 1)
+  }
+
+  const summary = lines.join(' ').replace(/\s+/g, ' ').trim()
+  return inlineMarkdown(summary, 'blog-summary')
+}
+
 function sidebarHeadingText(text) {
   return text.replace(/^\d+\.\s*/, '')
 }
@@ -169,7 +181,7 @@ function BlogPostDetail() {
   }
 
   const blocks = articleBlocks(post)
-  const headings = blocks.filter((block) => block.type === 'heading').slice(0, 6)
+  const headings = blocks.filter((block) => block.type === 'heading' && block.level === 2).slice(0, 6)
   const sourceUrls = sourceUrlsFrom(post)
 
   return (
@@ -185,7 +197,7 @@ function BlogPostDetail() {
             </div>
           </div>
           <h1>{post.title}</h1>
-          {post.desc && <p>{post.desc}</p>}
+          {post.desc && <p>{blogSummary(post)}</p>}
         </div>
         <div className="blog-post-hero__media">
           <BlogHeroImage post={post} />
