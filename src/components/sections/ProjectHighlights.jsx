@@ -2,11 +2,16 @@ import { useRef, useState } from 'react'
 import { useSiteContent } from '../../hooks/useSiteContent'
 import { optimizeImage } from '../../utils/images'
 
-function ComparisonLayer({ image, alt, label, variant, onLoad }) {
+function ComparisonLayer({ image, alt, label, variant }) {
+  const imageSrc = image ? optimizeImage(image, { width: 1600 }) : ''
+
   return (
-    <div className={'project-comparison__layer project-comparison__layer--' + variant}>
-      {image ? (
-        <img src={optimizeImage(image, { width: 1600 })} alt={alt} loading="lazy" draggable="false" onLoad={onLoad} />
+    <div
+      className={'project-comparison__layer project-comparison__layer--' + variant}
+      style={imageSrc ? { '--comparison-image': `url("${imageSrc}")` } : undefined}
+    >
+      {imageSrc ? (
+        <img src={imageSrc} alt={alt} loading="lazy" draggable="false" />
       ) : (
         <span className="project-comparison__placeholder">{label}</span>
       )}
@@ -16,22 +21,14 @@ function ComparisonLayer({ image, alt, label, variant, onLoad }) {
 
 function BeforeAfterSlider({ project }) {
   const [position, setPosition] = useState(50)
-  const [imageRatio, setImageRatio] = useState(null)
-
-  function syncImageRatio(event) {
-    const { naturalWidth, naturalHeight } = event.currentTarget
-    if (naturalWidth > 0 && naturalHeight > 0) {
-      setImageRatio((current) => current || naturalWidth / naturalHeight)
-    }
-  }
 
   return (
     <div
       className="project-highlight-card__media project-comparison"
-      style={{ '--comparison-position': position + '%', aspectRatio: imageRatio ? String(imageRatio) : undefined }}
+      style={{ '--comparison-position': position + '%' }}
     >
-      <ComparisonLayer image={project.before} alt={project.title + ' antes'} label="Antes" variant="before" onLoad={syncImageRatio} />
-      <ComparisonLayer image={project.after} alt={project.title + ' después'} label="Después" variant="after" onLoad={project.before ? undefined : syncImageRatio} />
+      <ComparisonLayer image={project.before} alt={project.title + ' antes'} label="Antes" variant="before" />
+      <ComparisonLayer image={project.after} alt={project.title + ' después'} label="Después" variant="after" />
 
       <span className="project-comparison__label project-comparison__label--before">Antes</span>
       <span className="project-comparison__label project-comparison__label--after">Después</span>

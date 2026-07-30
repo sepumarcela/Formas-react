@@ -1401,6 +1401,27 @@ section {
   background: var(--color-surface-warm);
 }
 
+.project-comparison__layer::before {
+  content: '';
+  position: absolute;
+  inset: -24px;
+  background-image:
+    linear-gradient(rgba(239, 231, 221, 0.28), rgba(239, 231, 221, 0.28)),
+    var(--comparison-image);
+  background-position: center;
+  background-size: cover;
+  filter: blur(16px);
+  opacity: 0.72;
+  transform: scale(1.05);
+}
+
+.project-comparison__layer img {
+  position: relative;
+  z-index: 1;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
 .project-comparison__layer--before {
   z-index: 1;
   clip-path: inset(0 calc(100% - var(--comparison-position)) 0 0);
@@ -8728,10 +8749,4 @@ section {
 .contacto-form input[aria-invalid='true'] {
   border-color: #b53e3e;
   box-shadow: 0 0 0 3px rgba(181, 62, 62, 0.1);
-}
-
-/* Mantiene completas las fotos del comparador, sin recortar sus bordes. */
-.project-highlight-card__media.project-comparison img {
-  object-fit: contain !important;
-  object-position: center !important;
 }
