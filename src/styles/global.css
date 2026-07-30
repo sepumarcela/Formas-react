@@ -8800,7 +8800,16 @@ section {
   max-width: 620px;
   height: 100% !important;
   object-fit: contain !important;
-  object-position: center !important;
+}
+
+.project-comparison--slider .project-comparison__layer--before > img {
+  justify-self: start;
+  object-position: left center !important;
+}
+
+.project-comparison--slider .project-comparison__layer--after > img {
+  justify-self: end;
+  object-position: right center !important;
 }
 
 @media (max-width: 620px) {
