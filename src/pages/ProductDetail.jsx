@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react'
 import { PiCheckCircleDuotone, PiClockDuotone, PiFactoryDuotone, PiHandshakeDuotone, PiRulerDuotone, PiSketchLogoDuotone } from 'react-icons/pi'
+import ProductImageDisclaimer from '../components/ProductImageDisclaimer'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { API_BASE_URL } from '../api/cmsApi'
 import { optimizeImage, preloadImage } from '../utils/images'
@@ -108,8 +109,11 @@ function ProductDetail() {
     <main className="page product-detail-page">
       <section className="product-hero-detail">
         <div className="product-hero-detail__inner">
-          <div className="product-gallery">
-            <ProductMainImage product={product} onOpen={() => setImageOpen(true)} />
+          <div className="product-media-column">
+            <div className="product-gallery">
+              <ProductMainImage product={product} onOpen={() => setImageOpen(true)} />
+            </div>
+            <ProductImageDisclaimer dark />
           </div>
 
           <div className="product-summary">

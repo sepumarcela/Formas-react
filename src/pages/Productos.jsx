@@ -12,6 +12,7 @@ import {
   PiTelevisionDuotone,
 } from 'react-icons/pi'
 import PageHero from '../components/sections/PageHero'
+import ProductImageDisclaimer from '../components/ProductImageDisclaimer'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage } from '../utils/images'
 import { printCatalogPdf } from '../utils/catalogPdf'
@@ -53,6 +54,8 @@ function Productos() {
             Descargar catálogo PDF
           </button>
         </div>
+
+        <ProductImageDisclaimer />
 
         <div className="products-category-list">
           {visibleCategories.map((category) => {

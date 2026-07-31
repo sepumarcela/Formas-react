@@ -8838,3 +8838,52 @@ section {
     aspect-ratio: 1.05 / 1;
   }
 }
+
+/* Aviso visible en catálogo, categorías y ficha individual. */
+.product-image-disclaimer {
+  width: fit-content;
+  max-width: min(720px, 100%);
+  margin: 24px auto 34px;
+  padding: 11px 16px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(176, 122, 86, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: rgba(43, 39, 36, 0.76);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.product-image-disclaimer svg {
+  flex: 0 0 auto;
+  color: var(--color-brand);
+}
+
+.product-media-column {
+  min-width: 0;
+}
+
+.product-media-column .product-image-disclaimer {
+  margin: 14px 0 0;
+}
+
+.product-image-disclaimer--dark {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.product-image-disclaimer--dark svg {
+  color: #D9A77C;
+}
+
+@media (max-width: 620px) {
+  .product-image-disclaimer {
+    width: 100%;
+    border-radius: 12px;
+    align-items: flex-start;
+  }
+}

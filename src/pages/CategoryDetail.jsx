@@ -1,6 +1,7 @@
 ﻿import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { PiDiamondDuotone, PiHandshakeDuotone, PiRulerDuotone, PiToolboxDuotone } from 'react-icons/pi'
+import ProductImageDisclaimer from '../components/ProductImageDisclaimer'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { optimizeImage, preloadImage } from '../utils/images'
 import { isPublicCategoryVisible } from '../config/features'
@@ -68,6 +69,7 @@ function CategoryDetail() {
       </div>
 
       <section style={{ background: 'var(--color-bg)' }}>
+        <ProductImageDisclaimer />
         <div className="cat-products-grid">
           {categoryProducts.map((product) => (
             <Link
