@@ -10,19 +10,6 @@ function escapeHtml(value = '') {
     .replace(/'/g, '&#039;')
 }
 
-function cleanText(value = '') {
-  return String(value).replace(/\s+/g, ' ').trim()
-}
-
-function productDetails(product) {
-  return [
-    ['Medidas', product.size],
-    ['Material', product.material],
-    ['Acabado', product.color || product.colorFinish],
-    ['Entrega', product.leadTime],
-  ].map(([label, value]) => [label, cleanText(value)]).filter(([, value]) => value)
-}
-
 function categoryProducts(category, products) {
   return products.filter((product) => product.categoryId === category.id && product.active !== false)
 }
@@ -171,7 +158,7 @@ function materialsMarkup() {
   return `
     <section class="catalog-page catalog-page--light catalog-materials">
       <div class="catalog-kicker">Detalles que elevan el resultado</div>
-      <h2>Materialidad cálida, funcionalidad precisa y acabados que se sienten bien.</h2>
+      <h2>Cada proyecto se define contigo: las medidas, los materiales, los acabados y el tiempo de entrega se establecen según el diseño final acordado.</h2>
       <div class="catalog-materials__list">
         ${items.map(([title, text], index) => `
           <article>
@@ -242,27 +229,11 @@ function categoryCoverMarkup(category, products, index) {
   `
 }
 
-function productCardMarkup(product, index) {
-  const details = productDetails(product)
-
+function productCardMarkup(product) {
   return `
     <article class="catalog-product-card">
       <div class="catalog-product-card__image">
-        ${imageMarkup(product.image, product.name, 800)}
-      </div>
-      <div class="catalog-product-card__body">
-        <p>Pieza ${String(index + 1).padStart(2, '0')}</p>
-        <h3>${escapeHtml(product.name)}</h3>
-        ${details.length ? `
-          <dl class="catalog-product-card__details">
-            ${details.map(([label, value]) => `
-              <div>
-                <dt>${escapeHtml(label)}</dt>
-                <dd>${escapeHtml(value)}</dd>
-              </div>
-            `).join('')}
-          </dl>
-        ` : ''}
+        ${imageMarkup(product.image, product.name, 1000)}
       </div>
     </article>
   `
@@ -291,7 +262,7 @@ function categoryProductsMarkup(category, products) {
         </div>
       </div>
       <div class="catalog-product-grid">
-        ${pageItems.map((product, index) => productCardMarkup(product, pageIndex * 4 + index)).join('')}
+        ${pageItems.map((product) => productCardMarkup(product)).join('')}
       </div>
       <aside class="catalog-reference-note catalog-reference-note--products">
         <strong>Imágenes referenciales</strong>
@@ -795,11 +766,12 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             min-height: 0;
             height: 392px;
             display: grid;
-            grid-template-rows: 65% 35%;
+            grid-template-rows: 1fr;
             overflow: hidden;
             border: 1px solid #D8CEC1;
-            background: rgba(255, 255, 255, 0.64);
-            box-shadow: 0 22px 48px rgba(58, 51, 45, 0.08);
+            border-radius: 16px;
+            background: #F4EFE8;
+            box-shadow: 0 18px 42px rgba(58, 51, 45, 0.12);
           }
           .catalog-product-card__image {
             min-width: 0;
@@ -816,6 +788,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            object-position: center;
             display: block;
           }
           .catalog-product-card__body {
@@ -987,7 +960,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
               grid-template-columns: 1fr;
             }
             .catalog-product-card {
-              grid-template-rows: 72% 28%;
+              grid-template-rows: 1fr;
             }
           }
           @media print {
@@ -1165,7 +1138,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             .catalog-product-card {
               height: auto;
               min-height: 0;
-              grid-template-rows: 65% 35%;
+              grid-template-rows: 1fr;
             }
             .catalog-product-card__body h3 {
               font-size: 25px;
