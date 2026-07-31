@@ -468,7 +468,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             min-height: 0;
             overflow: hidden;
             display: grid;
-            grid-template-rows: 70% 30%;
+            grid-template-rows: 62% 38%;
             border: 1px solid #D8CEC1;
             background: rgba(255, 255, 255, 0.58);
             box-shadow: 0 24px 58px rgba(58, 51, 45, 0.08);
@@ -496,8 +496,8 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 10px;
-            padding: 20px 24px;
+            gap: 8px;
+            padding: 18px 24px;
           }
           .catalog-index-card__body strong {
             min-width: 0;
@@ -1020,13 +1020,15 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             }
             .catalog-index-card {
               min-height: 0;
-              grid-template-rows: 70% 30%;
+              grid-template-rows: 60% 40%;
             }
             .catalog-index-card__body {
-              padding: 5mm 6mm;
+              gap: 2mm;
+              padding: 4mm 5mm;
             }
             .catalog-index-card__body strong {
-              font-size: 27px;
+              font-size: 24px;
+              line-height: 1.02;
             }
             .catalog-index-card__body span {
               font-size: 9px;
