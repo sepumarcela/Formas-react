@@ -1,17 +1,6 @@
 ﻿import { optimizeImage } from './images'
 import { COMPANY_ADDRESS } from '../config/company'
 
-const categoryCopy = {
-  'centros-entretenimiento': 'Piezas pensadas para integrar tecnología, almacenamiento y atmósfera en el centro social de la casa.',
-  'centros-estudio': 'Ambientes de trabajo que equilibran concentración, orden y calidez para crear todos los días.',
-  closets: 'Soluciones a medida para guardar mejor, ver mejor y disfrutar rutinas más simples.',
-  cocinas: 'Cocinas diseñadas para transformar la rutina diaria en una experiencia de diseño.',
-  'muebles-bano': 'Mobiliario resistente y refinado para convertir el baño en un espacio de calma.',
-  repisas: 'Elementos ligeros que organizan, exhiben y completan la personalidad de cada ambiente.',
-  'alcobas-infantiles': 'Muebles seguros, flexibles y cercanos para acompañar cada etapa de crecimiento.',
-  bibliotecas: 'Sistemas para ordenar, exhibir y dar carácter arquitectónico a tus espacios.',
-}
-
 function escapeHtml(value = '') {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -23,15 +12,6 @@ function escapeHtml(value = '') {
 
 function cleanText(value = '') {
   return String(value).replace(/\s+/g, ' ').trim()
-}
-
-function productSubtitle(product, category) {
-  const parts = [product.color, product.material].map(cleanText).filter(Boolean)
-  if (parts.length) return parts.slice(0, 2).join(' + ')
-
-  const fallback = cleanText(product.description || categoryCopy[category.id] || category.description || '')
-  if (!fallback) return 'Diseño a medida para espacios con carácter'
-  return fallback.length > 70 ? `${fallback.slice(0, 67).trim()}...` : fallback
 }
 
 function productDetails(product) {
@@ -235,8 +215,6 @@ function processMarkup() {
 function categoryCoverMarkup(category, products, index) {
   const items = categoryProducts(category, products)
   const image = category.image || firstImage(items)
-  const text = categoryCopy[category.id] || category.description || 'Una línea diseñada para resolver necesidades reales con calidez, orden y precisión.'
-
   return `
     <section class="catalog-page catalog-category">
       <div class="catalog-category__media">
@@ -245,30 +223,27 @@ function categoryCoverMarkup(category, products, index) {
       <div class="catalog-category__content">
         <div class="catalog-kicker">Línea ${String(index + 1).padStart(2, '0')}</div>
         <h2>${escapeHtml(category.name)}</h2>
-        <p>${escapeHtml(text)}</p>
         <div class="catalog-category__facts">
           <article>
             <span>Enfoque</span>
             <strong>Diseño a medida</strong>
           </article>
           <article>
-            <span>Línea</span>
-            <strong>${items.length} producto${items.length === 1 ? '' : 's'}</strong>
-          </article>
-          <article>
             <span>Uso</span>
             <strong>Interiorismo funcional</strong>
           </article>
         </div>
+        <aside class="catalog-reference-note">
+          <strong>Nota importante</strong>
+          <span>Las imágenes de los productos son referenciales. El resultado final puede variar según las medidas, los colores, los materiales y las características de cada espacio.</span>
+        </aside>
       </div>
     </section>
   `
 }
 
-function productCardMarkup(product, category, index) {
-  const subtitle = productSubtitle(product, category)
+function productCardMarkup(product, index) {
   const details = productDetails(product)
-  const description = cleanText(product.description)
 
   return `
     <article class="catalog-product-card">
@@ -278,7 +253,6 @@ function productCardMarkup(product, category, index) {
       <div class="catalog-product-card__body">
         <p>Pieza ${String(index + 1).padStart(2, '0')}</p>
         <h3>${escapeHtml(product.name)}</h3>
-        <em>${escapeHtml(subtitle)}</em>
         ${details.length ? `
           <dl class="catalog-product-card__details">
             ${details.map(([label, value]) => `
@@ -289,7 +263,6 @@ function productCardMarkup(product, category, index) {
             `).join('')}
           </dl>
         ` : ''}
-        ${description ? `<small>${escapeHtml(description)}</small>` : ''}
       </div>
     </article>
   `
@@ -316,11 +289,14 @@ function categoryProductsMarkup(category, products) {
           <div class="catalog-kicker">Productos ${pageIndex + 1} / ${pages.length}</div>
           <h2>${escapeHtml(category.name)}</h2>
         </div>
-        <span>${items.length} producto${items.length === 1 ? '' : 's'}</span>
       </div>
       <div class="catalog-product-grid">
-        ${pageItems.map((product, index) => productCardMarkup(product, category, pageIndex * 4 + index)).join('')}
+        ${pageItems.map((product, index) => productCardMarkup(product, pageIndex * 4 + index)).join('')}
       </div>
+      <aside class="catalog-reference-note catalog-reference-note--products">
+        <strong>Imágenes referenciales</strong>
+        <span>El resultado final puede variar según las medidas, los colores, los materiales y las características de cada espacio.</span>
+      </aside>
     </section>
   `).join('')
 }
@@ -729,7 +705,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             max-width: 820px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             border-top: 1px solid #D8CEC1;
             border-bottom: 1px solid #D8CEC1;
           }
@@ -754,8 +730,29 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             display: block;
             min-width: 0;
             color: #3A332D;
-            font-size: 16px;
+            font-size: 18px;
             line-height: 1.25;
+          }
+          .catalog-reference-note {
+            max-width: 820px;
+            margin: 24px auto 0;
+            padding: 16px 20px;
+            border-left: 3px solid #A88F74;
+            background: rgba(255, 255, 255, 0.52);
+            color: rgba(58, 51, 45, 0.76);
+            font-size: 13px;
+            line-height: 1.45;
+            text-align: left;
+          }
+          .catalog-reference-note strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #3A332D;
+            font-size: 13px;
+            font-weight: 900;
+          }
+          .catalog-reference-note span {
+            display: block;
           }
           .catalog-product-page {
             padding: 42px;
@@ -763,7 +760,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
           .catalog-product-page__header {
             min-height: 88px;
             display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
+            grid-template-columns: minmax(0, 1fr);
             gap: 24px;
             align-items: start;
             margin-bottom: 24px;
@@ -798,7 +795,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             min-height: 0;
             height: 392px;
             display: grid;
-            grid-template-rows: 58% 42%;
+            grid-template-rows: 65% 35%;
             overflow: hidden;
             border: 1px solid #D8CEC1;
             background: rgba(255, 255, 255, 0.64);
@@ -844,7 +841,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
           .catalog-product-card__body h3 {
             margin: 0 0 6px;
             color: #3A332D;
-            font-size: clamp(19px, 2vw, 24px);
+            font-size: clamp(23px, 2.2vw, 28px);
             line-height: 1;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -883,7 +880,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
           .catalog-product-card__details dt {
             margin: 0 0 2px;
             color: #A88F74;
-            font-size: 7px;
+            font-size: 9px;
             font-weight: 900;
             letter-spacing: 0.14em;
             text-transform: uppercase;
@@ -891,20 +888,10 @@ export function printCatalogPdf({ categories, products, pageContent }) {
           .catalog-product-card__details dd {
             margin: 0;
             color: rgba(58, 51, 45, 0.76);
-            font-size: 9px;
-            line-height: 1.22;
+            font-size: 12px;
+            line-height: 1.28;
             overflow-wrap: anywhere;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-          .catalog-product-card__body small {
-            display: -webkit-box;
-            margin-top: 9px;
-            color: rgba(58, 51, 45, 0.58);
-            font-size: 9px;
-            line-height: 1.25;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
@@ -1150,7 +1137,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             }
             .catalog-category__facts {
               max-width: 160mm;
-              grid-template-columns: repeat(3, minmax(0, 1fr));
+              grid-template-columns: repeat(2, minmax(0, 1fr));
             }
             .catalog-category__facts article {
               display: block;
@@ -1166,11 +1153,11 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             }
             .catalog-category__facts strong {
               display: block;
-              font-size: 12.5px;
+              font-size: 15px;
               overflow-wrap: anywhere;
             }
             .catalog-product-grid {
-              height: 245mm;
+              height: 216mm;
               grid-template-columns: repeat(2, minmax(0, 1fr));
               grid-template-rows: repeat(2, minmax(0, 1fr));
               gap: 8mm;
@@ -1178,16 +1165,33 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             .catalog-product-card {
               height: auto;
               min-height: 0;
-              grid-template-rows: 58% 42%;
+              grid-template-rows: 65% 35%;
             }
             .catalog-product-card__body h3 {
-              font-size: 22px;
+              font-size: 25px;
             }
             .catalog-product-card__body {
               padding: 4.5mm 5mm 5mm;
             }
-            .catalog-product-card__body small {
+            .catalog-product-card__details dt {
+              font-size: 8.5px;
+            }
+            .catalog-product-card__details dd {
+              font-size: 11.5px;
               -webkit-line-clamp: 2;
+            }
+            .catalog-reference-note {
+              margin-top: 5mm;
+              padding: 3.5mm 4mm;
+              font-size: 10.5px;
+              line-height: 1.35;
+            }
+            .catalog-reference-note strong {
+              font-size: 10.5px;
+            }
+            .catalog-reference-note--products {
+              max-width: none;
+              margin-top: 4mm;
             }
           }
         </style>
