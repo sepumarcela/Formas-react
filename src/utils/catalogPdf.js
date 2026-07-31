@@ -1,6 +1,17 @@
 ﻿import { optimizeImage } from './images'
 import { COMPANY_ADDRESS } from '../config/company'
 
+const categoryDescriptions = {
+  'centros-entretenimiento': 'Composiciones hechas a medida que integran tecnología, almacenamiento e iluminación para convertir la zona social en un ambiente armónico y sofisticado.',
+  'centros-estudio': 'Espacios de trabajo personalizados que equilibran concentración, orden y bienestar mediante soluciones funcionales de diseño contemporáneo.',
+  closets: 'Sistemas de almacenamiento diseñados para aprovechar cada centímetro y organizar tus rutinas con elegancia, comodidad y precisión.',
+  cocinas: 'Ambientes que unen funcionalidad, calidez y diseño para transformar cada momento cotidiano en una experiencia práctica y memorable.',
+  'muebles-bano': 'Mobiliario a medida que combina resistencia, orden y una estética serena para elevar la experiencia diaria del baño.',
+  repisas: 'Soluciones ligeras y versátiles que organizan, exhiben y aportan carácter sin recargar visualmente los espacios.',
+  'alcobas-infantiles': 'Mobiliario seguro, adaptable y lleno de personalidad, creado para acompañar el crecimiento y la imaginación de los más pequeños.',
+  bibliotecas: 'Composiciones arquitectónicas que organizan, exhiben y dan identidad al espacio mediante un equilibrio entre diseño y funcionalidad.',
+}
+
 function escapeHtml(value = '') {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -170,6 +181,10 @@ function materialsMarkup() {
           </article>
         `).join('')}
       </div>
+      <aside class="catalog-reference-note catalog-reference-note--materials">
+        <strong>Imágenes referenciales</strong>
+        <span>Las imágenes de los productos son referenciales. El resultado final puede variar según las medidas, los colores, los materiales y las características de cada espacio.</span>
+      </aside>
     </section>
   `
 }
@@ -202,29 +217,18 @@ function processMarkup() {
 function categoryCoverMarkup(category, products, index) {
   const items = categoryProducts(category, products)
   const image = category.image || firstImage(items)
+  const description = categoryDescriptions[category.id] || category.description || 'Una propuesta diseñada a medida para transformar el espacio con equilibrio, carácter y funcionalidad.'
+
   return `
     <section class="catalog-page catalog-category">
-      <div class="catalog-category__media">
-        ${imageMarkup(image, category.name, 1200, 'catalog-category__image')}
-      </div>
-      <div class="catalog-category__content">
+      <header class="catalog-category__heading">
         <div class="catalog-kicker">Línea ${String(index + 1).padStart(2, '0')}</div>
         <h2>${escapeHtml(category.name)}</h2>
-        <div class="catalog-category__facts">
-          <article>
-            <span>Enfoque</span>
-            <strong>Diseño a medida</strong>
-          </article>
-          <article>
-            <span>Uso</span>
-            <strong>Interiorismo funcional</strong>
-          </article>
-        </div>
-        <aside class="catalog-reference-note">
-          <strong>Nota importante</strong>
-          <span>Las imágenes de los productos son referenciales. El resultado final puede variar según las medidas, los colores, los materiales y las características de cada espacio.</span>
-        </aside>
+      </header>
+      <div class="catalog-category__media">
+        ${imageMarkup(image, category.name, 1400, 'catalog-category__image')}
       </div>
+      <p class="catalog-category__description">${escapeHtml(description)}</p>
     </section>
   `
 }
@@ -264,10 +268,6 @@ function categoryProductsMarkup(category, products) {
       <div class="catalog-product-grid">
         ${pageItems.map((product) => productCardMarkup(product)).join('')}
       </div>
-      <aside class="catalog-reference-note catalog-reference-note--products">
-        <strong>Imágenes referenciales</strong>
-        <span>El resultado final puede variar según las medidas, los colores, los materiales y las características de cada espacio.</span>
-      </aside>
     </section>
   `).join('')
 }
@@ -588,17 +588,22 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             color: rgba(58, 51, 45, 0.66);
             line-height: 1.6;
           }
+          .catalog-materials h2 {
+            max-width: 900px;
+            font-size: 50px;
+            line-height: 1.02;
+          }
           .catalog-materials__list {
             display: grid;
             gap: 0;
-            margin-top: 62px;
+            margin-top: 42px;
             border-top: 1px solid #D8CEC1;
           }
           .catalog-materials article {
             display: grid;
             grid-template-columns: 90px minmax(0, 1fr);
             gap: 24px;
-            padding: 28px 0;
+            padding: 22px 0;
             border-bottom: 1px solid #D8CEC1;
           }
           .catalog-materials article > span,
@@ -616,9 +621,15 @@ export function printCatalogPdf({ categories, products, pageContent }) {
               #F7F4EF;
             display: grid;
             grid-template-columns: 1fr;
-            grid-template-rows: 460px minmax(0, 1fr);
+            grid-template-rows: auto 460px auto;
             gap: 30px;
-            align-items: start;
+            align-content: center;
+            text-align: center;
+          }
+          .catalog-category__heading {
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
           }
           .catalog-category__media {
             width: 100%;
@@ -643,18 +654,20 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             place-items: center;
             color: rgba(58, 51, 45, 0.52);
           }
-          .catalog-category__content {
+          .catalog-category__description {
             width: 100%;
-            max-width: 820px;
-            min-width: 0;
+            max-width: 760px;
             margin: 0 auto;
-            padding: 0;
-            overflow: hidden;
-            text-align: center;
+            color: rgba(58, 51, 45, 0.7);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 20px;
+            font-style: italic;
+            line-height: 1.55;
+            text-wrap: balance;
           }
           .catalog-category h2 {
             max-width: 760px;
-            margin: 0 auto 16px;
+            margin: 0 auto;
             color: #3A332D;
             font-size: clamp(40px, 4.25vw, 54px);
             line-height: 1;
@@ -724,6 +737,11 @@ export function printCatalogPdf({ categories, products, pageContent }) {
           }
           .catalog-reference-note span {
             display: block;
+          }
+          .catalog-reference-note--materials {
+            max-width: none;
+            margin-top: 24px;
+            padding: 14px 18px;
           }
           .catalog-product-page {
             padding: 42px;
@@ -1083,32 +1101,29 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             .catalog-category {
               padding: 14mm;
               grid-template-columns: 1fr;
-              grid-template-rows: 102mm minmax(0, 1fr);
+              grid-template-rows: auto 132mm auto;
               gap: 8mm;
+              align-content: center;
             }
             .catalog-category__media {
               width: 100%;
-              height: 102mm;
+              height: 132mm;
             }
-            .catalog-category__content {
-              width: 100%;
+            .catalog-category__heading {
               max-width: 160mm;
-              margin: 0 auto;
-              padding: 0;
-              text-align: center;
             }
             .catalog-category h2 {
               max-width: 155mm;
-              margin: 0 auto 4mm;
-              font-size: 34px;
+              margin: 0 auto;
+              font-size: 36px;
               line-height: 1.02;
               -webkit-line-clamp: 2;
             }
-            .catalog-category p {
+            .catalog-category__description {
               max-width: 150mm;
-              margin: 0 auto 8mm;
-              font-size: 13.5px;
-              line-height: 1.45;
+              margin: 0 auto;
+              font-size: 15px;
+              line-height: 1.5;
             }
             .catalog-category__facts {
               max-width: 160mm;
@@ -1132,7 +1147,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
               overflow-wrap: anywhere;
             }
             .catalog-product-grid {
-              height: 216mm;
+              height: 241mm;
               grid-template-columns: repeat(2, minmax(0, 1fr));
               grid-template-rows: repeat(2, minmax(0, 1fr));
               gap: 8mm;
@@ -1164,9 +1179,9 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             .catalog-reference-note strong {
               font-size: 10.5px;
             }
-            .catalog-reference-note--products {
+            .catalog-reference-note--materials {
               max-width: none;
-              margin-top: 4mm;
+              margin-top: 5mm;
             }
           }
         </style>
