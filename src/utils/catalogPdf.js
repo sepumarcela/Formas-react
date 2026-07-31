@@ -666,13 +666,16 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             padding: 58px;
             background:
               linear-gradient(135deg, rgba(234, 228, 218, 0.92), rgba(247, 244, 239, 0.98)),
-            #F7F4EF;
+              #F7F4EF;
             display: grid;
-            grid-template-columns: minmax(0, 0.52fr) minmax(0, 0.48fr);
-            gap: 40px;
-            align-items: stretch;
+            grid-template-columns: 1fr;
+            grid-template-rows: 460px minmax(0, 1fr);
+            gap: 30px;
+            align-items: start;
           }
           .catalog-category__media {
+            width: 100%;
+            height: 460px;
             display: grid;
             place-items: center;
             overflow: hidden;
@@ -682,7 +685,7 @@ export function printCatalogPdf({ categories, products, pageContent }) {
           .catalog-category__image {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             object-position: center;
             display: block;
           }
@@ -694,45 +697,53 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             color: rgba(58, 51, 45, 0.52);
           }
           .catalog-category__content {
+            width: 100%;
+            max-width: 820px;
             min-width: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 28px 4px;
+            margin: 0 auto;
+            padding: 0;
             overflow: hidden;
+            text-align: center;
           }
           .catalog-category h2 {
-            margin: 0 0 24px;
+            max-width: 760px;
+            margin: 0 auto 16px;
             color: #3A332D;
-            font-size: clamp(40px, 4.25vw, 56px);
-            line-height: 0.98;
-            max-width: 100%;
+            font-size: clamp(40px, 4.25vw, 54px);
+            line-height: 1;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             overflow-wrap: anywhere;
           }
           .catalog-category p {
-            max-width: 100%;
-            margin: 0 0 42px;
+            max-width: 720px;
+            margin: 0 auto 28px;
             color: rgba(58, 51, 45, 0.72);
-            font-size: 20px;
-            line-height: 1.55;
+            font-size: 18px;
+            line-height: 1.5;
           }
           .catalog-category__facts {
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
             display: grid;
-            gap: 0;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             border-top: 1px solid #D8CEC1;
-          }
-          .catalog-category__facts article {
-            display: grid;
-            grid-template-columns: 130px minmax(0, 1fr);
-            gap: 18px;
-            padding: 18px 0;
             border-bottom: 1px solid #D8CEC1;
           }
+          .catalog-category__facts article {
+            min-width: 0;
+            padding: 16px 20px;
+            border-right: 1px solid #D8CEC1;
+          }
+          .catalog-category__facts article:last-child {
+            border-right: 0;
+          }
           .catalog-category__facts span {
+            display: block;
+            margin-bottom: 7px;
             color: #A88F74;
             font-size: 10px;
             font-weight: 900;
@@ -740,9 +751,10 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             text-transform: uppercase;
           }
           .catalog-category__facts strong {
+            display: block;
             min-width: 0;
             color: #3A332D;
-            font-size: 18px;
+            font-size: 16px;
             line-height: 1.25;
           }
           .catalog-product-page {
@@ -1108,26 +1120,53 @@ export function printCatalogPdf({ categories, products, pageContent }) {
             }
             .catalog-category {
               padding: 14mm;
-              grid-template-columns: minmax(0, 0.5fr) minmax(0, 0.5fr);
+              grid-template-columns: 1fr;
+              grid-template-rows: 102mm minmax(0, 1fr);
               gap: 8mm;
             }
+            .catalog-category__media {
+              width: 100%;
+              height: 102mm;
+            }
+            .catalog-category__content {
+              width: 100%;
+              max-width: 160mm;
+              margin: 0 auto;
+              padding: 0;
+              text-align: center;
+            }
             .catalog-category h2 {
+              max-width: 155mm;
+              margin: 0 auto 4mm;
               font-size: 34px;
               line-height: 1.02;
-              -webkit-line-clamp: 3;
+              -webkit-line-clamp: 2;
             }
             .catalog-category p {
-              font-size: 14px;
-              line-height: 1.55;
-              margin-bottom: 10mm;
+              max-width: 150mm;
+              margin: 0 auto 8mm;
+              font-size: 13.5px;
+              line-height: 1.45;
+            }
+            .catalog-category__facts {
+              max-width: 160mm;
+              grid-template-columns: repeat(3, minmax(0, 1fr));
             }
             .catalog-category__facts article {
-              grid-template-columns: 28mm minmax(0, 1fr);
-              gap: 5mm;
-              padding: 4mm 0;
+              display: block;
+              padding: 4mm 3mm;
+              border-bottom: 0;
+              border-right: 1px solid #D8CEC1;
+            }
+            .catalog-category__facts article:last-child {
+              border-right: 0;
+            }
+            .catalog-category__facts span {
+              margin-bottom: 1.5mm;
             }
             .catalog-category__facts strong {
-              font-size: 13px;
+              display: block;
+              font-size: 12.5px;
               overflow-wrap: anywhere;
             }
             .catalog-product-grid {
