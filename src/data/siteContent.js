@@ -16,10 +16,13 @@ const legacyDemoProductIds = new Set([
   'alcoba-sueno',
 ])
 
-const FORMS_PHONE = '+57 316 973 3417'
-const FORMS_WHATSAPP = 'https://wa.me/573169733417'
+const FORMS_PHONE = '+57 313 789 4438'
+const FORMS_WHATSAPP = 'https://wa.me/573137894438'
 
 const oldPhoneValues = new Set([
+  '+57 316 973 3417',
+  '316 973 3417',
+  '3169733417',
   '+57 300 123 4567',
   '+57 604 444 7890',
   '+57 314 697 5752',
@@ -32,6 +35,8 @@ const oldPhoneValues = new Set([
 ])
 
 const oldWhatsappValues = new Set([
+  'https://wa.me/573169733417',
+  'https://api.whatsapp.com/send?phone=573169733417',
   'https://wa.me/573001234567',
   'https://wa.me/573146975752',
   'https://api.whatsapp.com/send?phone=573001234567',
@@ -159,7 +164,7 @@ export const defaultSiteContent = {
       finalPrimaryLabel: 'Solicitar cotización',
       finalPrimaryLink: '/contacto',
       finalWhatsappLabel: 'Hablar por WhatsApp',
-      finalWhatsappLink: 'https://wa.me/573169733417',
+      finalWhatsappLink: 'https://wa.me/573137894438',
       finalImage: '',
     },
     proyectos: {
@@ -223,7 +228,7 @@ export const defaultSiteContent = {
       addressTitle: COMPANY_OFFICE_TITLE,
       address: COMPANY_ADDRESS,
       phoneTitle: 'Llámanos',
-      phone: '+57 316 973 3417',
+      phone: '+57 313 789 4438',
       emailTitle: 'Escríbenos',
       email: 'contacto@formasinteriores.com',
       hoursTitle: 'Horario de atención',
@@ -232,7 +237,7 @@ export const defaultSiteContent = {
       mapEmbedUrl: '',
       visitTitle: COMPANY_OFFICE_TITLE,
       visitText: COMPANY_OFFICE_DESCRIPTION,
-      whatsappLink: 'https://wa.me/573169733417',
+      whatsappLink: 'https://wa.me/573137894438',
       
     },
   },

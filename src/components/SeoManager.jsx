@@ -7,7 +7,7 @@ const SITE_NAME = 'Formas Interiores'
 const BUSINESS_NAME = 'Formas Interiores S.A.S.'
 const SITE_URL = 'https://formasinteriores.com'
 const CONTACT_EMAIL = 'contacto@formasinteriores.com'
-const CONTACT_PHONE = '+573169733417'
+const CONTACT_PHONE = '+573137894438'
 const DEFAULT_IMAGE = `${SITE_URL}/favicon-formas.png?v=11`
 const DEFAULT_DESCRIPTION = 'Formas Interiores disena y fabrica muebles a medida para hogares y espacios comerciales en Colombia, con diseno personalizado, materiales de calidad e instalacion profesional.'
 
