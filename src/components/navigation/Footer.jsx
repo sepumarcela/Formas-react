@@ -28,7 +28,7 @@ function Footer() {
   const footerPolicies = (pageContent.footerPolicies?.policies || []).filter((policy) => policy.active !== false)
   const contactContent = pageContent.contacto || {}
   const footerEmail = contactContent.email || 'contacto@formasinteriores.com'
-  const footerPhone = contactContent.phone || '+57 313 789 4438'
+  const footerPhone = contactContent.phone || '+57 316 731 3521'
   const footerAddress = contactContent.address || COMPANY_ADDRESS
 
   return (

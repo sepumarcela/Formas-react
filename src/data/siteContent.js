@@ -16,10 +16,13 @@ const legacyDemoProductIds = new Set([
   'alcoba-sueno',
 ])
 
-const FORMS_PHONE = '+57 313 789 4438'
+const FORMS_PHONE = '+57 316 731 3521'
 const FORMS_WHATSAPP = 'https://wa.me/573137894438'
 
 const oldPhoneValues = new Set([
+  '+57 313 789 4438',
+  '313 789 4438',
+  '3137894438',
   '+57 316 973 3417',
   '316 973 3417',
   '3169733417',
@@ -228,7 +231,7 @@ export const defaultSiteContent = {
       addressTitle: COMPANY_OFFICE_TITLE,
       address: COMPANY_ADDRESS,
       phoneTitle: 'Llámanos',
-      phone: '+57 313 789 4438',
+      phone: '+57 316 731 3521',
       emailTitle: 'Escríbenos',
       email: 'contacto@formasinteriores.com',
       hoursTitle: 'Horario de atención',
