@@ -46,9 +46,14 @@ const oldWhatsappValues = new Set([
   'https://api.whatsapp.com/send?phone=573146975752',
 ])
 
+const oldPhoneDigits = new Set(
+  [...oldPhoneValues].map((value) => value.replace(/\D/g, '')),
+)
+
 function normalizeFormsPhone(value) {
   const normalized = String(value || '').trim()
-  return oldPhoneValues.has(normalized) ? FORMS_PHONE : value
+  const normalizedDigits = normalized.replace(/\D/g, '')
+  return oldPhoneValues.has(normalized) || oldPhoneDigits.has(normalizedDigits) ? FORMS_PHONE : value
 }
 
 function normalizeFormsWhatsapp(value) {
